@@ -8,7 +8,7 @@ export default function RootLayout({
   return (
     <div className="flex h-screen flex-col">
       <Sidebar />
-      <main className="md:pl-[350px] mt-32 font-poppins">{children}</main>
+      <main className="md:pl-[350px] py-10 font-poppins">{children}</main>
     </div>
   );
 }

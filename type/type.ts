@@ -10,3 +10,9 @@ export interface CardDashboardQueueProps {
   number: number;
   background: string;
 }
+
+export interface CardStepProps {
+  title: string;
+  isLastStep: boolean;
+  isActive: boolean;
+}

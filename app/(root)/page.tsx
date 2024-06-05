@@ -1,16 +1,42 @@
-"use client";
-
 import InputComponent from "@/components/InputComponent";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import CardDashboardQueue from "@/components/Dashboard/CardDashboardQueue";
 import ChartDashboard from "@/components/Dashboard/ChartDashboard";
 
-export default function Home() {
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { columns, Payment } from "@/constants";
+import { DataTables } from "@/components/Datatables";
+
+async function getData(): Promise<Payment[]> {
+  return [
+    {
+      id: "728ed52f",
+      jenis: "Layanan Aldi",
+      online: true,
+      offline: false,
+    },
+    // ...
+  ];
+}
+
+export default async function Home() {
+  const data = await getData();
+
   return (
     <section className="mr-16">
       <div className="flex items-center justify-between">
-        <InputComponent typeInput="select" />
+        <div className="w-1/2">
+          <InputComponent typeInput="select" />
+        </div>
         <div className="flex gap-x-6 items-center">
           <div className="flex items-center space-x-2">
             <Label htmlFor="airplane-mode" className="text-secondary-700">
@@ -60,22 +86,64 @@ export default function Home() {
             <p className="text-[10px] text-neutral-800 font-semibold">2024</p>
           </div>
           <div className="flex gap-x-5 mt-5">
-            <div className="flex gap-x-5">
-              <div></div>
-              <p className="text-sm font-medium text-neutral-800">
+            <div className="flex gap-x-2 items-center justify-center">
+              <div className="w-2 h-2 bg-secondary-700 rounded-full"></div>
+              <p className="text-xs font-medium text-neutral-800">
                 Booking Antrian
               </p>
             </div>
-            <div>
-              <div></div>
-              <p className="text-sm font-medium text-neutral-800">
+            <div className="flex gap-x-2 items-center justify-center">
+              <div className="w-2 h-2 bg-primary-700 rounded-full"></div>
+              <p className="text-xs font-medium text-neutral-800">
                 Permohonan Layanan Online
               </p>
             </div>
           </div>
           <ChartDashboard />
         </div>
+        <div className="w-4/12 rounded-[20px] shadow p-4">
+          <Select>
+            <SelectTrigger className="w-[180px] border-0 font-semibold">
+              <SelectValue placeholder="Select a fruit" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Fruits</SelectLabel>
+                <SelectItem value="apple">Apple</SelectItem>
+                <SelectItem value="banana">Banana</SelectItem>
+                <SelectItem value="blueberry">Blueberry</SelectItem>
+                <SelectItem value="grapes">Grapes</SelectItem>
+                <SelectItem value="pineapple">Pineapple</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <div className="h-[62px] w-full rounded-full px-7 py-2 bg-secondary-700 flex items-center justify-between mt-4">
+            <p className="font-semibold text-neutral-50 text-xs">
+              Total Permohonanan Online
+            </p>
+            <div className="rounded-full bg-neutral-50 items-center justify-center w-10 h-10 flex">
+              <p className="text-secondary-700 font-semibold text-sm">80</p>
+            </div>
+          </div>
+          <div className="h-[62px] w-full rounded-full px-7 py-2 bg-primary-700 flex items-center justify-between mt-4">
+            <p className="font-semibold text-neutral-50 text-xs">
+              Total Antrian Online
+            </p>
+            <div className="rounded-full bg-neutral-50 items-center justify-center w-10 h-10 flex">
+              <p className="text-primary-700 font-semibold text-sm">80</p>
+            </div>
+          </div>
+          <div className="h-[62px] w-full rounded-full px-7 py-2 bg-primary-800 flex items-center justify-between mt-4">
+            <p className="font-semibold text-neutral-50 text-xs">
+              Total Permohonanan Selesai
+            </p>
+            <div className="rounded-full bg-neutral-50 items-center justify-center w-10 h-10 flex">
+              <p className="text-primary-800 font-semibold text-sm">80</p>
+            </div>
+          </div>
+        </div>
       </div>
+      <DataTables columns={columns} data={data} />
     </section>
   );
 }

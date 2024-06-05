@@ -12,7 +12,7 @@ const inter = Inter({
 
 const Sidebar = () => {
   return (
-    <aside className="bg-neutral-200 fixed w-[291px] min-h-screen">
+    <aside className="bg-neutral-200 fixed w-[291px] h-full overflow-scroll custom-scrollbar">
       <div className="px-8 py-[54px]">
         <h1 className="text-[32px] font-semibold">Admin</h1>
         <div className={`${inter.className} space-y-2 text-neutral-900 mt-8`}>
@@ -54,6 +54,13 @@ const Sidebar = () => {
           />
           <Nav route="/" icons="/icons/user-round.svg" title="Kelola User" />
           <Nav route="/" icons="/icons/settings.svg" title="Pengaturan" />
+        </div>
+        <div className="flex gap-2 items-center mt-11">
+          <div className="h-10 w-10 rounded-full bg-white"></div>
+          <div className="flex flex-col text-xs">
+            <p className="text-[#324054]">Dila</p>
+            <p className="text-[#71839B]">dila@gmail.com</p>
+          </div>
         </div>
       </div>
     </aside>
