@@ -32,7 +32,7 @@ const InputComponent = ({ typeInput }: { typeInput?: string }) => {
       </Select>
     );
   if (typeInput === "textarea")
-    return <Textarea placeholder="Type your message here." />;
+    return <Textarea className="h-96" placeholder="Type your message here." />;
 
   if (typeInput === "radio")
     return (
@@ -60,6 +60,9 @@ const InputComponent = ({ typeInput }: { typeInput?: string }) => {
         className="rounded-none border-r-0 border-t-0 border-l-0 bg-transparent"
       />
     );
+
+  if (typeInput === "file")
+    return <Input type="file" placeholder="Email" className="rounded-full" />;
 
   return <Input type="email" placeholder="Email" className="rounded-full" />;
 };
