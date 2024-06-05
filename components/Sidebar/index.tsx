@@ -27,7 +27,7 @@ const Sidebar = () => {
             <p>Dashboard</p>
           </Link>
           <Nav
-            route="/"
+            route="/manage-requirement"
             icons="/icons/book-text.svg"
             title="Kelola Persyaratan"
           />

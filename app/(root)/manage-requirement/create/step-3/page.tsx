@@ -21,6 +21,7 @@ const CreateManageRequirementPageStep2 = () => {
   const handleSwitch = () => {
     setToggle(!toggle);
   };
+
   return (
     <section className="mr-16">
       <div className="-ml-14 mb-10">
@@ -48,8 +49,8 @@ const CreateManageRequirementPageStep2 = () => {
           </div>
         </div>
         <div className="w-full h-[184x] rounded-[20px] bg-neutral-200 p-8">
-          <InputComponent />
-          <div className="my-8">
+          <InputComponent typeInput="formInput" />
+          <div className="mt-8">
             <div className="flex items-center gap-x-4">
               <p className="text-sm text-neutral-900">
                 Hanya izinkan dengan file tertentu
