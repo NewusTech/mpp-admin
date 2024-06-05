@@ -36,7 +36,7 @@ const InputComponent = ({ typeInput }: { typeInput?: string }) => {
 
   if (typeInput === "radio")
     return (
-      <RadioGroup defaultValue="option-one">
+      <RadioGroup>
         <div className="flex items-center space-x-2">
           <RadioGroupItem value="docs" id="docs" />
           <Label htmlFor="docs">Dokumen</Label>
@@ -57,11 +57,11 @@ const InputComponent = ({ typeInput }: { typeInput?: string }) => {
       <Input
         type="text"
         placeholder="Judul / Pertanyaan"
-        className="rounded-none border-b-1 border-0"
+        className="rounded-none border-r-0 border-t-0 border-l-0 bg-transparent"
       />
     );
 
-  return <Input type="email" placeholder="Email" />;
+  return <Input type="email" placeholder="Email" className="rounded-full" />;
 };
 
 export default InputComponent;

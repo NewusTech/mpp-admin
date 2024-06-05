@@ -16,3 +16,8 @@ export interface CardStepProps {
   isLastStep: boolean;
   isActive: boolean;
 }
+
+export interface AlertDialogPopupProps {
+  title: string;
+  content: React.ReactNode;
+}
