@@ -45,7 +45,7 @@ const Sidebar = () => {
           />
           <Nav route="/" icons="/icons/Report.svg" title="Laporan" />
           <Nav route="/" icons="/icons/clipboard-list.svg" title="SKM" />
-          <Nav route="/" icons="/icons/newspaper.svg" title="Berita" />
+          <Nav route="/articles" icons="/icons/newspaper.svg" title="Berita" />
           <Nav
             route="/"
             icons="/icons/Master.svg"

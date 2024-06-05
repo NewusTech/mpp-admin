@@ -17,7 +17,7 @@ async function getData(): Promise<Payment[]> {
   ];
 }
 
-const MasterInsantce = async () => {
+const MasterService = async () => {
   const data = await getData();
   return (
     <section className="mr-16">
@@ -52,4 +52,4 @@ const MasterInsantce = async () => {
   );
 };
 
-export default MasterInsantce;
+export default MasterService;
