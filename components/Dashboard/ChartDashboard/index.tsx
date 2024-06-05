@@ -41,8 +41,8 @@ const ChartDashboard = () => {
         type="line"
         options={option}
         series={series}
-        height={300}
-        width={900}
+        height="100%"
+        width="100%"
       />
     </>
   );
