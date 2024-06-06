@@ -44,13 +44,42 @@ const Sidebar = () => {
             title="Riwayat Permohonan"
           />
           <Nav route="/" icons="/icons/Report.svg" title="Laporan" />
-          <Nav route="/" icons="/icons/clipboard-list.svg" title="SKM" />
+          <Nav
+            route="/"
+            icons="/icons/clipboard-list.svg"
+            title="SKM"
+            type="dropdown"
+            content={
+              <>
+                <ul className="space-y-4">
+                  <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
+                    <Link href="/survey/question">Pertanyaan</Link>
+                  </li>
+                  <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
+                    <Link href="/survey/result">Hasil</Link>
+                  </li>
+                </ul>
+              </>
+            }
+          />
           <Nav route="/articles" icons="/icons/newspaper.svg" title="Berita" />
           <Nav
             route="/"
             icons="/icons/Master.svg"
             title="Data Master"
             type="dropdown"
+            content={
+              <>
+                <ul className="space-y-4">
+                  <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
+                    <Link href="/master/master-instance">Instansi</Link>
+                  </li>
+                  <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
+                    <Link href="/master/master-service">Layanan</Link>
+                  </li>
+                </ul>
+              </>
+            }
           />
           <Nav route="/" icons="/icons/user-round.svg" title="Kelola User" />
           <Nav route="/" icons="/icons/settings.svg" title="Pengaturan" />
