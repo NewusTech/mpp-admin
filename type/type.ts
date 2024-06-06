@@ -3,6 +3,7 @@ export interface NavProps {
   title: string;
   type?: string;
   route: string;
+  content?: React.ReactNode;
 }
 
 export interface CardDashboardQueueProps {

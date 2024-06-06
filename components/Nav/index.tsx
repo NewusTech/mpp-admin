@@ -5,7 +5,7 @@ import { NavProps } from "@/type/type";
 import Link from "next/link";
 import { useState } from "react";
 
-const Nav = ({ icons, title, type, route }: NavProps) => {
+const Nav = ({ icons, title, type, route, content }: NavProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
   const handleDropdownOpen = () => {
@@ -16,7 +16,7 @@ const Nav = ({ icons, title, type, route }: NavProps) => {
     return (
       <>
         <div
-          className="p-3 rounded-lg flex justify-between items-center"
+          className="p-3 cursor-pointer rounded-lg flex justify-between items-center"
           onClick={handleDropdownOpen}
         >
           <div className="flex items-center space-x-4">
@@ -28,9 +28,14 @@ const Nav = ({ icons, title, type, route }: NavProps) => {
             alt="arrow-down"
             width={20}
             height={20}
+            className={`
+              ${isDropdownOpen ? "rotate-180" : "rotate-0"} transition duration-300
+            `}
           />
         </div>
-        {isDropdownOpen && <div className="p-3">Hello</div>}
+        {isDropdownOpen && (
+          <div className="py-4 px-12 bg-neutral-300 rounded-lg">{content}</div>
+        )}
       </>
     );
 
