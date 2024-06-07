@@ -55,7 +55,7 @@ const Sidebar = () => {
             title="Kelola Persetujuan"
           />
           <Nav
-            route="/"
+            route="/history-approvals"
             icons="/icons/square-library.svg"
             title="Riwayat Permohonan"
           />
