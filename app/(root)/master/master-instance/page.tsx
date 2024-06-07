@@ -27,6 +27,8 @@ const MasterInsantce = async () => {
         </div>
         <AlertDialogPopup
           title="Tambah"
+          style="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
+          header="Tambah Instansi"
           content={
             <>
               <div className="p-6 space-y-2">

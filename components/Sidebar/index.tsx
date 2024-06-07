@@ -32,7 +32,7 @@ const Sidebar = () => {
             title="Kelola Persyaratan"
           />
           <Nav
-            route="/"
+            route="#"
             icons="/icons/data-permohonan.svg"
             title="Permohonan"
             type="dropdown"
@@ -49,7 +49,11 @@ const Sidebar = () => {
               </>
             }
           />
-          <Nav route="/" icons="/icons/stamp.svg" title="Kelola Persetujuan" />
+          <Nav
+            route="/manage-approvals"
+            icons="/icons/stamp.svg"
+            title="Kelola Persetujuan"
+          />
           <Nav
             route="/"
             icons="/icons/square-library.svg"
