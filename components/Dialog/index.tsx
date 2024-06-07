@@ -3,14 +3,12 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import InputComponent from "@/components/InputComponent";
 import { AlertDialogPopupProps } from "@/type/type";
 
 export function AlertDialogPopup({ title, content }: AlertDialogPopupProps) {

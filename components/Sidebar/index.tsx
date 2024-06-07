@@ -36,6 +36,18 @@ const Sidebar = () => {
             icons="/icons/data-permohonan.svg"
             title="Permohonan"
             type="dropdown"
+            content={
+              <>
+                <ul className="space-y-4">
+                  <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
+                    <Link href="/request/online">Online</Link>
+                  </li>
+                  <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
+                    <Link href="/request/offline">Offline</Link>
+                  </li>
+                </ul>
+              </>
+            }
           />
           <Nav route="/" icons="/icons/stamp.svg" title="Kelola Persetujuan" />
           <Nav
