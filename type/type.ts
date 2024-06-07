@@ -20,5 +20,7 @@ export interface CardStepProps {
 
 export interface AlertDialogPopupProps {
   title: string;
+  header: string;
+  style: string;
   content: React.ReactNode;
 }

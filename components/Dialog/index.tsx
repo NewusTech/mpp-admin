@@ -11,18 +11,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { AlertDialogPopupProps } from "@/type/type";
 
-export function AlertDialogPopup({ title, content }: AlertDialogPopupProps) {
+export function AlertDialogPopup({
+  title,
+  content,
+  header,
+  style,
+}: AlertDialogPopupProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full">
-          {title}
-        </Button>
+        <Button className={style}>{title}</Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="p-0 border-0 overflow-auto">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
-            Tambah Instansi
+            {header}
           </AlertDialogTitle>
         </AlertDialogHeader>
         {content}
