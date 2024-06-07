@@ -59,7 +59,7 @@ const Sidebar = () => {
             icons="/icons/square-library.svg"
             title="Riwayat Permohonan"
           />
-          <Nav route="/" icons="/icons/Report.svg" title="Laporan" />
+          <Nav route="/report" icons="/icons/Report.svg" title="Laporan" />
           <Nav
             route="/"
             icons="/icons/clipboard-list.svg"
