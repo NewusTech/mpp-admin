@@ -80,7 +80,7 @@ const Sidebar = () => {
           />
           <Nav route="/articles" icons="/icons/newspaper.svg" title="Berita" />
           <Nav
-            route="/"
+            route="#"
             icons="/icons/Master.svg"
             title="Data Master"
             type="dropdown"
@@ -97,7 +97,11 @@ const Sidebar = () => {
               </>
             }
           />
-          <Nav route="/" icons="/icons/user-round.svg" title="Kelola User" />
+          <Nav
+            route="/manage-user"
+            icons="/icons/user-round.svg"
+            title="Kelola User"
+          />
           <Nav route="/" icons="/icons/settings.svg" title="Pengaturan" />
         </div>
         <div className="flex gap-2 items-center mt-11">
