@@ -1,4 +1,4 @@
-import { CardStepProps } from "@/type/type";
+import { CardStepProps } from "@/types/interface";
 
 const Step = ({ title, isLastStep, isActive }: CardStepProps) => {
   return (

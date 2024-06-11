@@ -1,17 +1,16 @@
 import InputComponent from "@/components/InputComponent";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { columns, Payment } from "@/constants";
 import { DataTables } from "@/components/Datatables";
-import { AlertDialogPopup } from "@/components/Dialog";
+import { ManageApprovals as Approvals } from "@/types/type";
+import { manageApprovalColumns } from "@/constants";
 
-async function getData(): Promise<Payment[]> {
+async function getData(): Promise<Approvals[]> {
   return [
     {
-      id: "728ed52f",
-      jenis: "Layanan Aldi",
-      online: true,
-      offline: false,
+      id: 1,
+      date: "08-10-2022",
+      name: "Aldi Nugraha",
+      status: "Menunggu",
     },
     // ...
   ];
@@ -36,13 +35,13 @@ const ManageApprovals = async () => {
             Offline
           </Button>
         </div>
-        <div className="flex w-3/12 items-center gap-x-2">
+        <div className="flex w-4/12 items-center gap-x-2">
           <InputComponent typeInput="datepicker" />
           <p>to</p>
           <InputComponent typeInput="datepicker" />
         </div>
       </div>
-      <DataTables columns={columns} data={data} />
+      <DataTables columns={manageApprovalColumns} data={data} />
     </section>
   );
 };

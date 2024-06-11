@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
+import { CardType } from "@/types/interface";
 
 const steps = [
   { id: 1, title: "1" },
@@ -16,10 +17,24 @@ const steps = [
 const currentStep = 3;
 
 const CreateManageRequirementPageStep2 = () => {
-  const [toggle, setToggle] = useState<boolean>(false);
+  const [cards, setCards] = useState<CardType[]>([
+    { id: Date.now(), toggle: false },
+  ]);
 
-  const handleSwitch = () => {
-    setToggle(!toggle);
+  const handleSwitch = (id: number) => {
+    setCards(
+      cards.map((card) =>
+        card.id === id ? { ...card, toggle: !card.toggle } : card,
+      ),
+    );
+  };
+
+  const handleAddCard = () => {
+    setCards([...cards, { id: Date.now(), toggle: false }]);
+  };
+
+  const handleRemoveCard = (id: number) => {
+    setCards(cards.filter((card) => card.id !== id));
   };
 
   return (
@@ -48,27 +63,48 @@ const CreateManageRequirementPageStep2 = () => {
             ))}
           </div>
         </div>
-        <div className="w-full h-[184x] rounded-[20px] bg-neutral-200 p-8">
-          <InputComponent typeInput="formInput" />
-          <div className="mt-8">
-            <div className="flex items-center gap-x-4">
-              <p className="text-sm text-neutral-900">
-                Hanya izinkan dengan file tertentu
-              </p>
-              <Switch
-                onClick={handleSwitch}
-                className="data-[state=checked]:bg-neutral-800 data-[state=unchecked]:bg-transparent data-[state=unchecked]:border data-[state=unchecked]:border-neutral-800"
-                thumbClassName="data-[state=unchecked]:border data-[state=unchecked]:border-neutral-800 data-[state=unchecked]:ml-[2px]"
-              />
-            </div>
-            {toggle && (
-              <div className="w-[321px] flex mt-6">
-                <InputComponent typeInput="radio" />
+        {cards.map((card) => (
+          <div
+            key={card.id}
+            className="w-full h-full rounded-[20px] bg-neutral-200 p-8"
+          >
+            <InputComponent typeInput="formInput" />
+            <div className="mt-8">
+              <div className="flex items-center gap-x-4">
+                <p className="text-sm text-neutral-900">
+                  Hanya izinkan dengan file tertentu
+                </p>
+                <Switch
+                  onClick={() => handleSwitch(card.id)}
+                  className="data-[state=checked]:bg-neutral-800 data-[state=unchecked]:bg-transparent data-[state=unchecked]:border data-[state=unchecked]:border-neutral-800"
+                  thumbClassName="data-[state=unchecked]:border data-[state=unchecked]:border-neutral-800 data-[state=unchecked]:ml-[2px]"
+                />
               </div>
-            )}
+              {card.toggle && (
+                <div className="w-[321px] flex mt-6">
+                  <InputComponent typeInput="radio" />
+                </div>
+              )}
+            </div>
+            <div className="flex justify-end mt-3">
+              <div
+                className="cursor-pointer"
+                onClick={() => handleRemoveCard(card.id)}
+              >
+                <Image
+                  src="/icons/trash.svg"
+                  alt="trash"
+                  width={24}
+                  height={24}
+                />
+              </div>
+            </div>
           </div>
-        </div>
-        <Button className="border border-primary-700 bg-transparent text-primary-700 hover:bg-primary-700 hover:text-neutral-50 rounded-full w-[120px]">
+        ))}
+        <Button
+          onClick={handleAddCard}
+          className="border border-primary-700 bg-transparent text-primary-700 hover:bg-primary-700 hover:text-neutral-50 rounded-full w-[120px]"
+        >
           Tambah
         </Button>
         <div className="flex justify-center items-center pt-8">

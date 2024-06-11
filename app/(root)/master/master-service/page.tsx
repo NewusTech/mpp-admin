@@ -1,17 +1,16 @@
 import InputComponent from "@/components/InputComponent";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { columns, Payment } from "@/constants";
+import { dataServiceColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
 import { AlertDialogPopup } from "@/components/Dialog";
+import { DataServices } from "@/types/type";
 
-async function getData(): Promise<Payment[]> {
+async function getData(): Promise<DataServices[]> {
   return [
     {
-      id: "728ed52f",
-      jenis: "Layanan Aldi",
-      online: true,
-      offline: false,
+      id: 1,
+      no: 2,
+      instance: "Dinas PUPR",
+      service: "Buat Jalan",
     },
     // ...
   ];
@@ -49,7 +48,7 @@ const MasterService = async () => {
           }
         />
       </div>
-      <DataTables columns={columns} data={data} />
+      <DataTables columns={dataServiceColumns} data={data} />
     </section>
   );
 };

@@ -1,36 +1,36 @@
 import InputComponent from "@/components/InputComponent";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { columns, Payment } from "@/constants";
+import { newsColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
+import { News } from "@/types/type";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetch";
 
-async function getData(): Promise<Payment[]> {
-  return [
+async function getData(): Promise<News[]> {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/artikel/get`,
     {
-      id: "728ed52f",
-      jenis: "Layanan Aldi",
-      online: true,
-      offline: false,
+      cache: "no-cache",
     },
-    // ...
-  ];
+  );
+  const data = await res.json();
+  return data.data;
 }
 
 const Articles = async () => {
   const data = await getData();
+
   return (
     <section className="mr-16">
-      <div className="flex justify-between mb-8">
-        <div className="w-1/2">
-          <InputComponent />
-        </div>
+      <div className="flex justify-end mb-8">
         <Link href="/articles/create">
           <Button className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full">
             Tambah
           </Button>
         </Link>
       </div>
-      <DataTables columns={columns} data={data} />
+      <DataTables columns={newsColumns} data={data} filterBy="title" />
     </section>
   );
 };

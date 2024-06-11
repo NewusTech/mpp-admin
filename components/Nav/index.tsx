@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { NavProps } from "@/type/type";
+import { NavProps } from "@/types/interface";
 import Link from "next/link";
 import { useState } from "react";
 

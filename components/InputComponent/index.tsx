@@ -25,22 +25,45 @@ import {
 } from "@/components/ui/popover";
 import { useState } from "react";
 
-const InputComponent = ({ typeInput }: { typeInput?: string }) => {
+interface SelectItem {
+  id: string;
+  name: string;
+}
+
+interface InputProps {
+  typeInput?: string;
+  type?: string;
+  placeholder?: string;
+  label?: string;
+  value?: any;
+  onChange?: (e: any) => void;
+  items?: SelectItem[];
+}
+
+const InputComponent = ({
+  typeInput,
+  type,
+  placeholder,
+  label,
+  items,
+  value,
+  onChange,
+}: InputProps) => {
   const [date, setDate] = useState<Date>();
   if (typeInput === "select")
     return (
-      <Select>
+      <Select value={value} onValueChange={onChange}>
         <SelectTrigger className="w-full">
-          <SelectValue placeholder="Pilih Instansi" />
+          <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>Instansi</SelectLabel>
-            <SelectItem value="apple">Apple</SelectItem>
-            <SelectItem value="banana">Banana</SelectItem>
-            <SelectItem value="blueberry">Blueberry</SelectItem>
-            <SelectItem value="grapes">Grapes</SelectItem>
-            <SelectItem value="pineapple">Pineapple</SelectItem>
+            <SelectLabel>{label}</SelectLabel>
+            {items?.map((item) => (
+              <SelectItem key={item.id} value={item.id}>
+                {item.name}
+              </SelectItem>
+            ))}
           </SelectGroup>
         </SelectContent>
       </Select>
@@ -122,7 +145,9 @@ const InputComponent = ({ typeInput }: { typeInput?: string }) => {
       </div>
     );
 
-  return <Input type="email" placeholder="Email" className="rounded-full" />;
+  return (
+    <Input type={type} placeholder={placeholder} className="rounded-full" />
+  );
 };
 
 export default InputComponent;

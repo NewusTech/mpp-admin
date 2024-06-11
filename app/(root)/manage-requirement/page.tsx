@@ -1,16 +1,16 @@
 import InputComponent from "@/components/InputComponent";
 import { Button } from "@/components/ui/button";
 import { DataTables } from "@/components/Datatables";
-import { columns, Payment } from "@/constants";
+import { manageRequirementColumns } from "@/constants";
 import Link from "next/link";
+import { ManageRequirements as Requirement } from "@/types/type";
 
-async function getData(): Promise<Payment[]> {
+async function getData(): Promise<Requirement[]> {
   return [
     {
-      id: "728ed52f",
-      jenis: "Layanan Aldi",
-      online: true,
-      offline: false,
+      id: 1,
+      instance: "Bina Marga",
+      service: "Kelola Jalan",
     },
     // ...
   ];
@@ -33,7 +33,7 @@ const ManageRequirements = async () => {
             </Button>
           </Link>
         </div>
-        <DataTables columns={columns} data={data} />
+        <DataTables columns={manageRequirementColumns} data={data} />
       </div>
     </section>
   );

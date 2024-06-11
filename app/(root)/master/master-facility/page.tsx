@@ -1,21 +1,24 @@
 import InputComponent from "@/components/InputComponent";
-import { dataInstanceColumns } from "@/constants";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { columns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
 import { AlertDialogPopup } from "@/components/Dialog";
-import { DataInstance } from "@/types/type";
+import { Payment } from "@/types/type";
 
-async function getData(): Promise<DataInstance[]> {
+async function getData(): Promise<Payment[]> {
   return [
     {
-      id: 1,
-      no: 3,
-      instance: "Dinas PUPR",
+      id: "728ed52f",
+      jenis: "Layanan Aldi",
+      online: true,
+      offline: false,
     },
     // ...
   ];
 }
 
-const MasterInsantce = async () => {
+const MasterFacility = async () => {
   const data = await getData();
   return (
     <section className="mr-16">
@@ -26,20 +29,20 @@ const MasterInsantce = async () => {
         <AlertDialogPopup
           title="Tambah"
           style="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
-          header="Tambah Instansi"
+          header="Tambah Fasilitas"
           content={
             <>
               <div className="p-6 space-y-2">
-                <p className="font-normal">Nama Instansi</p>
-                <InputComponent />
+                <p className="font-normal">Pilih Gambar</p>
+                <InputComponent typeInput="file" />
               </div>
             </>
           }
         />
       </div>
-      <DataTables columns={dataInstanceColumns} data={data} />
+      <DataTables columns={columns} data={data} />
     </section>
   );
 };
 
-export default MasterInsantce;
+export default MasterFacility;

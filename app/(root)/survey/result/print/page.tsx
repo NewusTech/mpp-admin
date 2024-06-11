@@ -1,17 +1,18 @@
 import InputComponent from "@/components/InputComponent";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { columns, Payment } from "@/constants";
+import { detailSurveyResultColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
 import Image from "next/image";
+import { DetailSurveyResult } from "@/types/type";
 
-async function getData(): Promise<Payment[]> {
+async function getData(): Promise<DetailSurveyResult[]> {
   return [
     {
-      id: "728ed52f",
-      jenis: "Layanan Aldi",
-      online: true,
-      offline: false,
+      id: 1,
+      date: "08-10-2023",
+      name: "Dinas A",
+      value: "2000",
     },
     // ...
   ];
@@ -60,7 +61,7 @@ const SurveyPrint = async () => {
             Print
           </Button>
         </div>
-        <DataTables columns={columns} data={data} />
+        <DataTables columns={detailSurveyResultColumns} data={data} />
       </div>
     </section>
   );

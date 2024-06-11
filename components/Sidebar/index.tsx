@@ -93,6 +93,12 @@ const Sidebar = () => {
                   <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
                     <Link href="/master/master-service">Layanan</Link>
                   </li>
+                  <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
+                    <Link href="/master/master-facility">Fasilitas</Link>
+                  </li>
+                  <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
+                    <Link href="/master/master-faq">FAQ</Link>
+                  </li>
                 </ul>
               </>
             }
