@@ -1,32 +1,71 @@
+"use client";
+
 import InputComponent from "@/components/InputComponent";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { columns, Payment } from "@/constants";
 import { DataTables } from "@/components/Datatables";
-import { AlertDialogPopup } from "@/components/Dialog";
+import { RequestOffline as Request } from "@/types/type";
+import { requestOfflineColumns } from "@/constants";
+import useSWR from "swr";
+import Cookies from "js-cookie";
+import { useState } from "react";
+import { fetcher } from "@/lib/fetch";
 
-async function getData(): Promise<Payment[]> {
-  return [
-    {
-      id: "728ed52f",
-      jenis: "Layanan Aldi",
-      online: true,
-      offline: false,
-    },
-    // ...
-  ];
-}
+// async function getData(): Promise<Request[]> {
+//   return [
+//     {
+//       id: 1,
+//       date: "18-08-2022",
+//       nik: "098171829103891",
+//       status: "menunggu",
+//     },
+//     // ...
+//   ];
+// }
 
-const RequestOffline = async () => {
-  const data = await getData();
+const RequestOffline = () => {
+  // const data = await getData();
+
+  const [instance, setInstance] = useState<number>(0);
+  const [service, setService] = useState<number>(0);
+
+  const {
+    data: instances,
+    error,
+    isLoading,
+  } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get`, fetcher);
+
+  const {
+    data: services,
+    error: isError,
+    isLoading: loading,
+  } = useSWR(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get/${instance}`,
+    fetcher,
+  );
+
   return (
     <section className="mr-16">
       <div className="flex justify-between gap-x-5 mb-8">
-        <div className="flex w-9/12 gap-x-5">
-          <InputComponent typeInput="select" />
-          <InputComponent typeInput="select" />
+        <div className="flex w-7/12 gap-x-5">
+          <InputComponent
+            typeInput="select"
+            items={instances?.data}
+            label="Instansi"
+            placeholder="Pilih Instansi"
+            value={instance}
+            onChange={(e: number) => setInstance(e)}
+          />
+          <InputComponent
+            typeInput="select"
+            items={services?.data}
+            label="Layanan"
+            placeholder="Pilih Layanan"
+            value={service}
+            onChange={(e: number) => setService(e)}
+          />
         </div>
-        <div className="flex w-3/12 items-center gap-x-2">
+        <div className="flex w-5/12 items-center gap-x-2">
           <InputComponent typeInput="datepicker" />
           <p>to</p>
           <InputComponent typeInput="datepicker" />
@@ -42,7 +81,7 @@ const RequestOffline = async () => {
           <InputComponent />
         </div>
       </div>
-      <DataTables columns={columns} data={data} />
+      {/*<DataTables columns={requestOfflineColumns} data={data} />*/}
     </section>
   );
 };

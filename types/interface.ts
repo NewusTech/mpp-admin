@@ -24,3 +24,8 @@ export interface AlertDialogPopupProps {
   style: string;
   content: React.ReactNode;
 }
+
+export interface CardType {
+  id: number;
+  toggle?: boolean;
+}

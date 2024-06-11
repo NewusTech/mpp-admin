@@ -1,17 +1,15 @@
 import InputComponent from "@/components/InputComponent";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { columns, Payment } from "@/constants";
+import { requestOnlineColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
-import { AlertDialogPopup } from "@/components/Dialog";
+import { RequestOnline as Request } from "@/types/type";
 
-async function getData(): Promise<Payment[]> {
+async function getData(): Promise<Request[]> {
   return [
     {
-      id: "728ed52f",
-      jenis: "Layanan Aldi",
-      online: true,
-      offline: false,
+      id: 1,
+      date: "08-09-2012",
+      name: "John Doe",
+      status: "Pending",
     },
     // ...
   ];
@@ -37,7 +35,7 @@ const RequestOnline = async () => {
           <InputComponent />
         </div>
       </div>
-      <DataTables columns={columns} data={data} />
+      <DataTables columns={requestOnlineColumns} data={data} />
     </section>
   );
 };

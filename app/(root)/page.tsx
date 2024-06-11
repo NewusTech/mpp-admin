@@ -13,8 +13,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { columns, Payment } from "@/constants";
+import { columns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
+import { Payment } from "@/types/type";
 
 async function getData(): Promise<Payment[]> {
   return [

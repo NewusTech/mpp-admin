@@ -1,18 +1,18 @@
 import InputComponent from "@/components/InputComponent";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { columns, Payment } from "@/constants";
 import { DataTables } from "@/components/Datatables";
-import { AlertDialogPopup } from "@/components/Dialog";
 import Image from "next/image";
+import { Report as Reports } from "@/types/type";
+import { reportColumns } from "@/constants";
 
-async function getData(): Promise<Payment[]> {
+async function getData(): Promise<Reports[]> {
   return [
     {
-      id: "728ed52f",
-      jenis: "Layanan Aldi",
-      online: true,
-      offline: false,
+      id: 1,
+      service: "layanan 1",
+      waiting: "Text",
+      failed: "Text",
+      success: "text",
     },
     // ...
   ];
@@ -41,8 +41,7 @@ const Report = async () => {
           </div>
         </div>
       </div>
-
-      <DataTables columns={columns} data={data} />
+      <DataTables columns={reportColumns} data={data} />
     </section>
   );
 };

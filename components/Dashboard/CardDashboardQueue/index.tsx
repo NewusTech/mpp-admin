@@ -1,4 +1,4 @@
-import { CardDashboardQueueProps } from "@/type/type";
+import { CardDashboardQueueProps } from "@/types/interface";
 
 const CardDashboardQueue = ({
   title,

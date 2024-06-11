@@ -9,7 +9,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { AlertDialogPopupProps } from "@/type/type";
+import { AlertDialogPopupProps } from "@/types/interface";
 
 export function AlertDialogPopup({
   title,

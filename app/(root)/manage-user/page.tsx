@@ -1,15 +1,16 @@
 import InputComponent from "@/components/InputComponent";
-import { columns, Payment } from "@/constants";
+import { manageUserColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
 import { AlertDialogPopup } from "@/components/Dialog";
+import { ManageUser as User } from "@/types/type";
 
-async function getData(): Promise<Payment[]> {
+async function getData(): Promise<User[]> {
   return [
     {
-      id: "728ed52f",
-      jenis: "Layanan Aldi",
-      online: true,
-      offline: false,
+      id: 1,
+      name: "Aldi",
+      role: "Admin",
+      status: "Text",
     },
     // ...
   ];
@@ -53,7 +54,7 @@ const ManageUser = async () => {
           }
         />
       </div>
-      <DataTables columns={columns} data={data} />
+      <DataTables columns={manageUserColumns} data={data} />
     </section>
   );
 };

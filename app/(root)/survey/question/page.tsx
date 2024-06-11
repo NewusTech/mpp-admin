@@ -1,16 +1,16 @@
 import InputComponent from "@/components/InputComponent";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { columns, Payment } from "@/constants";
+import { surveyQuestionColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
+import { SurveyQuestion as Question } from "@/types/type";
 
-async function getData(): Promise<Payment[]> {
+async function getData(): Promise<Question[]> {
   return [
     {
-      id: "728ed52f",
-      jenis: "Layanan Aldi",
-      online: true,
-      offline: false,
+      id: 1,
+      no: 2,
+      question: "Halo",
     },
     // ...
   ];
@@ -30,7 +30,7 @@ const SurveyQuestion = async () => {
           </Button>
         </Link>
       </div>
-      <DataTables columns={columns} data={data} />
+      <DataTables columns={surveyQuestionColumns} data={data} />
     </section>
   );
 };

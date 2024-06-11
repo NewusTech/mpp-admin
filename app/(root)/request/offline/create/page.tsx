@@ -74,12 +74,16 @@ const CreateOffline = () => {
               <p>Alamat</p>
               <InputComponent typeInput="textarea" />
             </div>
-            <div className="text-right">
-              <Link href="/request/offline/create/step-2">
-                <Button className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full">
-                  Lanjut
-                </Button>
-              </Link>
+          </div>
+        </div>
+      </div>
+      <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-8 p-8">
+        <div className="flex justify-between gap-x-10">
+          <div className="w-full space-y-4">
+            <h1 className="text-xl font-semibold mb-4">Formulir</h1>
+            <div className="space-y-2">
+              <p>Pertanyaan</p>
+              <InputComponent />
             </div>
           </div>
         </div>
