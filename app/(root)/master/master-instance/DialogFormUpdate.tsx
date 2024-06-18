@@ -47,7 +47,7 @@ export default function AlertDialogUpdateInstance({ slug }: { slug: string }) {
 
   const { data: service } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get/${slug}`,
-    fetcher,
+    fetcher
   );
 
   const result = service?.data;
@@ -107,7 +107,7 @@ export default function AlertDialogUpdateInstance({ slug }: { slug: string }) {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
           body: formData,
-        },
+        }
       );
 
       const data = await response.json();
@@ -257,7 +257,7 @@ export default function AlertDialogUpdateInstance({ slug }: { slug: string }) {
                         <FormControl>
                           <FileUploader
                             type="logo"
-                            mediaUrl={result?.image}
+                            mediaUrl={result.image}
                             fileChange={field.onChange}
                           />
                         </FormControl>

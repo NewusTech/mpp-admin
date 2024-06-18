@@ -24,10 +24,6 @@ const FormSignin = () => {
 
   const form = useForm<z.infer<typeof SigninValidation>>({
     resolver: zodResolver(SigninValidation),
-    defaultValues: {
-      nik: "",
-      password: "",
-    },
   });
 
   // 2. Define a submit handler.
@@ -36,6 +32,8 @@ const FormSignin = () => {
       nik: values.nik,
       password: values.password,
     };
+
+    console.log(values);
 
     try {
       const response = await fetch(
@@ -50,7 +48,7 @@ const FormSignin = () => {
       );
 
       const data = await response.json();
-
+      console.log(data);
       if (response.ok) {
         Cookies.set("token", data.data.token);
         toast(data.message);
