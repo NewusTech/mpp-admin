@@ -154,7 +154,7 @@ const News = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
           className="w-full rounded-full bg-primary-700 hover:bg-primary-800 text-neutral-50"
           type="submit"
         >
-          Masuk
+          Tambah
         </Button>
       </form>
     </Form>

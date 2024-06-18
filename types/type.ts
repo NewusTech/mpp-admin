@@ -21,48 +21,47 @@ export type RequestOffline = {
 
 export type ManageApprovals = {
   id: number;
-  date: string;
+  createdAt: string;
   name: string;
   status: string;
 };
 
 export type DataInstance = {
   id: number;
-  no: number;
-  instance: string;
+  name: string;
+  slug: string;
 };
 
 export type DataServices = {
   id: number;
-  no: number;
-  instance: string;
-  service: string;
+  name: string;
+  instansi_name: string;
 };
 
 export type ManageRequirements = {
   id: number;
-  instance: string;
-  service: string;
+  instansi_name: string;
+  layanan: string;
 };
 
 export type SurveyResult = {
   id: number;
-  service: string;
-  total: string;
-  value: string;
+  layanan_name: string;
+  Surveyformnums_count: number;
+  Surveyformnums_nilai: number;
 };
 
 export type SurveyQuestion = {
   id: number;
   no: number;
-  question: string;
+  field: string;
 };
 
 export type DetailSurveyResult = {
   id: number;
   date: string;
   name: string;
-  value: string;
+  nilai: string;
 };
 
 export type News = {
@@ -85,4 +84,15 @@ export type Report = {
   waiting: string;
   failed: string;
   success: string;
+};
+
+export type FAQ = {
+  id: number;
+  question: string;
+  answer: string;
+};
+
+export type Facility = {
+  id: number;
+  image: string;
 };

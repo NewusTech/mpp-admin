@@ -25,12 +25,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   filterBy: string;
+  type?: string;
 }
 
 export function DataTables<TData, TValue>({
   columns,
   data,
   filterBy,
+  type,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -48,15 +50,23 @@ export function DataTables<TData, TValue>({
 
   return (
     <div>
-      <div className="rounded-md -mt-[72px] space-y-10">
-        <Input
-          placeholder="Cari..."
-          value={(table.getColumn(filterBy)?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn(filterBy)?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm rounded-full"
-        />
+      <div
+        className={`rounded-md ${type === "request" ? "-mt-10 space-y-10" : type === "requirement" ? "mt-10" : "-mt-[72px] space-y-10"}`}
+      >
+        <div
+          className={`flex ${type === "request" ? "justify-end" : type === "requirement" ? "hidden" : ""}`}
+        >
+          <Input
+            placeholder="Cari..."
+            value={
+              (table.getColumn(filterBy)?.getFilterValue() as string) ?? ""
+            }
+            onChange={(event) =>
+              table.getColumn(filterBy)?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm rounded-full"
+          />
+        </div>
         <Table className="border">
           <TableHeader className="bg-primary-400">
             {table.getHeaderGroups().map((headerGroup) => (

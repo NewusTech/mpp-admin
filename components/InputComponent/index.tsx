@@ -36,8 +36,11 @@ interface InputProps {
   placeholder?: string;
   label?: string;
   value?: any;
+  name?: string;
   onChange?: (e: any) => void;
   items?: SelectItem[];
+  date?: Date | undefined;
+  setDate?: (date: Date | undefined) => void;
 }
 
 const InputComponent = ({
@@ -48,8 +51,11 @@ const InputComponent = ({
   items,
   value,
   onChange,
+  date,
+  setDate,
+  name,
 }: InputProps) => {
-  const [date, setDate] = useState<Date>();
+  // const [date, setDate] = useState<Date>();
   if (typeInput === "select")
     return (
       <Select value={value} onValueChange={onChange}>
@@ -80,7 +86,7 @@ const InputComponent = ({
               !date && "text-muted-foreground",
             )}
           >
-            {date ? format(date, "PPP") : <span>Pick a date</span>}
+            {date ? format(date, "PPP") : <span>Pilih Data</span>}
             <CalendarIcon className="ml-2 h-4 w-4 text-primary-700" />
           </Button>
         </PopoverTrigger>
@@ -96,7 +102,15 @@ const InputComponent = ({
     );
 
   if (typeInput === "textarea")
-    return <Textarea className="h-40" placeholder="Type your message here." />;
+    return (
+      <Textarea
+        className="h-40"
+        placeholder={placeholder}
+        value={value}
+        name={name}
+        onChange={onChange}
+      />
+    );
 
   if (typeInput === "radio")
     return (
@@ -122,6 +136,8 @@ const InputComponent = ({
         type="text"
         placeholder="Judul / Pertanyaan"
         className="rounded-none border-r-0 border-t-0 border-l-0 bg-transparent"
+        value={value}
+        onChange={onChange}
       />
     );
 
@@ -135,6 +151,7 @@ const InputComponent = ({
           type="file"
           id="file"
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-50"
+          onChange={onChange}
         />
         <label
           htmlFor="file"
@@ -146,7 +163,14 @@ const InputComponent = ({
     );
 
   return (
-    <Input type={type} placeholder={placeholder} className="rounded-full" />
+    <Input
+      type={type}
+      name={name}
+      placeholder={placeholder}
+      className="rounded-full"
+      value={value}
+      onChange={onChange}
+    />
   );
 };
 

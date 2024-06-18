@@ -41,7 +41,12 @@ const Report = async () => {
           </div>
         </div>
       </div>
-      <DataTables columns={reportColumns} data={data} />
+      <DataTables
+        columns={reportColumns}
+        data={data}
+        filterBy="name"
+        type="requirement"
+      />
     </section>
   );
 };

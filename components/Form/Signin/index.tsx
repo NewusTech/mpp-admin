@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader } from "lucide-react";
-import { postData } from "@/utils/fetchData";
+import Cookies from "js-cookie";
 
 const FormSignin = () => {
   const router = useRouter();
@@ -36,7 +36,29 @@ const FormSignin = () => {
       nik: values.nik,
       password: values.password,
     };
-    await postData(`${process.env.NEXT_PUBLIC_API_URL}/user/login`, formData);
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        },
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Cookies.set("token", data.data.token);
+        toast(data.message);
+        router.push("/");
+      }
+    } catch (e: any) {
+      toast(e.message);
+    }
   }
 
   return (
