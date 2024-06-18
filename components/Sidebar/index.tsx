@@ -103,11 +103,11 @@ const Sidebar = () => {
               </>
             }
           />
-          <Nav
+          {/* <Nav
             route="/manage-user"
             icons="/icons/user-round.svg"
             title="Kelola User"
-          />
+          /> */}
           <Nav
             route="/setting"
             icons="/icons/settings.svg"
