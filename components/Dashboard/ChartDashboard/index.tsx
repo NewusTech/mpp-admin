@@ -39,7 +39,7 @@ const ChartDashboard = () => {
     <>
       <ApexChart
         type="line"
-        options={option}
+        // options={option}
         series={series}
         height="100%"
         width="100%"

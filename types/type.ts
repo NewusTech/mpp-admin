@@ -80,10 +80,10 @@ export type ManageUser = {
 
 export type Report = {
   id: number;
-  service: string;
-  waiting: string;
-  failed: string;
-  success: string;
+  name: string;
+  menunggu: string;
+  gagal: string;
+  selesai: string;
 };
 
 export type FAQ = {

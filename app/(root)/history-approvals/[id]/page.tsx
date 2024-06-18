@@ -3,20 +3,24 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { AlertDialogPopup } from "@/components/Dialog";
+import ModalValidate from "@/components/Dialog/modal-validate";
 import InputComponent from "@/components/InputComponent";
-import Cookies from "js-cookie";
+import { AlertDialogPopup } from "@/components/Dialog";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
-import AlertDialogUploadFile from "@/app/(root)/history-approvals/[id]/DialogForm";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-const DetailApproval = ({
+const DetailHistoryApproval = ({
   params,
 }: {
   params: {
     id: number;
   };
 }) => {
+  const router = useRouter();
+
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/detail/${params.id}`,
     fetcher,
@@ -47,10 +51,36 @@ const DetailApproval = ({
     return urlParts[urlParts.length - 1];
   };
 
+  const handleValidationStatus = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/updatestatus/${params.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+          body: JSON.stringify({
+            status: 3,
+          }),
+        },
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        toast(data.message);
+        router.push("/history-approvals");
+      }
+    } catch (e: any) {
+      toast(e.message);
+    }
+  };
+
   return (
     <section className="mr-16">
-      <div className="-ml-14 mb-10">
-        <Link href="/manage-approvals">
+      <div className="-ml-14 mb-10 w-12 h-12">
+        <Link href="/history-approvals">
           <Image
             src="/icons/back-arrow.svg"
             alt="back-arrow"
@@ -89,23 +119,25 @@ const DetailApproval = ({
             </Button>
           </div>
         ))}
-        <h2 className="text-lg font-semibold my-5">
-          Upload Hasil Dokumen Permohonan
-        </h2>
-        <div className="flex gap-x-5 items-center">
-          <AlertDialogUploadFile id={params.id} />
-          <Link href="/">
-            <p className="underline text-[#3A28FF] text-sm">Unduh Template</p>
-          </Link>
-        </div>
-        <div className="text-right">
-          <Button className="bg-success-700 hover:bg-success-800 w-[140px] rounded-full">
-            Setujui
-          </Button>
-        </div>
+        <h2 className="text-lg font-semibold my-5">Dokumen Hasil Permohonan</h2>
+        <Button className="w-[25vh] rounded-[20px] bg-neutral-50 hover:bg-neutral-100 shadow p-3 flex justify-around items-center">
+          <Image
+            src="/icons/download.svg"
+            alt="download"
+            width={24}
+            height={24}
+          />
+          <p className="text-neutral-900">Dokumen</p>
+        </Button>
+        <Button
+          onClick={handleValidationStatus}
+          className="mt-7 w-full rounded-full bg-success-700 hover:bg-success-800"
+        >
+          Selesai
+        </Button>
       </div>
     </section>
   );
 };
 
-export default DetailApproval;
+export default DetailHistoryApproval;

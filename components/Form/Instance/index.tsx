@@ -22,30 +22,10 @@ import FileUploader from "@/components/FileUploader";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 
-interface ArticleBySlug {
-  title: string;
-  desc: string;
-  image: string;
-  slug: string;
-}
-
-const Instance = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
+const Instance = ({ data, type }: { type?: string; data?: any }) => {
   const router = useRouter();
   const form = useForm<z.infer<typeof InstanceValidation>>({
     resolver: zodResolver(InstanceValidation),
-    defaultValues: {
-      name: "",
-      description: "",
-      status: "",
-      address: "",
-      phone: "",
-      pj: "",
-      nip_pj: "",
-      active_offline: "",
-      active_online: "",
-      open: "",
-      closed: "",
-    },
   });
 
   useEffect(() => {
@@ -54,14 +34,14 @@ const Instance = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
         name: data.name,
         desc: data.desc,
         status: data.status,
-        alamat: data.address,
-        telp: data.telp,
+        address: data.address,
+        phone: data.telp,
         pj: data.pj,
         nip_pj: data.nip_pj,
         active_offline: data.active_offline,
         active_online: data.active_online,
-        jam_buka: data.open,
-        jam_tutup: data.closed,
+        open: data.open,
+        closed: data.closed,
       });
     }
   }, [data]);
@@ -70,7 +50,7 @@ const Instance = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
   async function onSubmit(values: z.infer<typeof InstanceValidation>) {
     const formData = new FormData();
     formData.append("name", values.name);
-    formData.append("desc", values.description);
+    formData.append("desc", values.desc);
     formData.append("status", values.status);
     formData.append("image", values.image[0]);
     formData.append("alamat", values.address);
@@ -146,7 +126,7 @@ const Instance = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
         />
         <FormField
           control={form.control}
-          name="description"
+          name="desc"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Deskripsi</FormLabel>

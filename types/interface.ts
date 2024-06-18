@@ -38,3 +38,11 @@ export interface CardType {
   isrequired: string;
   options?: OptionType[];
 }
+
+export interface CardTypeFile {
+  id?: any;
+  toggle?: boolean;
+  field: string;
+  tipedata: "file";
+  isrequired?: string;
+}
