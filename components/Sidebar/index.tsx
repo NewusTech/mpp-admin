@@ -108,7 +108,11 @@ const Sidebar = () => {
             icons="/icons/user-round.svg"
             title="Kelola User"
           />
-          <Nav route="/" icons="/icons/settings.svg" title="Pengaturan" />
+          <Nav
+            route="/setting"
+            icons="/icons/settings.svg"
+            title="Pengaturan"
+          />
         </div>
         <div className="flex gap-2 items-center mt-11">
           <div className="h-10 w-10 rounded-full bg-white"></div>

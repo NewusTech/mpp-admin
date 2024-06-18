@@ -25,7 +25,16 @@ export interface AlertDialogPopupProps {
   content: React.ReactNode;
 }
 
-export interface CardType {
+export interface OptionType {
   id: number;
+  key: string;
+}
+
+export interface CardType {
+  id?: any;
   toggle?: boolean;
+  field: string;
+  tipedata: "text" | "number" | "radio" | "checkbox" | "date";
+  isrequired: string;
+  options?: OptionType[];
 }

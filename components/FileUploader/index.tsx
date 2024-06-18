@@ -36,13 +36,24 @@ const FileUploader = ({ fileChange, mediaUrl, type }: FileUploaderProps) => {
           />
           <p className="text-md">Change profile photo</p>
         </div>
+      ) : type === "logo" ? (
+        <>
+          <div className="w-full border border-dashed p-5 flex justify-center cursor-pointer">
+            <p className="text-gray-400 text-xs">Drag n drop gambar disini</p>
+          </div>
+          {fileUrl && (
+            <div className="flex justify-center py-2 h-14 w-14">
+              <img src={fileUrl} alt="image" />
+            </div>
+          )}
+        </>
       ) : (
         <>
           <div className="w-full border border-dashed p-5 flex justify-center cursor-pointer">
             <p className="text-gray-400">Drag n drop gambar disini</p>
           </div>
           {fileUrl && (
-            <div className="flex justify-center py-2">
+            <div className="flex justify-center py-2 h-40 w-40">
               <img src={fileUrl} alt="image" />
             </div>
           )}

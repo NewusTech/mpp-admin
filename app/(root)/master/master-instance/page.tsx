@@ -3,41 +3,27 @@ import { dataInstanceColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
 import { AlertDialogPopup } from "@/components/Dialog";
 import { DataInstance } from "@/types/type";
+import AlertDialogCreateInstance from "@/app/(root)/master/master-instance/DialogForm";
 
 async function getData(): Promise<DataInstance[]> {
-  return [
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get`,
     {
-      id: 1,
-      no: 3,
-      instance: "Dinas PUPR",
+      cache: "no-store",
     },
-    // ...
-  ];
+  );
+  const data = await res.json();
+  return data.data;
 }
 
 const MasterInsantce = async () => {
   const data = await getData();
   return (
     <section className="mr-16">
-      <div className="flex justify-between mb-8">
-        <div className="w-1/2">
-          <InputComponent />
-        </div>
-        <AlertDialogPopup
-          title="Tambah"
-          style="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
-          header="Tambah Instansi"
-          content={
-            <>
-              <div className="p-6 space-y-2">
-                <p className="font-normal">Nama Instansi</p>
-                <InputComponent />
-              </div>
-            </>
-          }
-        />
+      <div className="flex justify-end mb-8">
+        <AlertDialogCreateInstance />
       </div>
-      <DataTables columns={dataInstanceColumns} data={data} />
+      <DataTables columns={dataInstanceColumns} data={data} filterBy="name" />
     </section>
   );
 };

@@ -1,36 +1,55 @@
+"use client";
+
 import InputComponent from "@/components/InputComponent";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { detailSurveyResultColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
 import Image from "next/image";
-import { DetailSurveyResult } from "@/types/type";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetch";
 
-async function getData(): Promise<DetailSurveyResult[]> {
-  return [
-    {
-      id: 1,
-      date: "08-10-2023",
-      name: "Dinas A",
-      value: "2000",
-    },
-    // ...
-  ];
-}
+// async function getData(id: number): Promise<DetailSurveyResult[]> {
+//   const res = await fetch(
+//     `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/${id}`,
+//     {
+//       cache: "no-cache",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     },
+//   );
+//
+//   const data = await res.json();
+//
+//   return data?.data;
+// }
 
-const SurveyPrint = async () => {
-  const data = await getData();
+const SurveyPrint = ({
+  params,
+}: {
+  params: {
+    id: number;
+  };
+}) => {
+  const { data } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/${params.id}`,
+    fetcher,
+  );
+
+  const result = data?.data;
+
   return (
     <section className="mr-16">
       {/*<div className="flex justify-between mb-8">*/}
       {/*  <div className="w-1/2">*/}
       {/*    <InputComponent typeInput="select" />*/}
       {/*  </div>*/}
-      {/*  <Link href="/survey/result/print">*/}
+      {/*  <Link href="/survey/result/[id]">*/}
       {/*    <Button className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[140px] rounded-full">*/}
       {/*      <Image*/}
       {/*        src="/icons/printer.svg"*/}
-      {/*        alt="print"*/}
+      {/*        alt="[id]"*/}
       {/*        width={24}*/}
       {/*        height={24}*/}
       {/*      />*/}
@@ -61,7 +80,14 @@ const SurveyPrint = async () => {
             Print
           </Button>
         </div>
-        <DataTables columns={detailSurveyResultColumns} data={data} />
+        {result && (
+          <DataTables
+            columns={detailSurveyResultColumns}
+            data={result}
+            filterBy="name"
+            type="requirement"
+          />
+        )}
       </div>
     </section>
   );

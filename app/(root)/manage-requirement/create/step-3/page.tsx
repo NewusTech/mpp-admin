@@ -16,7 +16,7 @@ const steps = [
 ];
 const currentStep = 3;
 
-const CreateManageRequirementPageStep2 = () => {
+const CreateManageRequirementPageStep3 = () => {
   const [cards, setCards] = useState<CardType[]>([
     { id: Date.now(), toggle: false },
   ]);
@@ -109,7 +109,7 @@ const CreateManageRequirementPageStep2 = () => {
         </Button>
         <div className="flex justify-center items-center pt-8">
           <Button className="bg-primary-700 hover:bg-primary-800 rounded-full w-[290px]">
-            Lanjut
+            Submit
           </Button>
         </div>
       </div>
@@ -117,4 +117,4 @@ const CreateManageRequirementPageStep2 = () => {
   );
 };
 
-export default CreateManageRequirementPageStep2;
+export default CreateManageRequirementPageStep3;

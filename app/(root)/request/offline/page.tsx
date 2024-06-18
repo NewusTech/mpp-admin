@@ -1,68 +1,106 @@
 "use client";
 
-import InputComponent from "@/components/InputComponent";
+// import InputComponent from "@/components/InputComponent";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { DataTables } from "@/components/Datatables";
-import { RequestOffline as Request } from "@/types/type";
-import { requestOfflineColumns } from "@/constants";
 import useSWR from "swr";
-import Cookies from "js-cookie";
-import { useState } from "react";
 import { fetcher } from "@/lib/fetch";
+import InputComponent from "@/components/InputComponent";
+import { useEffect, useState } from "react";
+import { requestOfflineColumns } from "@/constants";
+import useCreateRequestOffline from "@/lib/store/useCreateRequestOffline";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+// import Cookies from "js-cookie";
 
-// async function getData(): Promise<Request[]> {
-//   return [
-//     {
-//       id: 1,
-//       date: "18-08-2022",
-//       nik: "098171829103891",
-//       status: "menunggu",
-//     },
-//     // ...
-//   ];
-// }
+interface JwtPayload {
+  role?: string;
+  instansi_id: number;
+}
 
 const RequestOffline = () => {
-  // const data = await getData();
+  const [instance, setInstance] = useState<string>("");
+  const [service, setService] = useState<string>("");
+  const setServiceId = useCreateRequestOffline((state) => state.setServiceId);
+  const [role, setRole] = useState<string | null>(null);
+  const [instansiId, setInstansiId] = useState<number | null>(null);
 
-  const [instance, setInstance] = useState<number>(0);
-  const [service, setService] = useState<number>(0);
+  useEffect(() => {
+    // Ambil token dari cookies
+    const token = Cookies.get("token");
 
-  const {
-    data: instances,
-    error,
-    isLoading,
-  } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get`, fetcher);
+    // Periksa apakah token ada dan decode token jika ada
+    if (token) {
+      try {
+        // Decode token untuk mendapatkan payload
+        const decoded = jwtDecode<JwtPayload>(token);
 
-  const {
-    data: services,
-    error: isError,
-    isLoading: loading,
-  } = useSWR(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get/${instance}`,
+        // Pastikan token terdecode dan mengandung informasi role dan instansi_id
+        if (decoded && decoded.role && decoded.instansi_id !== undefined) {
+          setRole(decoded.role);
+          setInstansiId(decoded.instansi_id);
+        }
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, []);
+
+  const { data } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get`,
     fetcher,
   );
+
+  const instanceId = Number(instance);
+
+  let url = `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get`;
+
+  if (role === "Admin Instansi") {
+    url += `/${instansiId}`;
+  } else if ("Superadmin") {
+    url += `/${instanceId}`;
+  }
+
+  const { data: services } = useSWR(url, fetcher);
+
+  const serviceId = Number(service);
+
+  let historyUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;
+
+  if (role === "Admin Instansi" && instansiId !== null) {
+    historyUrl += `?instansi_id=${instansiId}&layanan_id=${serviceId}`;
+  } else if (role === "Superadmin") {
+    historyUrl += `?instansi_id=${instanceId}&layanan_id=${serviceId}`;
+  }
+
+  const { data: histories } = useSWR<any>(historyUrl, fetcher);
+
+  const handlePassId = (id: number) => {
+    setServiceId(id);
+  };
 
   return (
     <section className="mr-16">
       <div className="flex justify-between gap-x-5 mb-8">
         <div className="flex w-7/12 gap-x-5">
-          <InputComponent
-            typeInput="select"
-            items={instances?.data}
-            label="Instansi"
-            placeholder="Pilih Instansi"
-            value={instance}
-            onChange={(e: number) => setInstance(e)}
-          />
+          {role !== "Admin Instansi" && (
+            <InputComponent
+              typeInput="select"
+              items={data?.data}
+              label="Instansi"
+              placeholder="Pilih Instansi"
+              value={instance}
+              onChange={(e: any) => setInstance(e)}
+            />
+          )}
           <InputComponent
             typeInput="select"
             items={services?.data}
             label="Layanan"
             placeholder="Pilih Layanan"
             value={service}
-            onChange={(e: number) => setService(e)}
+            onChange={(e: any) => setService(e)}
           />
         </div>
         <div className="flex w-5/12 items-center gap-x-2">
@@ -71,17 +109,57 @@ const RequestOffline = () => {
           <InputComponent typeInput="datepicker" />
         </div>
       </div>
-      <div className="flex justify-between ">
-        <Link href="/request/offline/create">
-          <Button className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full">
-            Tambah
-          </Button>
-        </Link>
-        <div className="w-4/12">
-          <InputComponent />
-        </div>
+      <div className="flex justify-start ">
+        {role === "Superadmin" ? (
+          <div>
+            {instansiId && serviceId ? (
+              <Link href="/request/offline/create">
+                <Button
+                  onClick={() => handlePassId(serviceId)}
+                  className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
+                >
+                  Tambah
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                disabled
+                className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
+              >
+                Tambah
+              </Button>
+            )}
+          </div>
+        ) : (
+          <div>
+            {serviceId ? (
+              <Link href="/request/offline/create">
+                <Button
+                  onClick={() => handlePassId(serviceId)}
+                  className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
+                >
+                  Tambah
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                disabled
+                className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
+              >
+                Tambah
+              </Button>
+            )}
+          </div>
+        )}
       </div>
-      {/*<DataTables columns={requestOfflineColumns} data={data} />*/}
+      {histories && (
+        <DataTables
+          columns={requestOfflineColumns}
+          data={histories?.data}
+          filterBy="nik"
+          type="request"
+        />
+      )}
     </section>
   );
 };
