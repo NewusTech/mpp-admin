@@ -124,7 +124,7 @@ const CreateOffline = () => {
   const handleSubmit = async () => {
     const formData = new FormData();
 
-    formData.append("userId", Number(selectedUser));
+    formData.append("userId", selectedUser);
     // Menambahkan datainput dari formValues
     Object.entries(formValues).forEach(([key, value], index) => {
       if (
@@ -153,11 +153,6 @@ const CreateOffline = () => {
         formData.append(`datafile[${index}][data]`, value); // Menambahkan file ke FormData
       }
     });
-
-    // Menampilkan FormData di console untuk keperluan debugging
-    for (let pair of formData.entries()) {
-      console.log(pair[0], pair[1]);
-    }
 
     try {
       const response = await fetch(

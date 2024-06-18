@@ -54,7 +54,7 @@ const ManageUser = async () => {
           }
         />
       </div>
-      <DataTables columns={manageUserColumns} data={data} />
+      <DataTables columns={manageUserColumns} data={data} filterBy="name" />
     </section>
   );
 };

@@ -37,6 +37,7 @@ import Image from "next/image";
 import AlertDialogUpdateFacility from "@/app/(root)/master/master-facility/DialogFormUpdate";
 import AlertDialogUpdateInstance from "@/app/(root)/master/master-instance/DialogFormUpdate";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 export const columns: ColumnDef<Payment>[] = [
   {
@@ -231,22 +232,19 @@ export const historyApprovalColumns: ColumnDef<ManageApprovals>[] = [
       );
     },
     cell: ({ row }) => {
-      // const status = row.original.action;
+      const status = row.original;
+
       return (
         <>
           <div className="flex justify-center items-center gap-x-3">
-            <Button
-              size="sm"
-              className="text-sm rounded-full bg-success-700 hover:bg-success-800"
-            >
-              Setujui
-            </Button>
-            <Button
-              size="sm"
-              className="text-sm rounded-full py-1 bg-secondary-700 hover:bg-secondary-800"
-            >
-              Lihat
-            </Button>
+            <Link href={`/history-approvals/${status.id}`}>
+              <Button
+                size="sm"
+                className="text-sm rounded-full py-1 bg-secondary-700 hover:bg-secondary-800"
+              >
+                Lihat
+              </Button>
+            </Link>
           </div>
         </>
       );
@@ -600,19 +598,19 @@ export const manageUserColumns: ColumnDef<ManageUser>[] = [
 
 export const reportColumns: ColumnDef<Report>[] = [
   {
-    accessorKey: "service",
+    accessorKey: "name",
     header: "Jenis Layanan",
   },
   {
-    accessorKey: "waiting",
+    accessorKey: "menunggu",
     header: "Menunggu",
   },
   {
-    accessorKey: "failed",
+    accessorKey: "gagal",
     header: "Gagal",
   },
   {
-    accessorKey: "success",
+    accessorKey: "selesai",
     header: "Selesai",
   },
 ];

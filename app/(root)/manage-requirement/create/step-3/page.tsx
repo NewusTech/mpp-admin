@@ -7,7 +7,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
-import { CardType } from "@/types/interface";
+import { CardTypeFile } from "@/types/interface";
+import useCreateRequirement from "@/lib/store/useCreateRequirement";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const steps = [
   { id: 1, title: "1" },
@@ -17,8 +21,15 @@ const steps = [
 const currentStep = 3;
 
 const CreateManageRequirementPageStep3 = () => {
-  const [cards, setCards] = useState<CardType[]>([
-    { id: Date.now(), toggle: false },
+  const { serviceId } = useCreateRequirement();
+  const router = useRouter();
+  const [cards, setCards] = useState<CardTypeFile[]>([
+    {
+      id: Date.now(),
+      toggle: false,
+      field: "",
+      tipedata: "file",
+    },
   ]);
 
   const handleSwitch = (id: number) => {
@@ -30,11 +41,59 @@ const CreateManageRequirementPageStep3 = () => {
   };
 
   const handleAddCard = () => {
-    setCards([...cards, { id: Date.now(), toggle: false }]);
+    setCards([
+      ...cards,
+      {
+        id: Date.now(),
+        toggle: false,
+        field: "",
+        tipedata: "file",
+      },
+    ]);
   };
 
   const handleRemoveCard = (id: number) => {
     setCards(cards.filter((card) => card.id !== id));
+  };
+
+  const handleInputChange = (id: number, field: string, value: any) => {
+    setCards(
+      cards.map((card) =>
+        card.id === id ? { ...card, [field]: value } : card,
+      ),
+    );
+  };
+
+  const handleSubmit = async () => {
+    const requestData = cards.map((card) => ({
+      field: card.field,
+      tipedata: card.tipedata,
+      status: 1,
+      layanan_id: serviceId,
+      isrequired: card.isrequired,
+    }));
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/layanandocs/createmulti`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+          body: JSON.stringify(requestData),
+        },
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        toast(data.message);
+        router.push("/manage-requirement");
+      }
+    } catch (error) {
+      toast("An error occurred while submitting the form.");
+    }
   };
 
   return (
@@ -68,7 +127,13 @@ const CreateManageRequirementPageStep3 = () => {
             key={card.id}
             className="w-full h-full rounded-[20px] bg-neutral-200 p-8"
           >
-            <InputComponent typeInput="formInput" />
+            <InputComponent
+              typeInput="formInput"
+              value={card.field}
+              onChange={(e) =>
+                handleInputChange(card.id, "field", e.target.value)
+              }
+            />
             <div className="mt-8">
               <div className="flex items-center gap-x-4">
                 <p className="text-sm text-neutral-900">
@@ -108,7 +173,10 @@ const CreateManageRequirementPageStep3 = () => {
           Tambah
         </Button>
         <div className="flex justify-center items-center pt-8">
-          <Button className="bg-primary-700 hover:bg-primary-800 rounded-full w-[290px]">
+          <Button
+            onClick={handleSubmit}
+            className="bg-primary-700 hover:bg-primary-800 rounded-full w-[290px]"
+          >
             Submit
           </Button>
         </div>

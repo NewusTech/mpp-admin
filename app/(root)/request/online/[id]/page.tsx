@@ -8,6 +8,9 @@ import { useState } from "react";
 import ModalValidate from "@/components/Dialog/modal-validate";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 const DetailRequestOnline = ({
   params,
@@ -16,6 +19,7 @@ const DetailRequestOnline = ({
     id: number;
   };
 }) => {
+  const router = useRouter();
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/detail/${params.id}`,
     fetcher,
@@ -44,6 +48,32 @@ const DetailRequestOnline = ({
   const getFileNameFromUrl = (url: string) => {
     const urlParts = url.split("/");
     return urlParts[urlParts.length - 1];
+  };
+
+  const handleValidationStatus = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/updatestatus/${params.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+          body: JSON.stringify({
+            status: 1,
+          }),
+        },
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        toast(data.message);
+        router.push("/request/online");
+      }
+    } catch (e: any) {
+      toast(e.message);
+    }
   };
 
   return (
@@ -76,7 +106,7 @@ const DetailRequestOnline = ({
             <p>{v.layananform_name}</p>
             <Button
               onClick={() => handleDownload(v.data, getFileNameFromUrl(v.data))}
-              className="mt-2 w-[60vh] rounded-[20px] bg-neutral-50 hover:bg-neutral-100 shadow p-3 flex justify-around items-center"
+              className="mt-2 w-[25vh] rounded-[20px] bg-neutral-50 hover:bg-neutral-100 shadow p-3 flex justify-around items-center"
             >
               <Image
                 src="/icons/download.svg"
@@ -89,8 +119,11 @@ const DetailRequestOnline = ({
           </div>
         ))}
         <div className="text-center mt-8 mb-[46px] space-x-3">
-          <ModalValidate title="Tidak Sesuai" />
-          <Button className="bg-success-700 hover:bg-success-800 w-[140px] rounded-full">
+          <ModalValidate id={params.id} title="Tidak Sesuai" />
+          <Button
+            onClick={handleValidationStatus}
+            className="bg-success-700 hover:bg-success-800 w-[140px] rounded-full"
+          >
             Validasi
           </Button>
         </div>
