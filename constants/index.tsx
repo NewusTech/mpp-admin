@@ -725,6 +725,33 @@ export const facilitiesColumns: ColumnDef<Facility>[] = [
   },
 ];
 
+export const dashboardSuperadminColumns: ColumnDef<any>[] = [
+  {
+    accessorKey: "tanggal",
+    header: "Tanggal",
+  },
+  {
+    accessorKey: "name",
+    header: "Nama Instansi",
+  },
+  {
+    accessorKey: "service",
+    header: "Nama Layanan",
+  },
+  {
+    accessorKey: "antrian",
+    header: "Antrian",
+  },
+  {
+    accessorKey: "request",
+    header: "Permohonan",
+  },
+  {
+    accessorKey: "skm",
+    header: "SKM",
+  },
+];
+
 export const selectDataTypeForm = [
   {
     id: 1,

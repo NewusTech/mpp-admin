@@ -20,7 +20,7 @@ import { Loader } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import FileUploader from "@/components/FileUploader";
 import Cookies from "js-cookie";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 interface ArticleBySlug {
   title: string;
@@ -31,6 +31,8 @@ interface ArticleBySlug {
 
 const News = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
   const router = useRouter();
+  const editor1Ref = useRef<{ getContent: () => string }>(null);
+
   const form = useForm<z.infer<typeof NewsValidation>>({
     resolver: zodResolver(NewsValidation),
     defaultValues: {
@@ -70,9 +72,11 @@ const News = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
 
         const data = await response.json();
         toast(data.message);
+        console.log(data);
         if (response.ok) router.push("/articles");
       } catch (error: any) {
         toast(error.message);
+        console.log(error.message);
       }
     } else {
       try {
