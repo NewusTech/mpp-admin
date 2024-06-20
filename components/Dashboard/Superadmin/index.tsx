@@ -1,16 +1,13 @@
 "use client";
 
 import InputComponent from "@/components/InputComponent";
-import MyChart from "@/components/Dashboard/ChartDashboard/line";
-import ChartDashboard from "@/components/Dashboard/ChartDashboard";
 import { Progress } from "@/components/ui/progress";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import { DataTables } from "@/components/Datatables";
 import { dashboardSuperadminColumns } from "@/constants";
+import BarChart from "@/components/Dashboard/ChartDashboard/bar";
 
 const getAll = [
   {
@@ -106,7 +103,7 @@ const Card = ({
 }) => {
   return (
     <div
-      className={`${color} rounded-[16px] w-[251px] h-[155px] flex flex-col items-center justify-center gap-y-10`}
+      className={`${color} rounded-[16px] w-full h-[155px] flex flex-col items-center justify-center gap-y-10`}
     >
       <h5 className="text-neutral-900 text-sm w-[187px] text-center">
         {title}
@@ -158,7 +155,7 @@ const DashboardSuperadmin = () => {
             <InputComponent typeInput="select" />
           </div>
         </div>
-        <div className="space-x-4 mt-4 flex">
+        <div className="space-x-4 mt-4 flex justify-between">
           <Card color="bg-secondary-700" text="14,777" title="Antrian Online" />
           <Card
             color="bg-primary-700"
@@ -192,13 +189,13 @@ const DashboardSuperadmin = () => {
                 </p>
               </div>
             </div>
-            <ChartDashboard />
+            <BarChart />
           </div>
         </div>
         <div className="rounded-[16px] w-6/12 shadow bg-neutral-50 p-4">
           <div className="flex justify-between items-center">
             <h1 className="text-sm font-medium text-primary-800 w-[251px]">
-              Antrian Online & Pembohonan Layanan Tiap Instansi
+              Antrian Online & Permohonan Layanan Tiap Instansi
             </h1>
             <p className="text-[10px] text-neutral-800">2024</p>
           </div>

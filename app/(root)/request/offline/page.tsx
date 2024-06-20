@@ -25,6 +25,10 @@ const RequestOffline = () => {
   const setServiceId = useCreateRequestOffline((state) => state.setServiceId);
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<number | null>(null);
+  const [searchTermInstance, setSearchTermInstance] = useState("");
+  const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
+  const [searchTermService, setSearchTermService] = useState("");
+  const [searchInputService, setSearchInputService] = useState(""); // State for search input
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -48,7 +52,7 @@ const RequestOffline = () => {
   }, []);
 
   const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
     fetcher,
   );
 
@@ -57,9 +61,9 @@ const RequestOffline = () => {
   let url = `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get`;
 
   if (role === "Admin Instansi") {
-    url += `/${instansiId}`;
+    url += `/${instansiId}?search=${searchTermService}`;
   } else if ("Superadmin") {
-    url += `/${instanceId}`;
+    url += `/${instanceId}?search=${searchTermService}`;
   }
 
   const { data: services } = useSWR(url, fetcher);
@@ -80,13 +84,26 @@ const RequestOffline = () => {
     setServiceId(id);
   };
 
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearchTermInstance(searchInputInstance);
+      setSearchTermService(searchInputService);
+    }, 300); // Debounce time to avoid excessive API calls
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchInputInstance, searchInputService]);
+
   return (
     <section className="mr-16">
       <div className="flex justify-between gap-x-5 mb-8">
         <div className="flex w-7/12 gap-x-5">
           {role !== "Admin Instansi" && (
             <InputComponent
-              typeInput="select"
+              typeInput="selectSearch"
+              valueInput={searchInputInstance}
+              onChangeInputSearch={(e) =>
+                setSearchInputInstance(e.target.value)
+              }
               items={data?.data}
               label="Instansi"
               placeholder="Pilih Instansi"
@@ -95,8 +112,10 @@ const RequestOffline = () => {
             />
           )}
           <InputComponent
-            typeInput="select"
+            typeInput="selectSearch"
             items={services?.data}
+            valueInput={searchInputService}
+            onChangeInputSearch={(e) => setSearchInputService(e.target.value)}
             label="Layanan"
             placeholder="Pilih Layanan"
             value={service}

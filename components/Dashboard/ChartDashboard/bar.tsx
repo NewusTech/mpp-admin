@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const ChartDashboard = () => {
+const BarChart = () => {
   const option = {
     chart: {
       id: "apexchart-example",
@@ -23,9 +23,6 @@ const ChartDashboard = () => {
         "Des",
       ],
     },
-    // stroke: {
-    //   curve: "smooth",
-    // },
     dataLabels: {
       enabled: false,
     },
@@ -33,17 +30,23 @@ const ChartDashboard = () => {
 
   const series = [
     {
+      name: "Net Profit",
       data: [44, 55, 57, 56, 61, 58, 63, 60, 66],
     },
     {
+      name: "Revenue",
       data: [76, 85, 101, 98, 87, 105, 91, 114, 94],
+    },
+    {
+      name: "Free Cash Flow",
+      data: [35, 41, 36, 26, 45, 48, 52, 53, 41],
     },
   ];
 
   return (
     <>
       <ApexChart
-        type="line"
+        type="bar"
         options={option}
         series={series}
         height="140%"
@@ -53,4 +56,4 @@ const ChartDashboard = () => {
   );
 };
 
-export default ChartDashboard;
+export default BarChart;

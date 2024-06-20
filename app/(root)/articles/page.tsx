@@ -9,7 +9,7 @@ import { fetcher } from "@/lib/fetch";
 
 async function getData(): Promise<News[]> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/artikel/get`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/artikel/get?limit=1000000`,
     {
       cache: "no-cache",
     },

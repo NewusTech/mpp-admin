@@ -18,11 +18,13 @@
 // import { Payment } from "@/types/type";
 
 import DashboardSuperadmin from "@/components/Dashboard/Superadmin";
+import InstanceDashboard from "@/components/Dashboard/Instance";
 
 export default function Home() {
   return (
     <section className="mr-16">
-      <DashboardSuperadmin />
+      {/*<DashboardSuperadmin />*/}
+      <InstanceDashboard />
     </section>
   );
 }

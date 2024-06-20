@@ -3,6 +3,9 @@ import { Inter } from "next/font/google";
 import Nav from "@/components/Nav";
 import DashboardIcon from "@/assets/icons/dashboard-icons";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -10,7 +13,36 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+interface JwtPayload {
+  role?: string;
+  instansi_id: number;
+}
+
 const Sidebar = () => {
+  const [role, setRole] = useState<string | null>(null);
+  const [instansiId, setInstansiId] = useState<number | null>(null);
+
+  useEffect(() => {
+    // Ambil token dari cookies
+    const token = Cookies.get("token");
+
+    // Periksa apakah token ada dan decode token jika ada
+    if (token) {
+      try {
+        // Decode token untuk mendapatkan payload
+        const decoded = jwtDecode<JwtPayload>(token);
+
+        // Pastikan token terdecode dan mengandung informasi role dan instansi_id
+        if (decoded && decoded.role && decoded.instansi_id !== undefined) {
+          setRole(decoded.role);
+          setInstansiId(decoded.instansi_id);
+        }
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, []);
+
   return (
     <aside className="bg-neutral-200 fixed w-[291px] h-full overflow-scroll custom-scrollbar">
       <div className="px-8 py-[54px]">
@@ -79,35 +111,39 @@ const Sidebar = () => {
             }
           />
           <Nav route="/articles" icons="/icons/newspaper.svg" title="Berita" />
-          <Nav
-            route="#"
-            icons="/icons/Master.svg"
-            title="Data Master"
-            type="dropdown"
-            content={
-              <>
-                <ul className="space-y-4">
-                  <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
-                    <Link href="/master/master-instance">Instansi</Link>
-                  </li>
-                  <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
-                    <Link href="/master/master-service">Layanan</Link>
-                  </li>
-                  <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
-                    <Link href="/master/master-facility">Fasilitas</Link>
-                  </li>
-                  <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
-                    <Link href="/master/master-faq">FAQ</Link>
-                  </li>
-                </ul>
-              </>
-            }
-          />
-          {/* <Nav
-            route="/manage-user"
-            icons="/icons/user-round.svg"
-            title="Kelola User"
-          /> */}
+          {role !== "Admin Instansi" && (
+            <>
+              <Nav
+                route="#"
+                icons="/icons/Master.svg"
+                title="Data Master"
+                type="dropdown"
+                content={
+                  <>
+                    <ul className="space-y-4">
+                      <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
+                        <Link href="/master/master-instance">Instansi</Link>
+                      </li>
+                      <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
+                        <Link href="/master/master-service">Layanan</Link>
+                      </li>
+                      <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
+                        <Link href="/master/master-facility">Fasilitas</Link>
+                      </li>
+                      <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
+                        <Link href="/master/master-faq">FAQ</Link>
+                      </li>
+                    </ul>
+                  </>
+                }
+              />
+              <Nav
+                route="/manage-user"
+                icons="/icons/user-round.svg"
+                title="Kelola User"
+              />
+            </>
+          )}
           <Nav
             route="/setting"
             icons="/icons/settings.svg"

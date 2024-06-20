@@ -8,7 +8,9 @@ import { Button } from "@/components/ui/button";
 import useCreateRequirement from "@/lib/store/useCreateRequirement";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
 
 const steps = [
   { id: 1, title: "1" },
@@ -18,19 +20,14 @@ const steps = [
 const currentStep = 1;
 
 const CreateManageRequirementPage = () => {
-  const {
-    selectedId,
-    informationService,
-    setInformationService,
-    serviceId,
-    setServiceId,
-  } = useCreateRequirement((state) => ({
-    selectedId: state.selectedId,
-    informationService: state.informationService,
-    setInformationService: state.setInformationService,
-    serviceId: state.serviceId,
-    setServiceId: state.setServiceId,
-  }));
+  const { selectedId, serviceId, setServiceId } = useCreateRequirement(
+    (state) => ({
+      selectedId: state.selectedId,
+      serviceId: state.serviceId,
+      setServiceId: state.setServiceId,
+    }),
+  );
+  const [informationService, setInformationService] = useState("");
 
   const { data: services } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get/${selectedId}`,
@@ -38,6 +35,19 @@ const CreateManageRequirementPage = () => {
   );
 
   const serviceAll = services?.data;
+
+  const handleSelectChange = (e: any) => {
+    const selectedServiceId = e;
+    setServiceId(selectedServiceId);
+
+    // Find the selected service to get its description
+    const selectedService = serviceAll.find(
+      (service: any) => service.id === parseInt(selectedServiceId),
+    );
+    if (selectedService) {
+      setInformationService(selectedService.desc);
+    }
+  };
 
   return (
     <section className="mr-16">
@@ -70,7 +80,7 @@ const CreateManageRequirementPage = () => {
           <InputComponent
             typeInput="select"
             value={serviceId}
-            onChange={(e) => setServiceId(e)}
+            onChange={handleSelectChange}
             items={serviceAll}
             label="Jenis Layanan"
             placeholder="Pilih Jenis Layanan"
@@ -80,8 +90,8 @@ const CreateManageRequirementPage = () => {
           <p>Informasi Layanan</p>
           <InputComponent
             typeInput="textarea"
-            value={informationService}
-            onChange={(e) => setInformationService(e.target.value)}
+            disable={true}
+            value={informationService || ""}
           />
         </div>
         <div className="flex justify-center items-center pt-8">

@@ -14,7 +14,7 @@ export type RequestOnline = {
 
 export type RequestOffline = {
   id: number;
-  date: string;
+  createdAt: string;
   nik: string;
   status: string;
 };
@@ -28,12 +28,14 @@ export type ManageApprovals = {
 
 export type DataInstance = {
   id: number;
+  no: number;
   name: string;
   slug: string;
 };
 
 export type DataServices = {
   id: number;
+  no: number;
   name: string;
   instansi_name: string;
 };

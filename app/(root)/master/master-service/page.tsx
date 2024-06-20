@@ -7,7 +7,7 @@ import AlertDialogCreateService from "@/app/(root)/master/master-service/DialogF
 
 async function getData(): Promise<DataServices[]> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/get`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/get?limit=100000`,
     {
       cache: "no-store",
     },
@@ -19,7 +19,6 @@ async function getData(): Promise<DataServices[]> {
 const MasterService = async () => {
   const data = await getData();
 
-  console.log(data);
   return (
     <section className="mr-16">
       <div className="flex justify-end mb-8">

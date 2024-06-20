@@ -4,9 +4,12 @@ import { FAQ } from "@/types/type";
 import AlertDialogCreateFaq from "@/app/(root)/master/master-faq/DialogForm";
 
 async function getData(): Promise<FAQ[]> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/faq/get`, {
-    cache: "no-store",
-  });
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/faq/get?limit=1000000`,
+    {
+      cache: "no-store",
+    },
+  );
   const data = await res.json();
   return data.data;
 }

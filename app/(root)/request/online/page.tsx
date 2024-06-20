@@ -21,6 +21,10 @@ const RequestOnline = () => {
   const setServiceId = useCreateRequestOffline((state) => state.setServiceId);
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<number | null>(null);
+  const [searchTermInstance, setSearchTermInstance] = useState("");
+  const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
+  const [searchTermService, setSearchTermService] = useState("");
+  const [searchInputService, setSearchInputService] = useState(""); // State for search input
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -43,10 +47,8 @@ const RequestOnline = () => {
     }
   }, []);
 
-  console.log(role, instansiId);
-
   const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
     fetcher,
   );
 
@@ -55,16 +57,16 @@ const RequestOnline = () => {
   let url = `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get`;
 
   if (role === "Admin Instansi") {
-    url += `/${instansiId}`;
+    url += `/${instansiId}?search=${searchTermService}`;
   } else if ("Superadmin") {
-    url += `/${instanceId}`;
+    url += `/${instanceId}?search=${searchTermService}`;
   }
 
   const { data: services } = useSWR(url, fetcher);
 
   const serviceId = Number(service);
 
-  let historyUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;
+  let historyUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform?limit=10000000`;
 
   if (role === "Admin Instansi" && instansiId !== null) {
     historyUrl += `?instansi_id=${instansiId}&layanan_id=${serviceId}`;
@@ -74,15 +76,26 @@ const RequestOnline = () => {
 
   const { data: histories } = useSWR<any>(historyUrl, fetcher);
 
-  console.log(histories);
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearchTermInstance(searchInputInstance);
+      setSearchTermService(searchInputService);
+    }, 300); // Debounce time to avoid excessive API calls
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchInputInstance, searchInputService]);
 
   return (
     <section className="mr-16">
-      <div className="flex justify-between gap-x-5 mb-8">
-        <div className="flex w-9/12 gap-x-5">
+      <div className="flex justify-between gap-x-5 mb-14">
+        <div className="flex w-8/12 gap-x-5">
           {role !== "Admin Instansi" && (
             <InputComponent
-              typeInput="select"
+              typeInput="selectSearch"
+              valueInput={searchInputInstance}
+              onChangeInputSearch={(e) =>
+                setSearchInputInstance(e.target.value)
+              }
               items={data?.data}
               label="Instansi"
               placeholder="Pilih Instansi"
@@ -91,23 +104,20 @@ const RequestOnline = () => {
             />
           )}
           <InputComponent
-            typeInput="select"
+            typeInput="selectSearch"
             items={services?.data}
+            valueInput={searchInputService}
+            onChangeInputSearch={(e) => setSearchInputService(e.target.value)}
             label="Layanan"
             placeholder="Pilih Layanan"
             value={service}
             onChange={(e: any) => setService(e)}
           />
         </div>
-        <div className="flex w-3/12 items-center gap-x-2">
+        <div className="flex w-4/12 items-center gap-x-2">
           <InputComponent typeInput="datepicker" />
           <p>to</p>
           <InputComponent typeInput="datepicker" />
-        </div>
-      </div>
-      <div className="flex justify-end ">
-        <div className="w-4/12">
-          <InputComponent />
         </div>
       </div>
       {histories && (

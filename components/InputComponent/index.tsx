@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -37,6 +37,9 @@ interface InputProps {
   label?: string;
   value?: any;
   name?: string;
+  disable?: boolean;
+  valueInput?: any;
+  onChangeInputSearch?: (e: any) => void;
   onChange?: (e: any) => void;
   items?: SelectItem[];
   date?: Date | undefined;
@@ -54,8 +57,39 @@ const InputComponent = ({
   date,
   setDate,
   name,
+  disable,
+  valueInput,
+  onChangeInputSearch,
 }: InputProps) => {
   // const [date, setDate] = useState<Date>();
+  if (typeInput === "selectSearch")
+    return (
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent className="pt-10">
+          <div className="px-2 fixed border-b w-full top-0 flex items-center justify-between z-10">
+            <Search className="text-slate-400" />
+            <Input
+              placeholder="Search..."
+              className="w-full border-0"
+              value={valueInput}
+              onChange={onChangeInputSearch}
+            />
+          </div>
+          <SelectGroup>
+            <SelectLabel>{label}</SelectLabel>
+            {items?.map((item) => (
+              <SelectItem key={item.id} value={item.id}>
+                {item.name}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    );
+
   if (typeInput === "select")
     return (
       <Select value={value} onValueChange={onChange}>
@@ -109,6 +143,7 @@ const InputComponent = ({
         value={value}
         name={name}
         onChange={onChange}
+        disabled={disable}
       />
     );
 

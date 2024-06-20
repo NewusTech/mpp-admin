@@ -28,7 +28,7 @@ const ManageRequirements = () => {
   };
 
   const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?limit=10000000`,
     fetcher,
   );
 
