@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Select,
   SelectContent,
@@ -9,8 +11,27 @@ import {
 } from "@/components/ui/select";
 import AreaChart from "@/components/Dashboard/ChartDashboard/area";
 import DonutChart from "@/components/Dashboard/ChartDashboard/donut";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+
+const buttons = [
+  { label: "Semua", value: 6 },
+  { label: "Menunggu", value: 0 },
+  { label: "Divalidasi", value: 1 },
+  { label: "Disetujui", value: 3 },
+  { label: "Selesai", value: 4 },
+  { label: "Gagal", value: 5 },
+];
 
 const TabService = () => {
+  const [activeButton, setActiveButton] = useState(null);
+
+  const handleClick = (value: any) => {
+    setActiveButton(value);
+    // Kirim nilai aktif ke server atau lakukan aksi lain yang diinginkan
+    console.log("Button clicked with value:", value);
+  };
+
   return (
     <section className="space-y-4 mt-8">
       <div className="flex w-full gap-x-4">
@@ -123,49 +144,20 @@ const TabService = () => {
         </div>
       </div>
       <div className="rounded-[16px] w-full bg-neutral-50 shadow p-12">
-        <div className="rounded-full p-2 border bg-transparent w-8/12 flex space-x-2">
-          <input
-            type="radio"
-            id="option1"
-            name="options"
-            value="option1"
-            className="hidden"
-          />
-          <label
-            htmlFor="option1"
-            className="px-4 py-2 text-neutral-800 peer-checked:rounded-full peer-checked:bg-blue-500 cursor-pointer transition-all peer-checked:text-neutral-50"
-          >
-            Semua
-          </label>
-
-          <input
-            type="radio"
-            id="option2"
-            name="options"
-            value="option2"
-            className="hidden"
-          />
-
-          <label
-            htmlFor="option2"
-            className="px-4 py-2 text-neutral-800 peer-checked:rounded-full peer-checked:bg-blue-500 cursor-pointer transition-all peer-checked:text-neutral-50"
-          >
-            Divalidasi
-          </label>
-
-          <input
-            type="radio"
-            id="option3"
-            name="options"
-            value="option3"
-            className="hidden"
-          />
-          <label
-            htmlFor="option3"
-            className="px-4 py-2 text-neutral-800 peer-checked:rounded-full peer-checked:bg-blue-500 cursor-pointer transition-all peer-checked:text-neutral-50"
-          >
-            Disetujui
-          </label>
+        <div className="rounded-full p-2 border bg-transparent w-[78%] flex space-x-2">
+          {buttons.map((button) => (
+            <Button
+              key={button.value}
+              className={`rounded-[20px] ${
+                activeButton === button.value
+                  ? "bg-primary-700 text-neutral-50"
+                  : "bg-transparent text-neutral-800"
+              } hover:text-neutral-50 hover:bg-primary-700`}
+              onClick={() => handleClick(button.value)}
+            >
+              {button.label}
+            </Button>
+          ))}
         </div>
       </div>
     </section>
