@@ -54,7 +54,7 @@ const Sidebar = () => {
           >
             <DashboardIcon
               color="fill-current text-primary-800"
-              stroke="#3A6C38"
+              stroke="#1D3A6C"
             />
             <p>Dashboard</p>
           </Link>

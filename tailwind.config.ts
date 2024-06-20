@@ -56,7 +56,7 @@ const config = {
         "primary-100": "#F2F5FB",
         "primary-200": "#E2EAF7",
         "primary-300": "#CBD9F1",
-        "primary-400": "#CBE4CA",
+        "primary-400": "#AEC3E9",
         "primary-500": "#8AA9DF",
         "primary-600": "#608AD3",
         "primary-700": "#3568C0",

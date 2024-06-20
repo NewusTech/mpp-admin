@@ -36,12 +36,13 @@ import { z } from "zod";
 import { ServiceValidation } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import FileUploader from "@/components/FileUploader";
 import MyEditor from "@/components/Editor";
+import InputComponent from "@/components/InputComponent";
 
 export default function AlertDialogCreateService() {
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -49,8 +50,15 @@ export default function AlertDialogCreateService() {
   const [selectedInstansi, setSelectedInstansi] = useState("");
   const [namaLayanan, setNamaLayanan] = useState("");
   const [status, setStatus] = useState("1");
+  const [searchTermInstance, setSearchTermInstance] = useState("");
+  const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
 
   const content1 = editor.current?.getContent();
+
+  const { data } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
+    fetcher,
+  );
 
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
@@ -59,11 +67,6 @@ export default function AlertDialogCreateService() {
   const handleAddModalClose = () => {
     setAddModalOpen(false);
   };
-
-  const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get`,
-    fetcher,
-  );
 
   const result = data?.data;
 
@@ -101,6 +104,14 @@ export default function AlertDialogCreateService() {
     }
   }
 
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearchTermInstance(searchInputInstance);
+    }, 300); // Debounce time to avoid excessive API calls
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchInputInstance]);
+
   return (
     <AlertDialog open={addModalOpen}>
       <AlertDialogTrigger asChild>
@@ -120,21 +131,18 @@ export default function AlertDialogCreateService() {
         <div className="p-6 space-y-5">
           <div className="space-y-2">
             <Label>Instansi</Label>
-            <Select
-              onValueChange={(value) => setSelectedInstansi(value)}
+            <InputComponent
+              typeInput="selectSearch"
+              valueInput={searchInputInstance}
+              onChangeInputSearch={(e) =>
+                setSearchInputInstance(e.target.value)
+              }
+              items={result}
+              label="Instansi"
+              placeholder="Pilih Instansi"
               value={selectedInstansi}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Pilih Instansi" />
-              </SelectTrigger>
-              <SelectContent>
-                {result?.map((data: any) => (
-                  <SelectItem value={data.id.toString()} key={data.id}>
-                    {data.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              onChange={(e: any) => setSelectedInstansi(e)}
+            />
           </div>
           <div className="space-y-2">
             <Label>Nama Layanan</Label>

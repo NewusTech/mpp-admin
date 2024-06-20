@@ -44,6 +44,7 @@ import FileUploader from "@/components/FileUploader";
 
 export default function AlertDialogUpdateService({ id }: { id: number }) {
   const [addModalOpen, setAddModalOpen] = useState(false);
+
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
   };
@@ -148,7 +149,7 @@ export default function AlertDialogUpdateService({ id }: { id: number }) {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {result.map((data: any) => (
+                          {result?.map((data: any) => (
                             <SelectItem
                               value={data.id.toString()}
                               key={data.id}
