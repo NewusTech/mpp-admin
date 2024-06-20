@@ -9,7 +9,7 @@ import AlertDialogCreateFacility from "@/app/(root)/master/master-facility/Dialo
 
 async function getData(): Promise<Facility[]> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/facilities/get`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/facilities/get?limit=1000000`,
     {
       cache: "no-store",
     },

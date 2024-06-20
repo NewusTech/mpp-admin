@@ -73,13 +73,46 @@ export const requestOnlineColumns: ColumnDef<RequestOnline>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: () => {
+      return (
+        <div className="flex justify-center">
+          <p>Status</p>
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      const statusRow = row.original;
+      const status = statusRow.status.toString();
+
+      return (
+        <div
+          className={cn("w-full h-full py-1 px-2 rounded-full text-center", {
+            "bg-neutral-500 text-neutral-800": status === "0",
+            "bg-primary-500 text-secondary-800": status === "2",
+            "bg-primary-7A00 text-primary-800": status === "3",
+            "bg-error-500 text-error-800": status === "4",
+          })}
+        >
+          {status === "0" ? (
+            <p className="bg-neutral-500 text-neutral-800">Menunggu</p>
+          ) : status === "1" ? (
+            <p>Sudah divalidasi</p>
+          ) : status === "2" ? (
+            <p>Sudah disetujui</p>
+          ) : status === "3" ? (
+            <p>Selesai</p>
+          ) : (
+            <p>Permohonan ditolak</p>
+          )}
+        </div>
+      );
+    },
   },
 ];
 
 export const requestOfflineColumns: ColumnDef<RequestOffline>[] = [
   {
-    accessorKey: "date",
+    accessorKey: "createdAt",
     header: "Tanggal",
   },
   {
@@ -88,7 +121,40 @@ export const requestOfflineColumns: ColumnDef<RequestOffline>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: () => {
+      return (
+        <div className="flex justify-center">
+          <p>Status</p>
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      const statusRow = row.original;
+      const status = statusRow.status.toString();
+
+      return (
+        <div
+          className={cn("w-full h-full py-1 px-2 rounded-full text-center", {
+            "bg-neutral-500 text-neutral-800": status === "0",
+            "bg-primary-500 text-secondary-800": status === "2",
+            "bg-primary-7A00 text-primary-800": status === "3",
+            "bg-error-500 text-error-800": status === "4",
+          })}
+        >
+          {status === "0" ? (
+            <p>Menunggu</p>
+          ) : status === "1" ? (
+            <p>Sudah divalidasi</p>
+          ) : status === "2" ? (
+            <p>Sudah disetujui</p>
+          ) : status === "3" ? (
+            <p>Selesai</p>
+          ) : (
+            <p>Permohonan ditolak</p>
+          )}
+        </div>
+      );
+    },
   },
 ];
 
@@ -254,8 +320,11 @@ export const historyApprovalColumns: ColumnDef<ManageApprovals>[] = [
 
 export const dataInstanceColumns: ColumnDef<DataInstance>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "no",
     header: "No",
+    cell: ({ row }) => {
+      return <p>{row.index + 1}</p>;
+    },
   },
   {
     accessorKey: "name",
@@ -311,8 +380,11 @@ export const dataInstanceColumns: ColumnDef<DataInstance>[] = [
 
 export const dataServiceColumns: ColumnDef<DataServices>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "no",
     header: "No",
+    cell: ({ row }) => {
+      return <p>{row.index + 1}</p>;
+    },
   },
   {
     accessorKey: "instansi_name",

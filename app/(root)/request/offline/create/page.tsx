@@ -237,7 +237,7 @@ const CreateOffline = () => {
               <SelectValue placeholder="Pilih NIK" />
             </SelectTrigger>
             <SelectContent className="pt-10">
-              <div className="px-2 fixed border-b top-0 flex items-center justify-between z-10">
+              <div className="px-2 fixed border-b w-full top-0 flex items-center justify-between z-10">
                 <Search className="text-slate-400" />
                 <Input
                   placeholder="Search..."

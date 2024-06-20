@@ -47,7 +47,7 @@ export default function AlertDialogUpdateInstance({ slug }: { slug: string }) {
 
   const { data: service } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get/${slug}`,
-    fetcher
+    fetcher,
   );
 
   const result = service?.data;
@@ -107,7 +107,7 @@ export default function AlertDialogUpdateInstance({ slug }: { slug: string }) {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
           body: formData,
-        }
+        },
       );
 
       const data = await response.json();
@@ -132,7 +132,7 @@ export default function AlertDialogUpdateInstance({ slug }: { slug: string }) {
           <p className="text-sm">Edit</p>
         </div>
       </AlertDialogTrigger>
-      <AlertDialogContent className="p-0 border-0 overflow-auto w-full">
+      <AlertDialogContent className="p-0 border-0 overflow-auto w-full h-full">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
             Tambah Layanan

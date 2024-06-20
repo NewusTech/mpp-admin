@@ -1,13 +1,11 @@
-import InputComponent from "@/components/InputComponent";
 import { dataInstanceColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
-import { AlertDialogPopup } from "@/components/Dialog";
 import { DataInstance } from "@/types/type";
 import AlertDialogCreateInstance from "@/app/(root)/master/master-instance/DialogForm";
 
 async function getData(): Promise<DataInstance[]> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?limit=1000000`,
     {
       cache: "no-store",
     },
