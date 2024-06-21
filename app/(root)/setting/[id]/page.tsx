@@ -25,7 +25,6 @@ const CreateFormat = ({
   const router = useRouter();
 
   const result = data?.data?.Layanansurat;
-  console.log(result);
 
   const editor1Ref = useRef<{ getContent: () => string }>(null);
   const editor2Ref = useRef<{ getContent: () => string }>(null);

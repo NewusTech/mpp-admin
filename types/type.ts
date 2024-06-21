@@ -7,7 +7,7 @@ export type Payment = {
 
 export type RequestOnline = {
   id: number;
-  date: string;
+  createdAt: string;
   name: string;
   status: string;
 };
@@ -61,7 +61,7 @@ export type SurveyQuestion = {
 
 export type DetailSurveyResult = {
   id: number;
-  date: string;
+  createdAt: string;
   name: string;
   nilai: string;
 };
@@ -97,4 +97,10 @@ export type FAQ = {
 export type Facility = {
   id: number;
   image: string;
+};
+
+export type VisionMission = {
+  id: number;
+  visi: any;
+  misi: any;
 };

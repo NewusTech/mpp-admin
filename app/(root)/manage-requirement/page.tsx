@@ -16,28 +16,73 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useCreateRequirement from "@/lib/store/useCreateRequirement";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+
+interface JwtPayload {
+  role?: string;
+  instansi_id: number;
+}
 
 const ManageRequirements = () => {
   const [instance, setInstance] = useState<string>("");
   const setSelectedId = useCreateRequirement((state) => state.setSelectedId);
+  const [searchTermInstance, setSearchTermInstance] = useState("");
+  const [role, setRole] = useState<string | null>(null);
+  const [instansiId, setInstansiId] = useState<number | null>(null);
+  const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
+
+  useEffect(() => {
+    // Ambil token dari cookies
+    const token = Cookies.get("token");
+
+    // Periksa apakah token ada dan decode token jika ada
+    if (token) {
+      try {
+        // Decode token untuk mendapatkan payload
+        const decoded = jwtDecode<JwtPayload>(token);
+
+        // Pastikan token terdecode dan mengandung informasi role dan instansi_id
+        if (decoded && decoded.role && decoded.instansi_id !== undefined) {
+          setRole(decoded.role);
+          setInstansiId(decoded.instansi_id);
+        }
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, []);
 
   const handlePassIdInstnace = (id: number) => {
     setSelectedId(id);
   };
 
   const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?limit=10000000`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
     fetcher,
   );
 
   const instanceId = Number(instance);
 
-  const { data: services } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get/${instanceId}`,
-    fetcher,
-  );
+  let url = `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get`;
+
+  if (role === "Admin Instansi") {
+    url += `/${instansiId}?limit=10000000`;
+  } else if ("Superadmin") {
+    url += `/${instanceId}?limit=10000000`;
+  }
+
+  const { data: services } = useSWR<any>(url, fetcher);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearchTermInstance(searchInputInstance);
+    }, 300); // Debounce time to avoid excessive API calls
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchInputInstance]);
 
   const result = data?.data;
   const serviceAll = services?.data;
@@ -48,21 +93,20 @@ const ManageRequirements = () => {
         <h1 className="text-lg font-semibold">Kelola Persyaratan</h1>
         <div className="flex justify-between mt-4">
           <div className="w-1/2">
-            <Select value={instance} onValueChange={(e: any) => setInstance(e)}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Pilih Instansi" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Instansi</SelectLabel>
-                  {result?.map((item: any) => (
-                    <SelectItem key={item.id} value={item.id}>
-                      {item.name}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            {role !== "Admin Instansi" && (
+              <InputComponent
+                typeInput="selectSearch"
+                valueInput={searchInputInstance}
+                onChangeInputSearch={(e) =>
+                  setSearchInputInstance(e.target.value)
+                }
+                items={result}
+                label="Instansi"
+                placeholder="Pilih Instansi"
+                value={instance}
+                onChange={(e: any) => setInstance(e)}
+              />
+            )}
           </div>
           {instance ? (
             <Link href="/manage-requirement/create">

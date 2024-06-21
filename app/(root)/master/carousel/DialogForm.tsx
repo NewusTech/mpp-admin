@@ -29,7 +29,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import FileUploader from "@/components/FileUploader";
 
-export default function AlertDialogCreateFacility() {
+export default function AlertDialogCreateCarousel() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
@@ -50,7 +50,7 @@ export default function AlertDialogCreateFacility() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/facilities/create`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/carousel/create`,
         {
           method: "POST",
           headers: {
@@ -61,9 +61,11 @@ export default function AlertDialogCreateFacility() {
       );
 
       const data = await response.json();
-      toast(data.message);
-      console.log(data);
-      handleAddModalClose();
+      if (response.ok) {
+        toast(data.message);
+        console.log(data);
+        handleAddModalClose();
+      }
     } catch (error: any) {
       toast(error.message);
       console.log(error);
@@ -83,7 +85,7 @@ export default function AlertDialogCreateFacility() {
       <AlertDialogContent className="p-0 border-0 overflow-auto">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
-            Tambah Fasilitas
+            Tambah Slider
           </AlertDialogTitle>
         </AlertDialogHeader>
         <div className="p-6">

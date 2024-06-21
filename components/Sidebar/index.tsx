@@ -111,16 +111,16 @@ const Sidebar = () => {
             }
           />
           <Nav route="/articles" icons="/icons/newspaper.svg" title="Berita" />
-          {role !== "Admin Instansi" && (
-            <>
-              <Nav
-                route="#"
-                icons="/icons/Master.svg"
-                title="Data Master"
-                type="dropdown"
-                content={
-                  <>
-                    <ul className="space-y-4">
+          <Nav
+            route="#"
+            icons="/icons/Master.svg"
+            title="Data Master"
+            type="dropdown"
+            content={
+              <>
+                <ul className="space-y-4">
+                  {role !== "Admin Instansi" ? (
+                    <>
                       <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
                         <Link href="/master/master-instance">Instansi</Link>
                       </li>
@@ -133,17 +133,29 @@ const Sidebar = () => {
                       <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
                         <Link href="/master/master-faq">FAQ</Link>
                       </li>
-                    </ul>
-                  </>
-                }
-              />
-              <Nav
-                route="/manage-user"
-                icons="/icons/user-round.svg"
-                title="Kelola User"
-              />
-            </>
-          )}
+                      <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
+                        <Link href="/master/vision-mission">Visi Misi</Link>
+                      </li>
+                      <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
+                        <Link href="/master/carousel">Slider</Link>
+                      </li>
+                    </>
+                  ) : (
+                    <>
+                      <li className="hover:translate-x-2 hover:text-primary-700 transition-color duration-200">
+                        <Link href="/master/master-service">Layanan</Link>
+                      </li>
+                    </>
+                  )}
+                </ul>
+              </>
+            }
+          />
+          <Nav
+            route="/manage-user"
+            icons="/icons/user-round.svg"
+            title="Kelola User"
+          />
           <Nav
             route="/setting"
             icons="/icons/settings.svg"
