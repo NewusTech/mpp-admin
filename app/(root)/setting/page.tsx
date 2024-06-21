@@ -17,8 +17,13 @@ interface JwtPayload {
 const SettingPage = () => {
   const [instance, setInstance] = useState<string>("");
   const [service, setService] = useState<string>("");
+  const [searchTermInstance, setSearchTermInstance] = useState("");
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<number | null>(null);
+
+  const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
+  const [searchTermService, setSearchTermService] = useState("");
+  const [searchInputService, setSearchInputService] = useState(""); // State for search input
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -41,10 +46,8 @@ const SettingPage = () => {
     }
   }, []);
 
-  console.log(role, instansiId);
-
   const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
     fetcher,
   );
 
@@ -53,14 +56,23 @@ const SettingPage = () => {
   let url = `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get`;
 
   if (role === "Admin Instansi") {
-    url += `/${instansiId}`;
+    url += `/${instansiId}?search=${searchTermService}`;
   } else if ("Superadmin") {
-    url += `/${instanceId}`;
+    url += `/${instanceId}?search=${searchTermService}`;
   }
 
   const { data: services } = useSWR(url, fetcher);
 
   const serviceId = Number(service);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearchTermInstance(searchInputInstance);
+      setSearchTermService(searchInputService);
+    }, 300); // Debounce time to avoid excessive API calls
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchInputInstance, searchInputService]);
 
   const result = data?.data;
   const serviceAll = services?.data;
@@ -71,21 +83,27 @@ const SettingPage = () => {
         <div className="flex w-full gap-x-5">
           {role !== "Admin Instansi" && (
             <InputComponent
-              typeInput="select"
-              value={instance}
-              onChange={(e) => setInstance(e)}
+              typeInput="selectSearch"
+              valueInput={searchInputInstance}
+              onChangeInputSearch={(e) =>
+                setSearchInputInstance(e.target.value)
+              }
               items={result}
               label="Instansi"
               placeholder="Pilih Instansi"
+              value={instance}
+              onChange={(e: any) => setInstance(e)}
             />
           )}
           <InputComponent
-            typeInput="select"
-            value={service}
-            onChange={(e) => setService(e)}
+            typeInput="selectSearch"
             items={serviceAll}
-            label="Jenis Layanan"
-            placeholder="Pilih Jenis Layanan"
+            valueInput={searchInputService}
+            onChangeInputSearch={(e) => setSearchInputService(e.target.value)}
+            label="Layanan"
+            placeholder="Pilih Layanan"
+            value={service}
+            onChange={(e: any) => setService(e)}
           />
         </div>
       </div>

@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
 import TabQueue from "@/components/Dashboard/Instance/TabQueue";
 import TabService from "@/components/Dashboard/Instance/TabService";
+import TabSurvey from "@/components/Dashboard/Instance/TabSurvey";
 
 const InstanceDashboard = () => {
   return (
@@ -72,6 +73,9 @@ const InstanceDashboard = () => {
         </TabsContent>
         <TabsContent value="service">
           <TabService />
+        </TabsContent>
+        <TabsContent value="survey">
+          <TabSurvey />
         </TabsContent>
       </Tabs>
     </>

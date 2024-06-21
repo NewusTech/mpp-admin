@@ -97,7 +97,7 @@ export default function AlertDialogUpdateFacility({ id }: { id: number }) {
       <AlertDialogContent className="p-0 border-0 overflow-auto">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
-            Tambah Layanan
+            Ubah Fasilitas
           </AlertDialogTitle>
         </AlertDialogHeader>
         <div className="p-6">

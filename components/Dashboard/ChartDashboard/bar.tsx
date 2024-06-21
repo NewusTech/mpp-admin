@@ -3,43 +3,43 @@
 import dynamic from "next/dynamic";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const BarChart = () => {
+interface ChartDataProps {
+  month: string;
+  permohonanCount: number;
+  skmCount: number;
+}
+
+interface BarChartProps {
+  chartData: ChartDataProps[];
+}
+
+const BarChart = ({ chartData }: BarChartProps) => {
+  const permohonanData = chartData?.map((data: any) => data.permohonanCount);
+
   const option = {
     chart: {
       id: "apexchart-example",
     },
     xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Des",
-      ],
+      categories: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun"],
     },
     dataLabels: {
       enabled: false,
     },
+    legend: {
+      show: false,
+    },
+    colors: ["#3568C0", "#FF9742"],
   };
 
   const series = [
     {
-      name: "Net Profit",
-      data: [44, 55, 57, 56, 61, 58, 63, 60, 66],
+      name: "Permohonan Layanan",
+      data: permohonanData,
     },
     {
-      name: "Revenue",
-      data: [76, 85, 101, 98, 87, 105, 91, 114, 94],
-    },
-    {
-      name: "Free Cash Flow",
-      data: [35, 41, 36, 26, 45, 48, 52, 53, 41],
+      name: "Antrian Online",
+      data: [76, 85, 101, 98, 87, 105],
     },
   ];
 
@@ -49,7 +49,7 @@ const BarChart = () => {
         type="bar"
         options={option}
         series={series}
-        height="140%"
+        height="75%"
         width="100%"
       />
     </>

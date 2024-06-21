@@ -13,9 +13,14 @@ import AreaChart from "@/components/Dashboard/ChartDashboard/area";
 import DonutChart from "@/components/Dashboard/ChartDashboard/donut";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetch";
+import { DataTables } from "@/components/Datatables";
+import { dashboardApprovalColumns } from "@/constants";
+import InputComponent from "@/components/InputComponent";
 
-const buttons = [
-  { label: "Semua", value: 6 },
+const buttons: any = [
+  { label: "Semua", value: "" },
   { label: "Menunggu", value: 0 },
   { label: "Divalidasi", value: 1 },
   { label: "Disetujui", value: 3 },
@@ -24,7 +29,14 @@ const buttons = [
 ];
 
 const TabService = () => {
-  const [activeButton, setActiveButton] = useState(null);
+  const [activeButton, setActiveButton] = useState("");
+
+  const { data } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/historyform?limit=10000000&status=${activeButton}`,
+    fetcher,
+  );
+
+  const result = data?.data;
 
   const handleClick = (value: any) => {
     setActiveButton(value);
@@ -145,7 +157,7 @@ const TabService = () => {
       </div>
       <div className="rounded-[16px] w-full bg-neutral-50 shadow p-12">
         <div className="rounded-full p-2 border bg-transparent w-[78%] flex space-x-2">
-          {buttons.map((button) => (
+          {buttons.map((button: any) => (
             <Button
               key={button.value}
               className={`rounded-[20px] ${
@@ -158,6 +170,22 @@ const TabService = () => {
               {button.label}
             </Button>
           ))}
+        </div>
+        <div className="flex justify-end mt-10">
+          <div className="flex items-center w-4/12 space-x-2 ">
+            <InputComponent typeInput="datepicker" />
+            <p>to</p>
+            <InputComponent typeInput="datepicker" />
+          </div>
+        </div>
+        <div className="mt-8">
+          {result && (
+            <DataTables
+              columns={dashboardApprovalColumns}
+              data={result}
+              filterBy="name"
+            />
+          )}
         </div>
       </div>
     </section>

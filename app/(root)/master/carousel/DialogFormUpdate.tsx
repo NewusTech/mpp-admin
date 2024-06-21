@@ -10,8 +10,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Loader } from "lucide-react";
 import Cookies from "js-cookie";
 import {
   Form,
@@ -26,10 +24,12 @@ import { z } from "zod";
 import { FacilitiesValidation } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetch";
 import FileUploader from "@/components/FileUploader";
 
-export default function AlertDialogCreateFacility() {
+export default function AlertDialogUpdateCarousel({ id }: { id: number }) {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
@@ -43,6 +43,21 @@ export default function AlertDialogCreateFacility() {
     resolver: zodResolver(FacilitiesValidation),
   });
 
+  const { data } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/carousel/get/${id}`,
+    fetcher,
+  );
+
+  const result = data?.data;
+
+  useEffect(() => {
+    if (result) {
+      form.reset({
+        image: result.image,
+      });
+    }
+  }, [result]);
+
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof FacilitiesValidation>) {
     const formData = new FormData();
@@ -50,9 +65,9 @@ export default function AlertDialogCreateFacility() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/facilities/create`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/carousel/update/${id}`,
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
@@ -61,9 +76,10 @@ export default function AlertDialogCreateFacility() {
       );
 
       const data = await response.json();
-      toast(data.message);
-      console.log(data);
-      handleAddModalClose();
+      if (response.ok) {
+        toast(data.message);
+        handleAddModalClose();
+      }
     } catch (error: any) {
       toast(error.message);
       console.log(error);
@@ -73,17 +89,17 @@ export default function AlertDialogCreateFacility() {
   return (
     <AlertDialog open={addModalOpen}>
       <AlertDialogTrigger asChild>
-        <Button
+        <div
           onClick={handleOpenAddModal}
-          className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
+          className="px-2 py-1 cursor-pointer hover:bg-slate-100 rounded"
         >
-          Tambah
-        </Button>
+          <p className="text-sm">Edit</p>
+        </div>
       </AlertDialogTrigger>
       <AlertDialogContent className="p-0 border-0 overflow-auto">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
-            Tambah Fasilitas
+            Ubah Carousel
           </AlertDialogTitle>
         </AlertDialogHeader>
         <div className="p-6">
@@ -96,7 +112,10 @@ export default function AlertDialogCreateFacility() {
                   <FormItem className="space-y-3">
                     <FormLabel>Foto</FormLabel>
                     <FormControl>
-                      <FileUploader fileChange={field.onChange} />
+                      <FileUploader
+                        mediaUrl={result?.image}
+                        fileChange={field.onChange}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -113,7 +132,7 @@ export default function AlertDialogCreateFacility() {
                   type="submit"
                   className="bg-primary-700 hover:bg-primary-800 rounded-full"
                 >
-                  Tambah
+                  Ubah
                 </AlertDialogAction>
               </AlertDialogFooter>
             </form>

@@ -2,95 +2,12 @@
 
 import InputComponent from "@/components/InputComponent";
 import { Progress } from "@/components/ui/progress";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import { DataTables } from "@/components/Datatables";
 import { dashboardSuperadminColumns } from "@/constants";
 import BarChart from "@/components/Dashboard/ChartDashboard/bar";
-
-const getAll = [
-  {
-    tanggal: "2024-06-01",
-    name: "Dinas Kependudukan dan Catatan Sipil",
-    service: "Pembuatan KTP",
-    antrian: 5,
-    request: 3,
-    skm: 4.5,
-  },
-  {
-    tanggal: "2024-06-02",
-    name: "Dinas Kesehatan",
-    service: "Pelayanan Kesehatan Masyarakat",
-    antrian: 7,
-    request: 6,
-    skm: 4.7,
-  },
-  {
-    tanggal: "2024-06-03",
-    name: "Dinas Pendidikan",
-    service: "Pendaftaran Sekolah",
-    antrian: 4,
-    request: 2,
-    skm: 4.2,
-  },
-  {
-    tanggal: "2024-06-04",
-    name: "Dinas Perhubungan",
-    service: "Perpanjangan SIM",
-    antrian: 9,
-    request: 8,
-    skm: 4.9,
-  },
-  {
-    tanggal: "2024-06-05",
-    name: "Dinas Sosial",
-    service: "Bantuan Sosial",
-    antrian: 6,
-    request: 5,
-    skm: 4.6,
-  },
-  {
-    tanggal: "2024-06-06",
-    name: "Dinas Pekerjaan Umum",
-    service: "Izin Mendirikan Bangunan",
-    antrian: 8,
-    request: 7,
-    skm: 4.8,
-  },
-  {
-    tanggal: "2024-06-07",
-    name: "Dinas Pariwisata",
-    service: "Izin Usaha Pariwisata",
-    antrian: 10,
-    request: 9,
-    skm: 5.0,
-  },
-  {
-    tanggal: "2024-06-08",
-    name: "Dinas Pertanian",
-    service: "Penyuluhan Pertanian",
-    antrian: 3,
-    request: 1,
-    skm: 4.0,
-  },
-  {
-    tanggal: "2024-06-09",
-    name: "Dinas Perindustrian dan Perdagangan",
-    service: "Pendaftaran Merek Dagang",
-    antrian: 5,
-    request: 4,
-    skm: 4.3,
-  },
-  {
-    tanggal: "2024-06-10",
-    name: "Dinas Lingkungan Hidup",
-    service: "Pengelolaan Sampah",
-    antrian: 7,
-    request: 6,
-    skm: 4.7,
-  },
-];
 
 const Card = ({
   color,
@@ -113,7 +30,13 @@ const Card = ({
   );
 };
 
-const ProgressBar = ({ name, value }: { name: string; value: number }) => {
+export const ProgressBar = ({
+  name,
+  value,
+}: {
+  name: string;
+  value: number;
+}) => {
   return (
     <div className="space-y-1">
       <div className="flex justify-between text-sm text-neutral-800">
@@ -127,20 +50,34 @@ const ProgressBar = ({ name, value }: { name: string; value: number }) => {
 
 const DashboardSuperadmin = () => {
   const [instance, setInstance] = useState<string>("");
+  const [searchTermInstance, setSearchTermInstance] = useState("");
+  const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
+
   const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
     fetcher,
   );
 
   const instanceId = Number(instance);
 
-  // const { data: surveys } = useSWR<any>(
-  //   `${process.env.NEXT_PUBLIC_API_URL}/user/survey/form/${instanceId}`,
-  //   fetcher,
-  // );
+  const { data: history } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/superadmin?instansi_id=${instanceId}&limit=10000000`,
+    fetcher,
+  );
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearchTermInstance(searchInputInstance);
+    }, 300); // Debounce time to avoid excessive API calls
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchInputInstance]);
 
   const result = data?.data;
-  // const surveyAll = surveys?.data?.Surveyforms;
+  const histories: any = history?.data;
+  const countProgress: any = histories?.countbyInstansi;
+  const chartCount: any = histories?.monthlyCounts;
+  const serviceData: any = histories?.layananData;
 
   return (
     <div className="space-y-4">
@@ -159,12 +96,12 @@ const DashboardSuperadmin = () => {
           <Card color="bg-secondary-700" text="14,777" title="Antrian Online" />
           <Card
             color="bg-primary-700"
-            text="14,777"
+            text={histories?.permohonanCount}
             title="Permohonan Layanan"
           />
           <Card
             color="bg-neutral-700"
-            text="14,777"
+            text={histories?.skmCount}
             title="Survey Kepuasan Masyarakat (SKM)"
           />
         </div>
@@ -189,7 +126,21 @@ const DashboardSuperadmin = () => {
                 </p>
               </div>
             </div>
-            <BarChart />
+            <BarChart chartData={chartCount} />
+            <div className="w-full flex gap-x-3">
+              <div className="rounded-[8px] w-full py-2 px-4 bg-slate-100 space-y-1">
+                <h4 className="text-slate-400 text-sm">Permohonan Layanan</h4>
+                <h1 className="text-neutral-900 text-3xl font-medium">
+                  {histories?.permohonanCount}
+                </h1>
+              </div>
+              <div className="rounded-[8px] w-full py-2 px-4 bg-slate-100 space-y-1">
+                <h4 className="text-slate-400 text-sm">Antrian Online</h4>
+                <h1 className="text-neutral-900 text-3xl font-medium">
+                  15,777
+                </h1>
+              </div>
+            </div>
           </div>
         </div>
         <div className="rounded-[16px] w-6/12 shadow bg-neutral-50 p-4">
@@ -200,11 +151,19 @@ const DashboardSuperadmin = () => {
             <p className="text-[10px] text-neutral-800">2024</p>
           </div>
           <div className="space-y-8 mt-5">
-            <ProgressBar name="Nama Instansi" value={33} />
-            <ProgressBar name="Nama Instansi" value={13} />
-            <ProgressBar name="Nama Instansi" value={93} />
-            <ProgressBar name="Nama Instansi" value={100} />
-            <ProgressBar name="Nama Instansi" value={50} />
+            {countProgress
+              ?.sort(
+                (a: any, b: any) =>
+                  b.layananformnum_count - a.layananformnum_count,
+              )
+              .slice(0, 5)
+              .map((v: any) => (
+                <ProgressBar
+                  key={v.id}
+                  name={v.name}
+                  value={v.layananformnum_count}
+                />
+              ))}
           </div>
         </div>
       </div>
@@ -212,12 +171,16 @@ const DashboardSuperadmin = () => {
         <div className="flex justify-between mb-20 gap-x-8">
           <div className="w-1/2">
             <InputComponent
-              typeInput="select"
-              value={instance}
-              onChange={(e) => setInstance(e)}
+              typeInput="selectSearch"
+              valueInput={searchInputInstance}
+              onChangeInputSearch={(e) =>
+                setSearchInputInstance(e.target.value)
+              }
               items={result}
               label="Instansi"
               placeholder="Pilih Instansi"
+              value={instance}
+              onChange={(e: any) => setInstance(e)}
             />
           </div>
           <div className="flex w-1/2 items-center gap-x-2">
@@ -226,12 +189,14 @@ const DashboardSuperadmin = () => {
             <InputComponent typeInput="datepicker" />
           </div>
         </div>
-        <DataTables
-          columns={dashboardSuperadminColumns}
-          data={getAll}
-          filterBy="instance"
-          type="request"
-        />
+        {serviceData && (
+          <DataTables
+            columns={dashboardSuperadminColumns}
+            data={serviceData}
+            filterBy="layanan_name"
+            type="request"
+          />
+        )}
       </div>
     </div>
   );
