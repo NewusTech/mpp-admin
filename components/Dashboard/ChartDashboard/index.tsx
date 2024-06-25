@@ -2,9 +2,10 @@
 
 import dynamic from "next/dynamic";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
+import { ApexOptions } from "apexcharts"; // Import the ApexOptions type
 
 const ChartDashboard = () => {
-  const option = {
+  const option: ApexOptions = {
     chart: {
       id: "apexchart-example",
     },
@@ -23,12 +24,16 @@ const ChartDashboard = () => {
         "Des",
       ],
     },
-    // stroke: {
-    //   curve: "smooth",
-    // },
+    stroke: {
+      curve: "smooth",
+    },
     dataLabels: {
       enabled: false,
     },
+    legend: {
+      show: false,
+    },
+    colors: ["#3568C0", "#FF9742"],
   };
 
   const series = [
@@ -46,7 +51,7 @@ const ChartDashboard = () => {
         type="line"
         options={option}
         series={series}
-        height="140%"
+        height="80%"
         width="100%"
       />
     </>

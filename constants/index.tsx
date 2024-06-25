@@ -40,6 +40,8 @@ import AlertDialogUpdateInstance from "@/app/(root)/master/master-instance/Dialo
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import AlertDialogUpdateCarousel from "@/app/(root)/master/carousel/DialogFormUpdate";
+import ModalDelete from "@/components/Dialog/delete";
+import AlertDialogUpdateSurvey from "@/app/(root)/survey/question/DialogFormUpdate";
 
 function formatDate(dateString: any) {
   const date = new Date(dateString);
@@ -246,6 +248,32 @@ export const manageApprovalColumns: ColumnDef<ManageApprovals>[] = [
     },
     cell: ({ row }) => {
       const action = row.original;
+
+      const handleValidationStatus = async () => {
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/updatestatus/${action.id}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${Cookies.get("token")}`,
+              },
+              body: JSON.stringify({
+                status: 2,
+              }),
+            },
+          );
+
+          const data = await response.json();
+          if (response.ok) {
+            toast(data.message);
+          }
+        } catch (e: any) {
+          toast(e.message);
+        }
+      };
+
       return (
         <>
           <div className="flex justify-center items-center gap-x-3">
@@ -262,6 +290,7 @@ export const manageApprovalColumns: ColumnDef<ManageApprovals>[] = [
             </Link>
             <Button
               size="sm"
+              onClick={handleValidationStatus}
               className="text-sm rounded-full bg-success-700 hover:bg-success-800"
             >
               Setujui
@@ -424,24 +453,6 @@ export const dataInstanceColumns: ColumnDef<DataInstance>[] = [
     cell: ({ row }) => {
       const instance = row.original;
 
-      const handleDelete = async (slug: string) => {
-        try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/delete/${slug}`,
-            {
-              method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${Cookies.get("token")}`,
-              },
-            },
-          );
-          const data = await response.json();
-          toast(data.message);
-        } catch (error: any) {
-          toast(error.message);
-        }
-      };
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -454,12 +465,7 @@ export const dataInstanceColumns: ColumnDef<DataInstance>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <AlertDialogUpdateInstance slug={instance.slug} />
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onClick={() => handleDelete(instance.slug)}
-            >
-              Delete
-            </DropdownMenuItem>
+            <ModalDelete endpoint={`instansi/delete/${instance.slug}`} />
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -488,24 +494,6 @@ export const dataServiceColumns: ColumnDef<DataServices>[] = [
     cell: ({ row }) => {
       const service = row.original;
 
-      const handleDelete = async (id: number) => {
-        try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/delete/${id}`,
-            {
-              method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${Cookies.get("token")}`,
-              },
-            },
-          );
-          const data = await response.json();
-          toast(data.message);
-        } catch (error: any) {
-          toast(error.message);
-        }
-      };
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -518,12 +506,7 @@ export const dataServiceColumns: ColumnDef<DataServices>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <AlertDialogUpdateService id={service.id} />
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onClick={() => handleDelete(service.id)}
-            >
-              Delete
-            </DropdownMenuItem>
+            <ModalDelete endpoint={`layanan/delete/${service.id}`} />
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -543,7 +526,7 @@ export const manageRequirementColumns: ColumnDef<ManageRequirements>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original;
+      const requirement = row.original;
 
       return (
         <DropdownMenu>
@@ -556,7 +539,9 @@ export const manageRequirementColumns: ColumnDef<ManageRequirements>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              <Link href={`/manage-requirement/${requirement.id}`}>Edit</Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -578,24 +563,6 @@ export const surveyQuestionColumns: ColumnDef<SurveyQuestion>[] = [
     cell: ({ row }) => {
       const survey = row.original;
 
-      const handleDelete = async (id: number) => {
-        try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/user/surveyform/delete/${id}`,
-            {
-              method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${Cookies.get("token")}`,
-              },
-            },
-          );
-          const data = await response.json();
-          toast(data.message);
-        } catch (error: any) {
-          toast(error.message);
-        }
-      };
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -607,13 +574,8 @@ export const surveyQuestionColumns: ColumnDef<SurveyQuestion>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onClick={() => handleDelete(survey.id)}
-            >
-              Delete
-            </DropdownMenuItem>
+            <AlertDialogUpdateSurvey id={survey.id} />
+            <ModalDelete endpoint={`surveyform/delete/${survey.id}`} />
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -683,24 +645,6 @@ export const newsColumns: ColumnDef<News>[] = [
     cell: ({ row }) => {
       const article = row.original;
 
-      const handleDelete = async (slug: string) => {
-        try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/user/artikel/delete/${slug}`,
-            {
-              method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${Cookies.get("token")}`,
-              },
-            },
-          );
-          const data = await response.json();
-          toast(data.message);
-        } catch (error: any) {
-          toast(error.message);
-        }
-      };
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -715,12 +659,7 @@ export const newsColumns: ColumnDef<News>[] = [
             <DropdownMenuItem className="cursor-pointer">
               <Link href={`/articles/${article.slug}`}>Edit</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onClick={() => handleDelete(article.slug)}
-            >
-              Delete
-            </DropdownMenuItem>
+            <ModalDelete endpoint={`artikel/delete/${article.slug}`} />
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -734,17 +673,30 @@ export const manageUserColumns: ColumnDef<ManageUser>[] = [
     header: "Nama",
   },
   {
-    accessorKey: "role",
+    accessorKey: "Role",
     header: "Role",
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "Instansi",
+    header: "Instansi",
+    cell: ({ row }) => {
+      const user = row.original;
+
+      return (
+        <p>
+          {user.Instansi === null && user.Role === "Bupati"
+            ? "Kepala Daerah"
+            : user.Instansi === null
+              ? "Masyarakat"
+              : user.Instansi}
+        </p>
+      );
+    },
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original;
+      const user = row.original;
 
       return (
         <DropdownMenu>
@@ -758,7 +710,7 @@ export const manageUserColumns: ColumnDef<ManageUser>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <ModalDelete endpoint={`alluserinfo/delete/${user.slug}`} />
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -799,23 +751,6 @@ export const FAQColumns: ColumnDef<FAQ>[] = [
     cell: ({ row }) => {
       const faq = row.original;
 
-      const handleDelete = async (id: number) => {
-        try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/user/faq/delete/${id}`,
-            {
-              method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${Cookies.get("token")}`,
-              },
-            },
-          );
-          const data = await response.json();
-          toast(data.message);
-        } catch (error: any) {
-          toast(error.message);
-        }
-      };
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -828,9 +763,7 @@ export const FAQColumns: ColumnDef<FAQ>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <AlertDialogUpdateFaq id={faq.id} />
-            <DropdownMenuItem onClick={() => handleDelete(faq.id)}>
-              Delete
-            </DropdownMenuItem>
+            <ModalDelete endpoint={`faq/delete/${faq.id}`} />
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -856,23 +789,6 @@ export const facilitiesColumns: ColumnDef<Facility>[] = [
     cell: ({ row }) => {
       const facility = row.original;
 
-      const handleDelete = async (id: number) => {
-        try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/user/facilities/delete/${id}`,
-            {
-              method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${Cookies.get("token")}`,
-              },
-            },
-          );
-          const data = await response.json();
-          toast(data.message);
-        } catch (error: any) {
-          toast(error.message);
-        }
-      };
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -885,9 +801,7 @@ export const facilitiesColumns: ColumnDef<Facility>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <AlertDialogUpdateFacility id={facility.id} />
-            <DropdownMenuItem onClick={() => handleDelete(facility.id)}>
-              Delete
-            </DropdownMenuItem>
+            <ModalDelete endpoint={`facilities/delete/${facility.id}`} />
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -913,23 +827,6 @@ export const carouselColumns: ColumnDef<Facility>[] = [
     cell: ({ row }) => {
       const carousel = row.original;
 
-      const handleDelete = async (id: number) => {
-        try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/user/carousel/delete/${id}`,
-            {
-              method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${Cookies.get("token")}`,
-              },
-            },
-          );
-          const data = await response.json();
-          toast(data.message);
-        } catch (error: any) {
-          toast(error.message);
-        }
-      };
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -942,9 +839,7 @@ export const carouselColumns: ColumnDef<Facility>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <AlertDialogUpdateCarousel id={carousel.id} />
-            <DropdownMenuItem onClick={() => handleDelete(carousel.id)}>
-              Delete
-            </DropdownMenuItem>
+            <ModalDelete endpoint={`carousel/delete/${carousel.id}`} />
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -1020,21 +915,26 @@ export const selectDataTypeForm = [
   },
   {
     id: 2,
+    value: "textarea",
+    name: "Jawaban Panjang",
+  },
+  {
+    id: 3,
     value: "number",
     name: "Jawaban Angka",
   },
   {
-    id: 3,
+    id: 4,
     value: "radio",
     name: "Satu Pilihan",
   },
   {
-    id: 4,
+    id: 5,
     value: "checkbox",
     name: "Banyak Pilihan",
   },
   {
-    id: 5,
+    id: 6,
     value: "date",
     name: "Tanggal",
   },

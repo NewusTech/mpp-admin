@@ -45,10 +45,16 @@ const CreateOffline = () => {
   const serviceId = useCreateRequestOffline((state) => state.serviceId);
   const [formValues, setFormValues] = useState<Record<string, FormValue>>({});
   const [docValues, setDocValues] = useState<Record<string, File | null>>({});
+  const [userData, setUserData] = useState<any>(null); // State for storing selected user data
   const [searchTerm, setSearchTerm] = useState("");
+  const [kecamatan, setKecamatan] = useState<any>(null);
+  const [searchKecamatanTerm, setSearchKecamatanTerm] = useState("");
+  const [searchKecamatanInput, setSearchKecamatanInput] = useState("");
+  const [village, setVillage] = useState<any>(null);
+  const [searchVillageTerm, setSearchVillageTerm] = useState("");
+  const [searchVillageInput, setSearchVillageInput] = useState("");
   const [searchInput, setSearchInput] = useState(""); // State for search input
   const [selectedUser, setSelectedUser] = useState(""); // State untuk menyimpan nilai yang dipilih
-  const [userData, setUserData] = useState<any>(null); // State for storing selected user data
   const [form, setForm] = useState({
     name: "",
     nik: "",
@@ -85,6 +91,16 @@ const CreateOffline = () => {
     }));
   };
 
+  const { data: kecamatans } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/kecamatan/get?search=${searchKecamatanTerm}`,
+    fetcher,
+  );
+
+  const { data: desa } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/desa/get?kecamatan_id=${userData ? userData.kecamatan_id : kecamatan}&search=${searchVillageTerm}`,
+    fetcher,
+  );
+
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/form/${serviceId}`,
     fetcher,
@@ -96,11 +112,13 @@ const CreateOffline = () => {
   );
 
   const { data: users } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/alluserinfo/get?search=${searchTerm}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/alluserinfo/get?search=${searchTerm}&role=5`,
     fetcher,
   );
 
   const resultUser = users?.data;
+  const resultKec = kecamatans?.data;
+  const resultDesa = desa?.data;
   const resultForm: FormData[] = data?.data?.Layananforms || [];
   const resultDocs: DocData[] = inputFile?.data?.Layananforms || [];
 
@@ -177,14 +195,23 @@ const CreateOffline = () => {
     }
   };
 
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearchKecamatanTerm(searchKecamatanInput);
+      setSearchVillageTerm(searchVillageInput);
+    }, 300); // Debounce time to avoid excessive API calls
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchKecamatanInput, searchVillageInput]);
+
   const handleCreateUser = async () => {
     const formData = {
       name: form.name,
       nik: form.nik,
       telepon: form.telepon,
       email: form.email,
-      kecamatan: form.kec,
-      desa: form.desa,
+      kecamatan_id: kecamatan,
+      desa_id: village,
       rt: form.rt,
       rw: form.rw,
       alamat: form.alamat,
@@ -247,7 +274,11 @@ const CreateOffline = () => {
                 />
               </div>
               {resultUser?.map((item: any) => (
-                <SelectItem key={item.id} value={item.id.toString()}>
+                <SelectItem
+                  key={item.id}
+                  className="w-full"
+                  value={item.id.toString()}
+                >
                   <div className="py-1 w-full">
                     <h2 className="font-bold">{item.nik}</h2>
                     <p className="text-sm">{item.name}</p>
@@ -286,11 +317,33 @@ const CreateOffline = () => {
               <div className="flex gap-x-4">
                 <div className="w-full space-y-2">
                   <p>Kecamatan</p>
-                  <InputComponent value={userData.kec} />
+                  <InputComponent
+                    typeInput="selectSearch"
+                    valueInput={searchKecamatanInput}
+                    onChangeInputSearch={(e) =>
+                      setSearchKecamatanInput(e.target.value)
+                    }
+                    items={resultKec}
+                    label="Kecamatan"
+                    placeholder="Pilih Kecamatan"
+                    value={kecamatan || userData.kecamatan_id}
+                    onChange={(e: any) => setKecamatan(e)}
+                  />
                 </div>
                 <div className="w-full space-y-2">
                   <p>Desa</p>
-                  <InputComponent value={userData.desa} />
+                  <InputComponent
+                    typeInput="selectSearch"
+                    valueInput={searchVillageInput}
+                    onChangeInputSearch={(e) =>
+                      setSearchVillageInput(e.target.value)
+                    }
+                    items={resultDesa}
+                    label="Desa"
+                    placeholder="Pilih Desa"
+                    value={village || userData.desa_id}
+                    onChange={(e: any) => setVillage(e)}
+                  />
                 </div>
               </div>
               <div className="flex gap-x-4">
@@ -354,17 +407,31 @@ const CreateOffline = () => {
                   <div className="w-full space-y-2">
                     <p>Kecamatan</p>
                     <InputComponent
-                      value={form.kec}
-                      name="kec"
-                      onChange={handleChangeUserData}
+                      typeInput="selectSearch"
+                      valueInput={searchKecamatanInput}
+                      onChangeInputSearch={(e) =>
+                        setSearchKecamatanInput(e.target.value)
+                      }
+                      items={resultKec}
+                      label="Kecamatan"
+                      placeholder="Pilih Kecamatan"
+                      value={kecamatan}
+                      onChange={(e: any) => setKecamatan(e)}
                     />
                   </div>
                   <div className="w-full space-y-2">
                     <p>Desa</p>
                     <InputComponent
-                      value={form.desa}
-                      name="desa"
-                      onChange={handleChangeUserData}
+                      typeInput="selectSearch"
+                      valueInput={searchVillageInput}
+                      onChangeInputSearch={(e) =>
+                        setSearchVillageInput(e.target.value)
+                      }
+                      items={resultDesa}
+                      label="Desa"
+                      placeholder="Pilih Desa"
+                      value={village}
+                      onChange={(e: any) => setVillage(e)}
                     />
                   </div>
                 </div>
@@ -482,12 +549,12 @@ const CreateOffline = () => {
               <h3 className="font-semibold text-[16px] text-primary-800">
                 {v.field}
               </h3>
-              <p className="text-sm">Lorem ipsum dolor sit amet</p>
             </div>
             <div>
               <InputComponent
                 typeInput="upload"
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                label={docValues[v.id] ? docValues[v.id]?.name : "Upload"}
+                onChange={(e) =>
                   handleDocChange(
                     v.id,
                     e.target.files ? e.target.files[0] : null,

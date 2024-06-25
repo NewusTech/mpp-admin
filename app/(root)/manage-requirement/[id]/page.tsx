@@ -5,12 +5,10 @@ import Step from "@/components/Steps";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import useCreateRequirement from "@/lib/store/useCreateRequirement";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
-import { toast } from "sonner";
+import useUpdateRequirementStore from "@/lib/store/useUpdateRequirementStore";
+import { useRouter } from "next/navigation";
 
 const steps = [
   { id: 1, title: "1" },
@@ -19,35 +17,33 @@ const steps = [
 ];
 const currentStep = 1;
 
-const CreateManageRequirementPage = () => {
-  const { selectedId, serviceId, setServiceId } = useCreateRequirement(
+const UpdateManageRequirementPage = ({
+  params,
+}: {
+  params: {
+    id: number;
+  };
+}) => {
+  const { setLayananforms, setServiceId } = useUpdateRequirementStore(
     (state) => ({
-      selectedId: state.selectedId,
-      serviceId: state.serviceId,
+      setLayananforms: state.setLayananforms,
       setServiceId: state.setServiceId,
     }),
   );
-  const [informationService, setInformationService] = useState("");
 
-  const { data: services } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get/${selectedId}`,
+  const router = useRouter();
+
+  const { data: service } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/form/${params.id}`,
     fetcher,
   );
 
-  const serviceAll = services?.data;
+  const serviceOne = service?.data;
 
-  const handleSelectChange = (e: any) => {
-    const selectedServiceId = e;
-    setServiceId(selectedServiceId);
-
-    // Find the selected service to get its description
-    const selectedService = serviceAll.find(
-      (service: any) => service.id === parseInt(selectedServiceId),
-    );
-
-    if (selectedService) {
-      setInformationService(selectedService.desc);
-    }
+  const handlePassLayananforms = () => {
+    setLayananforms(serviceOne.Layananforms);
+    setServiceId(params.id);
+    router.push(`/manage-requirement/${params.id}/step-2`);
   };
 
   return (
@@ -78,33 +74,27 @@ const CreateManageRequirementPage = () => {
         </div>
         <div className="py-5 space-y-2">
           <p>Jenis Layanan</p>
-          <InputComponent
-            typeInput="select"
-            value={serviceId}
-            onChange={(e) => handleSelectChange(e)}
-            items={serviceAll}
-            label="Jenis Layanan"
-            placeholder="Pilih Jenis Layanan"
-          />
+          <InputComponent disable={true} value={serviceOne?.name} />
         </div>
         <div className="space-y-2">
           <p>Informasi Layanan</p>
           <InputComponent
             typeInput="textarea"
             disable={true}
-            value={informationService}
+            value={serviceOne?.desc}
           />
         </div>
         <div className="flex justify-center items-center pt-8">
-          <Link href="/manage-requirement/create/step-2">
-            <Button className="bg-primary-700 hover:bg-primary-800 rounded-full w-[290px]">
-              Lanjut
-            </Button>
-          </Link>
+          <Button
+            className="bg-primary-700 hover:bg-primary-800 rounded-full w-[290px]"
+            onClick={handlePassLayananforms}
+          >
+            Lanjut
+          </Button>
         </div>
       </div>
     </section>
   );
 };
 
-export default CreateManageRequirementPage;
+export default UpdateManageRequirementPage;

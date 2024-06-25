@@ -1,9 +1,13 @@
 export interface NavProps {
   icons: string;
+  iconsActive: string;
   title: string;
   type?: string;
   route: string;
   content?: React.ReactNode;
+  isDropdownOpen?: boolean;
+  handleDropdownOpen?: () => void;
+  path: string;
 }
 
 export interface CardDashboardQueueProps {
@@ -34,8 +38,15 @@ export interface CardType {
   id?: any;
   toggle?: boolean;
   field: string;
-  tipedata: "text" | "number" | "radio" | "checkbox" | "date";
-  isrequired: string;
+  tipedata:
+    | "text"
+    | "number"
+    | "radio"
+    | "checkbox"
+    | "date"
+    | "textarea"
+    | "string";
+  isrequired: any;
   options?: OptionType[];
 }
 

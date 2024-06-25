@@ -10,10 +10,14 @@ export const fetcher = (url: string) => {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
-  }).then((res) => {
-    if (!res.ok) {
-      throw new Error("Failed to fetch");
-    }
-    return res.json();
-  });
+  })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Failed to fetch");
+      }
+      return res.json();
+    })
+    .catch((e) => {
+      console.log(e);
+    });
 };

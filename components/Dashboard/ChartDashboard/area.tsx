@@ -4,14 +4,24 @@ import dynamic from "next/dynamic";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import { ApexOptions } from "apexcharts"; // Import the ApexOptions type
 
-const AreaChart = () => {
+interface AreaChartProps {
+  data: {
+    LayananId: number;
+    LayananName: string;
+    LayananformnumCount: number;
+  }[];
+}
+
+const AreaChart = ({ data }: AreaChartProps) => {
+  if (!data || data.length === 0) {
+    return <p>No data available</p>;
+  }
+
   const option: ApexOptions = {
     chart: {
       id: "area",
     },
-    xaxis: {
-      categories: ["Jan", "Feb", "Mar"],
-    },
+    labels: data?.map((item) => item.LayananName),
     dataLabels: {
       enabled: false,
     },
@@ -24,28 +34,18 @@ const AreaChart = () => {
     colors: ["#1D3A6C", "#3568C0", "#FF9742"],
   };
 
-  const series = [
-    {
-      name: "Layanan 1",
-      data: [10, 150, 57],
-    },
-    {
-      name: "Layanan 2",
-      data: [1, 200, 10],
-    },
-    {
-      name: "Layanan 3",
-      data: [1, 100, 90],
-    },
-  ];
+  const seriesData = data?.map((item) => ({
+    name: item.LayananName,
+    data: [item.LayananformnumCount],
+  }));
 
   return (
     <>
       <ApexChart
         type="area"
         options={option}
-        series={series}
-        height="100%"
+        series={seriesData}
+        height="70%"
         width="100%"
       />
     </>

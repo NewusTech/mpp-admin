@@ -10,7 +10,14 @@ interface OptionType {
 interface Step2 {
   id?: any;
   field: string;
-  tipedata: "text" | "number" | "radio" | "checkbox" | "date";
+  tipedata:
+    | "text"
+    | "number"
+    | "radio"
+    | "checkbox"
+    | "date"
+    | "textarea"
+    | "string";
   isrequired: string;
   options?: OptionType[];
 }

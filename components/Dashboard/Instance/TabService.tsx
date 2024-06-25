@@ -28,20 +28,44 @@ const buttons: any = [
   { label: "Gagal", value: 5 },
 ];
 
+const months = [
+  { label: "Januari", value: 1 },
+  { label: "Februari", value: 2 },
+  { label: "Maret", value: 3 },
+  { label: "April", value: 4 },
+  { label: "Mei", value: 5 },
+  { label: "Juni", value: 6 },
+  { label: "Juli", value: 7 },
+  { label: "Agustus", value: 8 },
+  { label: "September", value: 9 },
+  { label: "Oktober", value: 10 },
+  { label: "November", value: 11 },
+  { label: "Desember", value: 12 },
+];
+
 const TabService = () => {
   const [activeButton, setActiveButton] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState<any>(null);
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/historyform?limit=10000000&status=${activeButton}`,
     fetcher,
   );
 
+  const url =
+    selectedMonth === null
+      ? `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/admindinas`
+      : `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/admindinas?month=${selectedMonth}`;
+
+  const { data: stats } = useSWR<any>(url, fetcher);
+
   const result = data?.data;
+  const resultStats = stats?.data;
+  const resultTop3Month = stats?.data.top3LayananMonth;
+  const resultTop3Week = stats?.data.top3LayananWeek;
 
   const handleClick = (value: any) => {
     setActiveButton(value);
-    // Kirim nilai aktif ke server atau lakukan aksi lain yang diinginkan
-    console.log("Button clicked with value:", value);
   };
 
   return (
@@ -52,29 +76,36 @@ const TabService = () => {
             <p className="text-sm w-10/12 text-center">
               Permohonan Layanan Selesai Hari Ini
             </p>
-            <h4 className="font-semibold text-[40px]">8</h4>
+            <h4 className="font-semibold text-[40px]">
+              {resultStats?.permohonanCountToday}
+            </h4>
           </div>
           <div className="rounded-[16px] w-full bg-error-700 flex flex-col gap-y-4 items-center justify-center py-[40px] px-5 text-neutral-50">
             <p className="text-sm w-10/12 text-center">
               Permohonan Layanan Gagal Hari Ini
             </p>
-            <h4 className="font-semibold text-[40px]">28</h4>
+            <h4 className="font-semibold text-[40px]">
+              {resultStats?.permohonanGagalToday}
+            </h4>
           </div>
           <div></div>
         </div>
         <div className="rounded-[16px] w-4/12 bg-neutral-50 shadow p-4">
-          <Select>
+          <Select
+            value={selectedMonth?.toString()}
+            onValueChange={(e) => setSelectedMonth(e)}
+          >
             <SelectTrigger className="w-[180px] border-0 font-semibold">
-              <SelectValue placeholder="Select a fruit" />
+              <SelectValue placeholder="Pilih Bulan" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Fruits</SelectLabel>
-                <SelectItem value="apple">Apple</SelectItem>
-                <SelectItem value="banana">Banana</SelectItem>
-                <SelectItem value="blueberry">Blueberry</SelectItem>
-                <SelectItem value="grapes">Grapes</SelectItem>
-                <SelectItem value="pineapple">Pineapple</SelectItem>
+                <SelectLabel>Bulan</SelectLabel>
+                {months.map((v) => (
+                  <SelectItem key={v.value} value={v.value.toString()}>
+                    {v.label}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -83,7 +114,9 @@ const TabService = () => {
               Permohonanan Layanan Selesai
             </p>
             <div className="rounded-full bg-neutral-50 items-center justify-center w-10 h-10 flex">
-              <p className="text-success-700 font-semibold text-sm">80</p>
+              <p className="text-success-700 font-semibold text-sm">
+                {resultStats?.permohonanCountMonth}
+              </p>
             </div>
           </div>
           <div className="h-[62px] w-full rounded-full px-7 py-2 bg-error-700 flex items-center justify-between mt-4">
@@ -91,67 +124,69 @@ const TabService = () => {
               Permohonanan Layanan Gagal
             </p>
             <div className="rounded-full bg-neutral-50 items-center justify-center w-10 h-10 flex">
-              <p className="text-error-700 font-semibold text-sm">80</p>
+              <p className="text-error-700 font-semibold text-sm">
+                {resultStats?.permohonanGagalMonth}
+              </p>
             </div>
           </div>
         </div>
       </div>
       <div className="flex w-full gap-x-5">
         <div className="rounded-[16px] w-1/2 bg-neutral-50 shadow p-4">
-          <div className="flex gap-x-2 mb-8 text-neutral-800 flex justify-center">
+          <div className="gap-x-2 mb-8 text-neutral-800 flex justify-center">
             <h3 className="text-primary-800 font-medium">TOP 3 Layanan</h3>
             <p>Januari</p>
           </div>
-          {/*<DonutChart />*/}
+          <DonutChart data={resultTop3Month} />
           <div className="flex gap-x-5 justify-around mt-4">
-            <div className="flex gap-x-2 items-center">
-              <div className="w-2 h-2 bg-primary-800 rounded-full"></div>
-              <div>
-                <h3 className="text-sm text-neutral-900 font-semibold">300</h3>
-                <p className="text-xs text-neutral-800">Layanan 1</p>
-              </div>
-            </div>
-            <div className="flex gap-x-2 items-center">
-              <div className="w-2 h-2 bg-primary-700 rounded-full"></div>
-              <div>
-                <h3 className="text-sm text-neutral-900 font-semibold">300</h3>
-                <p className="text-xs text-neutral-800">Layanan 1</p>
-              </div>
-            </div>
-            <div className="flex gap-x-2 items-center">
-              <div className="w-2 h-2 bg-secondary-700 rounded-full"></div>
-              <div>
-                <h3 className="text-sm text-neutral-900 font-semibold">300</h3>
-                <p className="text-xs text-neutral-800">Layanan 1</p>
-              </div>
-            </div>
+            {resultTop3Month?.map((v: any, index: number) => {
+              // Tentukan kelas latar belakang berdasarkan nilai index
+              const bgClass =
+                index === 0
+                  ? "bg-primary-800"
+                  : index === 1
+                    ? "bg-primary-700"
+                    : "bg-secondary-700";
+
+              return (
+                <div className="flex gap-x-2 items-center" key={v?.layananId}>
+                  <div className={`w-2 h-2 ${bgClass} rounded-full`}></div>
+                  <div>
+                    <h3 className="text-sm text-neutral-900 font-semibold">
+                      {v?.LayananformnumCount}
+                    </h3>
+                    <p className="text-xs text-neutral-800">{v?.LayananName}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
         <div className="rounded-[16px] w-1/2 bg-neutral-50 shadow p-4">
           <p className="text-right text-neutral-800 mb-10">Last 7 Days</p>
-          <AreaChart />
+          <AreaChart data={resultTop3Week} />
           <div className="flex gap-x-5 justify-around mt-4">
-            <div className="flex gap-x-2 items-center">
-              <div className="w-2 h-2 bg-primary-800 rounded-full"></div>
-              <div>
-                <h3 className="text-sm text-neutral-900 font-semibold">300</h3>
-                <p className="text-xs text-neutral-800">Layanan 1</p>
-              </div>
-            </div>
-            <div className="flex gap-x-2 items-center">
-              <div className="w-2 h-2 bg-primary-700 rounded-full"></div>
-              <div>
-                <h3 className="text-sm text-neutral-900 font-semibold">300</h3>
-                <p className="text-xs text-neutral-800">Layanan 1</p>
-              </div>
-            </div>
-            <div className="flex gap-x-2 items-center">
-              <div className="w-2 h-2 bg-secondary-700 rounded-full"></div>
-              <div>
-                <h3 className="text-sm text-neutral-900 font-semibold">300</h3>
-                <p className="text-xs text-neutral-800">Layanan 1</p>
-              </div>
-            </div>
+            {resultTop3Week?.map((v: any, index: number) => {
+              // Tentukan kelas latar belakang berdasarkan nilai index
+              const bgClass =
+                index === 0
+                  ? "bg-primary-800"
+                  : index === 1
+                    ? "bg-primary-700"
+                    : "bg-secondary-700";
+
+              return (
+                <div className="flex gap-x-2 items-center" key={v?.layananId}>
+                  <div className={`w-2 h-2 ${bgClass} rounded-full`}></div>
+                  <div>
+                    <h3 className="text-sm text-neutral-900 font-semibold">
+                      {v?.LayananformnumCount}
+                    </h3>
+                    <p className="text-xs text-neutral-800">{v?.LayananName}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -172,7 +207,7 @@ const TabService = () => {
           ))}
         </div>
         <div className="flex justify-end mt-10">
-          <div className="flex items-center w-4/12 space-x-2 ">
+          <div className="flex items-center w-5/12 space-x-2 ">
             <InputComponent typeInput="datepicker" />
             <p>to</p>
             <InputComponent typeInput="datepicker" />
