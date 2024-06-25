@@ -76,8 +76,9 @@ export type News = {
 export type ManageUser = {
   id: number;
   name: string;
-  role: string;
-  status: string;
+  slug: string;
+  Role: string;
+  Instansi: string;
 };
 
 export type Report = {

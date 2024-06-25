@@ -33,8 +33,6 @@ const FormSignin = () => {
       password: values.password,
     };
 
-    console.log(values);
-
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/user/login`,

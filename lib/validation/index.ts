@@ -53,6 +53,15 @@ export const FAQValidation = z.object({
   }),
 });
 
+export const SurveyValidation = z.object({
+  field: z.string({
+    message: "Pertanyaan harus diisi",
+  }),
+  status: z.enum(["0", "1"], {
+    required_error: "Harus pilih status.",
+  }),
+});
+
 export const ServiceValidation = z.object({
   name: z.string({
     message: "Pertanyaan harus diisi",

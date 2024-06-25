@@ -120,7 +120,7 @@ const InputComponent = ({
               !date && "text-muted-foreground",
             )}
           >
-            {date ? format(date, "PPP") : <span>Pilih Data</span>}
+            {date ? format(date, "PP") : <span>Pilih Tanggal</span>}
             <CalendarIcon className="ml-2 h-4 w-4 text-primary-700" />
           </Button>
         </PopoverTrigger>
@@ -181,7 +181,7 @@ const InputComponent = ({
 
   if (typeInput === "upload")
     return (
-      <div className="relative inline-block">
+      <div className="relative inline-block cursor-pointer">
         <input
           type="file"
           id="file"
@@ -192,7 +192,7 @@ const InputComponent = ({
           htmlFor="file"
           className="cursor-pointer inline-block bg-transparent border border-primary-700 text-primary-700 py-2 px-5 rounded-full font-semibold text-sm hover:bg-violet-100"
         >
-          Upload
+          {label}
         </label>
       </div>
     );
@@ -205,6 +205,7 @@ const InputComponent = ({
       className="rounded-full"
       value={value}
       onChange={onChange}
+      disabled={disable}
     />
   );
 };
