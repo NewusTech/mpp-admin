@@ -3,27 +3,46 @@
 import dynamic from "next/dynamic";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const DonutChart = () => {
-  const options = {
+interface DonutChartProps {
+  data: {
+    LayananId: number;
+    LayananName: string;
+    LayananformnumCount: number;
+  }[];
+}
+
+const AreaChart = ({ data }: DonutChartProps) => {
+  if (!data || data.length === 0) {
+    return <p className="text-center">No data available</p>;
+  }
+
+  const option = {
     chart: {
       id: "donut",
     },
-    labels: ["Series A", "Series B", "Series C"], // Labels for the donut chart
-    dataLabels: {
-      enabled: false,
-    },
+    labels: data?.map((item) => item.LayananName),
     legend: {
       show: false,
     },
+    dataLabels: {
+      enabled: false,
+    },
+    colors: ["#1D3A6C", "#3568C0", "#FF9742"],
   };
 
-  const series = [44, 55, 41]; // Series data for the donut chart
+  const series = data?.map((item) => item.LayananformnumCount);
 
   return (
     <>
-      <ApexChart type="donut" options={options} series={series} height="190%" />
+      <ApexChart
+        type="donut"
+        options={option}
+        series={series}
+        height="90%"
+        width="100%"
+      />
     </>
   );
 };
 
-export default DonutChart;
+export default AreaChart;
