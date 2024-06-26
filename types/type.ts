@@ -35,7 +35,7 @@ export type DataInstance = {
 
 export type DataApps = {
   id: number;
-  link: number;
+  link: string;
   name: string;
   slug: string;
   image: string;
