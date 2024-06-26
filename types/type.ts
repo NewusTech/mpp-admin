@@ -33,6 +33,14 @@ export type DataInstance = {
   slug: string;
 };
 
+export type DataApps = {
+  id: number;
+  link: string;
+  name: string;
+  slug: string;
+  image: string;
+};
+
 export type DataServices = {
   id: number;
   no: number;
@@ -97,7 +105,19 @@ export type FAQ = {
 
 export type Facility = {
   id: number;
+  slug: string;
+  title: string;
   image: string;
+};
+
+export type Slider = {
+  id: number;
+  image: string;
+};
+
+export type Video = {
+  id: number;
+  video: string;
 };
 
 export type VisionMission = {

@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CardTypeFile } from "@/types/interface";
 import useCreateRequirement from "@/lib/store/useCreateRequirement";
 import Cookies from "js-cookie";
@@ -31,11 +31,19 @@ const CreateManageRequirementPageStep3 = () => {
     `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/docs/${serviceId}`,
     fetcher,
   );
+  const [cards, setCards] = useState<CardTypeFile[]>([]);
 
   const result = service?.data;
   const docs = result?.Layananforms;
 
-  const [cards, setCards] = useState<CardTypeFile[]>(docs);
+  useEffect(() => {
+    const initialCards = docs?.map((item: any) => ({
+      id: item.id,
+      field: item.field,
+      tipedata: item.tipedata,
+    }));
+    setCards(initialCards);
+  }, [docs]);
 
   const handleSwitch = (id: number) => {
     setCards(
@@ -43,18 +51,6 @@ const CreateManageRequirementPageStep3 = () => {
         card.id === id ? { ...card, toggle: !card.toggle } : card,
       ),
     );
-  };
-
-  const handleAddCard = () => {
-    setCards([
-      ...cards,
-      {
-        id: Date.now(),
-        toggle: false,
-        field: "",
-        tipedata: "file",
-      },
-    ]);
   };
 
   const handleRemoveCard = (id: number) => {
@@ -124,7 +120,7 @@ const CreateManageRequirementPageStep3 = () => {
             ))}
           </div>
         </div>
-        {cards.map((card) => (
+        {cards?.map((card) => (
           <div
             key={card.id}
             className="w-full h-full rounded-[20px] bg-neutral-200 p-8"
@@ -168,12 +164,6 @@ const CreateManageRequirementPageStep3 = () => {
             </div>
           </div>
         ))}
-        <Button
-          onClick={handleAddCard}
-          className="border border-primary-700 bg-transparent text-primary-700 hover:bg-primary-700 hover:text-neutral-50 rounded-full w-[120px]"
-        >
-          Tambah
-        </Button>
         <div className="flex justify-center items-center pt-8">
           <Button
             onClick={handleSubmit}

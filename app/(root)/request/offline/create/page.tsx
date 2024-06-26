@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Textarea } from "@/components/ui/textarea";
 
 // Define types
 type FormValue = string | number | boolean | Record<string, boolean>;
@@ -525,12 +526,20 @@ const CreateOffline = () => {
                       </div>
                     ))}
                   </div>
+                ) : v.tipedata === "textarea" ? (
+                  <Textarea
+                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                      handleChange(v.id, e.target.value)
+                    }
+                    className="w-full h-40 p-2 border rounded-md"
+                  />
                 ) : (
-                  <InputComponent
+                  <Input
                     type={v.tipedata}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       handleChange(v.id, e.target.value)
                     }
+                    className="rounded-full w-full pr-96 "
                   />
                 )}
               </div>

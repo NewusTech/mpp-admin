@@ -28,8 +28,9 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import FileUploader from "@/components/FileUploader";
+import { Input } from "@/components/ui/input";
 
-export default function AlertDialogUpdateFacility({ id }: { id: number }) {
+export default function AlertDialogUpdateFacility({ slug }: { slug: string }) {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
@@ -44,28 +45,30 @@ export default function AlertDialogUpdateFacility({ id }: { id: number }) {
   });
 
   const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/facilities/get/${id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/facilities/get/${slug}`,
     fetcher,
   );
 
   const result = data?.data;
 
-  // useEffect(() => {
-  //   if (result) {
-  //     form.reset({
-  //       image: result.image,
-  //     });
-  //   }
-  // }, [result]);
+  useEffect(() => {
+    if (result) {
+      form.reset({
+        image: result.image,
+        title: result.title,
+      });
+    }
+  }, [result]);
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof FacilitiesValidation>) {
     const formData = new FormData();
     formData.append("image", values.image[0]);
+    formData.append("title", values.title);
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/facilities/update/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/facilities/update/${slug}`,
         {
           method: "PUT",
           headers: {
@@ -94,7 +97,7 @@ export default function AlertDialogUpdateFacility({ id }: { id: number }) {
           <p className="text-sm">Edit</p>
         </div>
       </AlertDialogTrigger>
-      <AlertDialogContent className="p-0 border-0 overflow-auto">
+      <AlertDialogContent className="p-0 border-0 overflow-auto h-full">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
             Ubah Fasilitas
@@ -103,6 +106,23 @@ export default function AlertDialogUpdateFacility({ id }: { id: number }) {
         <div className="p-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel>Judul</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Masukkan judul"
+                        className="rounded-full"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="image"

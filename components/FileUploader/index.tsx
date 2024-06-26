@@ -19,9 +19,13 @@ const FileUploader = ({ fileChange, mediaUrl, type }: FileUploaderProps) => {
     },
     [file],
   );
+
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: { "image/*": [".png", ".jpeg", ".jpg", ".svg"] },
+    accept: {
+      "image/*": [".png", ".jpeg", ".jpg", ".svg"],
+      "video/*": [".mp4"],
+    },
   });
 
   return (
@@ -44,6 +48,17 @@ const FileUploader = ({ fileChange, mediaUrl, type }: FileUploaderProps) => {
           {fileUrl && (
             <div className="flex justify-center py-2 h-14 w-14">
               <img src={fileUrl} alt="image" />
+            </div>
+          )}
+        </>
+      ) : type === "video" ? (
+        <>
+          <div className="w-full border border-dashed p-5 flex justify-center cursor-pointer">
+            <p className="text-gray-400">Drag n drop video disini</p>
+          </div>
+          {fileUrl && (
+            <div className="flex justify-center py-2 h-40 w-40">
+              <video src={fileUrl} controls />
             </div>
           )}
         </>
