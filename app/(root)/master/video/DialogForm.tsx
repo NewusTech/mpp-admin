@@ -23,15 +23,16 @@ import {
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { FacilitiesValidation } from "@/lib/validation";
+import { uploadVideoSchema } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useState } from "react";
 import FileUploader from "@/components/FileUploader";
-import { Input } from "@/components/ui/input";
 
-export default function AlertDialogCreateFacility() {
+export default function AlertDialogCreateVideo() {
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
   };
@@ -40,21 +41,21 @@ export default function AlertDialogCreateFacility() {
     setAddModalOpen(false);
   };
 
-  const form = useForm<z.infer<typeof FacilitiesValidation>>({
-    resolver: zodResolver(FacilitiesValidation),
+  const form = useForm<z.infer<typeof uploadVideoSchema>>({
+    resolver: zodResolver(uploadVideoSchema),
   });
 
   // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof FacilitiesValidation>) {
+  async function onSubmit(values: z.infer<typeof uploadVideoSchema>) {
+    setIsLoading(true);
     const formData = new FormData();
-    formData.append("image", values.image[0]);
-    formData.append("title", values.title);
+    formData.append("video", values.video[0]);
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/facilities/create`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/video/update`,
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
@@ -63,12 +64,15 @@ export default function AlertDialogCreateFacility() {
       );
 
       const data = await response.json();
-      toast(data.message);
-      console.log(data);
-      handleAddModalClose();
+      if (response.ok) {
+        toast(data.message);
+        handleAddModalClose();
+      }
     } catch (error: any) {
       toast(error.message);
       console.log(error);
+    } finally {
+      setIsLoading(false); // Stop loading
     }
   }
 
@@ -79,13 +83,13 @@ export default function AlertDialogCreateFacility() {
           onClick={handleOpenAddModal}
           className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
         >
-          Tambah
+          Video
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="p-0 border-0 overflow-auto">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
-            Tambah Fasilitas
+            Ubah Video
           </AlertDialogTitle>
         </AlertDialogHeader>
         <div className="p-6">
@@ -93,29 +97,12 @@ export default function AlertDialogCreateFacility() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel>Judul</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Masukkan judul"
-                        className="rounded-full"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="image"
+                name="video"
                 render={({ field }) => (
                   <FormItem className="space-y-3">
                     <FormLabel>Foto</FormLabel>
                     <FormControl>
-                      <FileUploader fileChange={field.onChange} />
+                      <FileUploader fileChange={field.onChange} type="video" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -131,8 +118,9 @@ export default function AlertDialogCreateFacility() {
                 <AlertDialogAction
                   type="submit"
                   className="bg-primary-700 hover:bg-primary-800 rounded-full"
+                  disabled={isLoading ? true : false}
                 >
-                  Tambah
+                  {isLoading ? <Loader className="animate-spin" /> : "Ubah"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </form>

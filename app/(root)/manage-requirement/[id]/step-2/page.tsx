@@ -38,22 +38,24 @@ const UpdateManageRequirementPageStep2 = () => {
   const { serviceId, layananforms, dataStep2, setDataStep2 } =
     useUpdateRequirementStore();
 
-  const [cards, setCards] = useState<CardType[]>(layananforms);
+  const [cards, setCards] = useState<CardType[]>([]);
+
+  useEffect(() => {
+    const initialCards = layananforms.map((item) => ({
+      id: item.id,
+      field: item.field,
+      tipedata: item.tipedata,
+      isrequired: item.isrequired,
+      options:
+        (item.tipedata === "radio" || item.tipedata === "checkbox") &&
+        item.datajson
+          ? item.datajson.map((opt: any) => ({ id: opt.id, key: opt.key }))
+          : [],
+    }));
+    setCards(initialCards);
+  }, [layananforms]);
 
   const [lastOptionId, setLastOptionId] = useState<number>(0); // State for incremental option ID
-
-  const handleAddCard = () => {
-    setCards([
-      ...cards,
-      {
-        id: Date.now(),
-        field: "",
-        tipedata: "text",
-        isrequired: "",
-        options: [],
-      },
-    ]);
-  };
 
   const handleRemoveCard = async (id: number) => {
     try {
@@ -157,6 +159,7 @@ const UpdateManageRequirementPageStep2 = () => {
         field: card.field,
         tipedata: card.tipedata,
         isrequired: card.isrequired,
+        status: 1,
       };
 
       if (card.tipedata === "radio" || card.tipedata === "checkbox") {
@@ -313,23 +316,10 @@ const UpdateManageRequirementPageStep2 = () => {
                     </div>
                   </div>
                 ))}
-                <Button
-                  size="xs"
-                  className="mt-2 border border-primary-700 bg-transparent text-primary-700 hover:bg-primary-700 hover:text-neutral-50 rounded-full"
-                  onClick={() => addOption(card.id)}
-                >
-                  <p className="text-xs">Tambah Pilihan</p>
-                </Button>
               </div>
             )}
           </div>
         ))}
-        <Button
-          className="border border-primary-700 bg-transparent text-primary-700 hover:bg-primary-700 hover:text-neutral-50 rounded-full w-[120px]"
-          onClick={handleAddCard}
-        >
-          Tambah
-        </Button>
         <div className="flex justify-center items-center pt-8">
           <Button
             className="bg-primary-700 hover:bg-primary-800 rounded-full w-[290px]"

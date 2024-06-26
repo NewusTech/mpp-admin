@@ -23,14 +23,13 @@ import {
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { FacilitiesValidation } from "@/lib/validation";
+import { FlowValidation } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useState } from "react";
 import FileUploader from "@/components/FileUploader";
-import { Input } from "@/components/ui/input";
 
-export default function AlertDialogCreateFacility() {
+export default function AlertDialogCreateMasterFlow() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
@@ -40,21 +39,20 @@ export default function AlertDialogCreateFacility() {
     setAddModalOpen(false);
   };
 
-  const form = useForm<z.infer<typeof FacilitiesValidation>>({
-    resolver: zodResolver(FacilitiesValidation),
+  const form = useForm<z.infer<typeof FlowValidation>>({
+    resolver: zodResolver(FlowValidation),
   });
 
   // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof FacilitiesValidation>) {
+  async function onSubmit(values: z.infer<typeof FlowValidation>) {
     const formData = new FormData();
     formData.append("image", values.image[0]);
-    formData.append("title", values.title);
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/facilities/create`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/alurmpp/update`,
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
@@ -79,35 +77,18 @@ export default function AlertDialogCreateFacility() {
           onClick={handleOpenAddModal}
           className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
         >
-          Tambah
+          Flow MPP
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="p-0 border-0 overflow-auto">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
-            Tambah Fasilitas
+            Ubah Flow
           </AlertDialogTitle>
         </AlertDialogHeader>
         <div className="p-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel>Judul</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Masukkan judul"
-                        className="rounded-full"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               <FormField
                 control={form.control}
                 name="image"
@@ -132,7 +113,7 @@ export default function AlertDialogCreateFacility() {
                   type="submit"
                   className="bg-primary-700 hover:bg-primary-800 rounded-full"
                 >
-                  Tambah
+                  Ubah
                 </AlertDialogAction>
               </AlertDialogFooter>
             </form>

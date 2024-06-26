@@ -11,9 +11,22 @@ export const SigninValidation = z.object({
 
 export const NewsValidation = z.object({
   title: z.string({
-    message: "NIK harus setidaknya 16 karakter.",
+    message: "Wajib isi.",
   }),
   description: z.string().min(25, {
+    message: "Deskripsi setidaknya harus 25 karakter.",
+  }),
+  image: z.custom<File[]>(),
+});
+
+export const AppsValidation = z.object({
+  name: z.string({
+    message: "Wajib isi.",
+  }),
+  description: z.string().min(25, {
+    message: "Deskripsi setidaknya harus 25 karakter.",
+  }),
+  link: z.string({
     message: "Deskripsi setidaknya harus 25 karakter.",
   }),
   image: z.custom<File[]>(),
@@ -81,4 +94,16 @@ export const ServiceValidation = z.object({
 
 export const FacilitiesValidation = z.object({
   image: z.custom<File[]>(),
+  title: z.string({
+    message: "Wajib diisi",
+  }),
+});
+
+export const FlowValidation = z.object({
+  image: z.custom<File[]>(),
+});
+
+// Skema lengkap untuk validasi formulir dengan file video
+export const uploadVideoSchema = z.object({
+  video: z.custom<File[]>(),
 });

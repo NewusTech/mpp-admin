@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  DataApps,
   DataInstance,
   DataServices,
   DetailSurveyResult,
@@ -25,8 +26,10 @@ import {
   Report,
   RequestOffline,
   RequestOnline,
+  Slider,
   SurveyQuestion,
   SurveyResult,
+  Video,
   VisionMission,
 } from "@/types/type";
 import Link from "next/link";
@@ -436,6 +439,69 @@ export const dashboardApprovalColumns: ColumnDef<ManageApprovals>[] = [
   },
 ];
 
+export const dataAppsColumns: ColumnDef<DataApps>[] = [
+  {
+    accessorKey: "name",
+    header: "Nama",
+  },
+  {
+    accessorKey: "image",
+    header: "Logo",
+    cell: ({ row }) => {
+      const apps = row.original;
+
+      return (
+        <div>
+          <Image src={apps.image} alt={apps.name} width={100} height={100} />
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "link",
+    header: "Link",
+    cell: ({ row }) => {
+      const apps = row.original;
+      return (
+        <div>
+          <a
+            href={apps.link}
+            className="underline hover:text-primary-700"
+            target="_blank"
+          >
+            {apps.name}
+          </a>
+        </div>
+      );
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const instance = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <Link href={`/master/master-apps/${instance.slug}`}>Edit</Link>
+            </DropdownMenuItem>
+            <ModalDelete endpoint={`aplikasietc/delete/${instance.slug}`} />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
+
 export const dataInstanceColumns: ColumnDef<DataInstance>[] = [
   {
     accessorKey: "no",
@@ -773,6 +839,10 @@ export const FAQColumns: ColumnDef<FAQ>[] = [
 
 export const facilitiesColumns: ColumnDef<Facility>[] = [
   {
+    accessorKey: "title",
+    header: "Judul",
+  },
+  {
     accessorKey: "image",
     header: "Gambar",
     cell: ({ row }) => {
@@ -800,8 +870,8 @@ export const facilitiesColumns: ColumnDef<Facility>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <AlertDialogUpdateFacility id={facility.id} />
-            <ModalDelete endpoint={`facilities/delete/${facility.id}`} />
+            <AlertDialogUpdateFacility slug={facility.slug} />
+            <ModalDelete endpoint={`facilities/delete/${facility.slug}`} />
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -842,6 +912,41 @@ export const carouselColumns: ColumnDef<Facility>[] = [
             <ModalDelete endpoint={`carousel/delete/${carousel.id}`} />
           </DropdownMenuContent>
         </DropdownMenu>
+      );
+    },
+  },
+];
+
+export const flowColumns: ColumnDef<Slider>[] = [
+  {
+    accessorKey: "image",
+    header: "Gambar",
+    cell: ({ row }) => {
+      const flow = row.original;
+      return (
+        <div>
+          <Image src={flow.image} alt="image" width={200} height={200} />
+        </div>
+      );
+    },
+  },
+];
+
+export const videoColumns: ColumnDef<Video>[] = [
+  {
+    accessorKey: "video",
+    header: "Video",
+    cell: ({ row }) => {
+      const flow = row.original;
+      return (
+        <div>
+          <video
+            src={flow.video}
+            controls={true}
+            muted={true}
+            className="w-full h-auto"
+          />
+        </div>
       );
     },
   },

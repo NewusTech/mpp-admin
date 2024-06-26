@@ -20,7 +20,6 @@ async function getData(): Promise<News[]> {
 
 const Articles = async () => {
   const data = await getData();
-  console.log(data);
 
   return (
     <section className="mr-16">
