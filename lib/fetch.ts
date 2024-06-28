@@ -1,9 +1,9 @@
 "use client";
 
 import Cookies from "js-cookie";
-const token = Cookies.get("token");
 
 export const fetcher = (url: string) => {
+  const token = Cookies.get("token");
   // Atau ambil dari state/context
   return fetch(url, {
     headers: {

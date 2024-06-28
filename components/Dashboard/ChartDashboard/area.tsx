@@ -14,7 +14,7 @@ interface AreaChartProps {
 
 const AreaChart = ({ data }: AreaChartProps) => {
   if (!data || data.length === 0) {
-    return <p>No data available</p>;
+    return <p className="text-center text-neutral-800">Data tidak tersedia</p>;
   }
 
   const option: ApexOptions = {

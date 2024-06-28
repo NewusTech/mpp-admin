@@ -1,8 +1,8 @@
-export type Payment = {
+export type QueueTab = {
   id: string;
-  jenis: string;
-  online: boolean;
-  offline: boolean;
+  name: string;
+  active_online: boolean;
+  active_offline: boolean;
 };
 
 export type RequestOnline = {
@@ -69,8 +69,9 @@ export type SurveyQuestion = {
 
 export type DetailSurveyResult = {
   id: number;
-  createdAt: string;
+  date: string;
   name: string;
+  kritiksaran: string;
   nilai: string;
 };
 

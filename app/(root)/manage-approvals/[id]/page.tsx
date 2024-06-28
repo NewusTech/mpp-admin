@@ -9,6 +9,14 @@ import Cookies from "js-cookie";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import AlertDialogUploadFile from "@/app/(root)/history-approvals/[id]/DialogForm";
+import {
+  bloodTypes,
+  educations,
+  genders,
+  marriedStatus,
+  religions,
+} from "@/constants";
+import { UserInfoLeft, UserInfoRight } from "@/components/BiodataUser";
 
 const DetailApproval = ({
   params,
@@ -23,12 +31,29 @@ const DetailApproval = ({
   );
 
   const result = data?.data;
+  const userInfo = result?.userinfo;
+  const serviceForm = result?.Layananforminputs;
+  const religion =
+    religions.find((item: any) => item.id === userInfo?.agama)?.key ||
+    "Tidak Diketahui";
+  const bloodType =
+    bloodTypes.find((item: any) => item.id === userInfo?.goldar)?.key ||
+    "Tidak Diketahui";
+  const gender =
+    genders.find((item: any) => item.id === userInfo?.gender)?.key ||
+    "Tidak Diketahui";
+  const education =
+    educations.find((item: any) => item.id === userInfo?.pendidikan)?.key ||
+    "Tidak Diketahui";
+  const married =
+    marriedStatus.find((item: any) => item.id === userInfo?.status_kawin)
+      ?.key || "Tidak Diketahui";
 
-  const filteredData = result?.filter(
+  const filteredData = serviceForm?.filter(
     (item: any) => item.layananform_tipedata !== "file",
   );
 
-  const filteredDataFile = result?.filter(
+  const filteredDataFile = serviceForm?.filter(
     (item: any) => item.layananform_tipedata === "file",
   );
 
@@ -62,6 +87,24 @@ const DetailApproval = ({
       <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-3 p-8">
         <h1 className="text-xl font-semibold mb-1">Nama</h1>
         <h4 className="text-[16px] text-neutral-900">Jenis Layanan</h4>
+        <h2 className="text-lg font-semibold my-5">Data Diri</h2>
+        <div className="w-full flex">
+          <div className="space-y-3 w-1/2">
+            <UserInfoLeft
+              userInfo={userInfo}
+              religion={religion}
+              gender={gender}
+            />
+          </div>
+          <div className="space-y-3 w-1/2">
+            <UserInfoRight
+              userInfo={userInfo}
+              education={education}
+              marriedStatus={married}
+              bloodType={bloodType}
+            />
+          </div>
+        </div>
         <h2 className="text-lg font-semibold my-5">Formulir</h2>
         {filteredData?.map((v: any) => (
           <div className="space-y-2 mt-3" key={v.id}>

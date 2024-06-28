@@ -29,6 +29,8 @@ const RequestOffline = () => {
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
   const [searchTermService, setSearchTermService] = useState("");
   const [searchInputService, setSearchInputService] = useState(""); // State for search input
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -70,15 +72,41 @@ const RequestOffline = () => {
 
   const serviceId = Number(service);
 
-  let historyUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;
+  const buildUrl = (baseUrl: string, params: Record<string, any>) => {
+    const url = new URL(baseUrl);
+    // Tambahkan parameter lainnya
+    Object.keys(params).forEach((key) => {
+      if (params[key] !== undefined) {
+        url.searchParams.append(key, params[key]);
+      }
+    });
 
-  if (role === "Admin Instansi" && instansiId !== null) {
-    historyUrl += `?instansi_id=${instansiId}&layanan_id=${serviceId}`;
-  } else if (role === "Superadmin") {
-    historyUrl += `?instansi_id=${instanceId}&layanan_id=${serviceId}`;
+    return url.toString();
+  };
+
+  let instanceId2;
+
+  if (role === "Admin Instansi") {
+    instanceId2 = instansiId;
+  } else {
+    instanceId2 = instanceId;
   }
 
-  const { data: histories } = useSWR<any>(historyUrl, fetcher);
+  const params = {
+    instansi_id: instanceId2,
+    layanan_id: serviceId,
+    limit: 10000000, // atau false
+    start_date: startDate, // atau undefined
+    end_date: endDate, // atau undefined
+  };
+
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;
+
+  // Bangun URL berdasarkan role dan instanceId
+  const fixUrl = buildUrl(baseUrl, params);
+
+  // Gunakan URL yang dibangun dengan useSWR
+  const { data: histories } = useSWR<any>(fixUrl, fetcher);
 
   const handlePassId = (id: number) => {
     setServiceId(id);
@@ -123,9 +151,17 @@ const RequestOffline = () => {
           />
         </div>
         <div className="flex w-5/12 items-center gap-x-2">
-          <InputComponent typeInput="datepicker" />
+          <InputComponent
+            typeInput="datepicker"
+            date={startDate}
+            setDate={(e) => setStartDate(e)}
+          />
           <p>to</p>
-          <InputComponent typeInput="datepicker" />
+          <InputComponent
+            typeInput="datepicker"
+            date={endDate}
+            setDate={(e) => setEndDate(e)}
+          />
         </div>
       </div>
       <div className="flex justify-start ">

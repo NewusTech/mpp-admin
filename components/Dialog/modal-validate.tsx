@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Dialog,
   DialogContent,
@@ -14,9 +16,12 @@ import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Loader } from "lucide-react";
 
 const ModalValidate = ({ title, id }: { id: number; title: string }) => {
   const router = useRouter();
+  const [feedback, setFeedback] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
@@ -27,6 +32,7 @@ const ModalValidate = ({ title, id }: { id: number; title: string }) => {
   };
 
   const handleValidationStatus = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/updatestatus/${id}`,
@@ -38,6 +44,7 @@ const ModalValidate = ({ title, id }: { id: number; title: string }) => {
           },
           body: JSON.stringify({
             status: 4,
+            pesan: feedback,
           }),
         },
       );
@@ -50,6 +57,8 @@ const ModalValidate = ({ title, id }: { id: number; title: string }) => {
       }
     } catch (e: any) {
       toast(e.message);
+    } finally {
+      setIsLoading(false); // Stop loading
     }
   };
 
@@ -72,7 +81,12 @@ const ModalValidate = ({ title, id }: { id: number; title: string }) => {
             Silakan masukan catatan untuk user
           </DialogDescription>
         </DialogHeader>
-        <InputComponent typeInput="textarea" />
+        <InputComponent
+          typeInput="textarea"
+          value={feedback}
+          onChange={(e) => setFeedback(e.target.value)}
+          disable={false}
+        />
         <DialogFooter className="sm:justify-center">
           <DialogClose asChild>
             <Button
@@ -87,8 +101,9 @@ const ModalValidate = ({ title, id }: { id: number; title: string }) => {
             type="button"
             onClick={handleValidationStatus}
             className="bg-error-700 hover:bg-error-800 rounded-full px-12"
+            disabled={isLoading ? true : false}
           >
-            Ok
+            {isLoading ? <Loader className="animate-spin" /> : "Ok"}
           </Button>
         </DialogFooter>
       </DialogContent>

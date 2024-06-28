@@ -18,9 +18,11 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader } from "lucide-react";
 import Cookies from "js-cookie";
+import { useState } from "react";
 
 const FormSignin = () => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof SigninValidation>>({
     resolver: zodResolver(SigninValidation),
@@ -28,6 +30,7 @@ const FormSignin = () => {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof SigninValidation>) {
+    setIsLoading(true);
     const formData = {
       nik: values.nik,
       password: values.password,
@@ -46,14 +49,16 @@ const FormSignin = () => {
       );
 
       const data = await response.json();
-      console.log(data);
       if (response.ok) {
         Cookies.set("token", data.data.token);
+        await new Promise((resolve) => setTimeout(resolve, 300));
         toast(data.message);
         router.push("/");
       }
     } catch (e: any) {
       toast(e.message);
+    } finally {
+      setIsLoading(false); // Stop loading
     }
   }
 
@@ -99,8 +104,9 @@ const FormSignin = () => {
         <Button
           className="w-full rounded-full bg-primary-700 hover:bg-primary-800 text-neutral-50"
           type="submit"
+          disabled={isLoading ? true : false}
         >
-          Masuk
+          {isLoading ? <Loader className="animate-spin" /> : "Masuk"}
         </Button>
       </form>
     </Form>

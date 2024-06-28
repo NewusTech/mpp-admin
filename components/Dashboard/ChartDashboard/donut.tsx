@@ -13,7 +13,7 @@ interface DonutChartProps {
 
 const AreaChart = ({ data }: DonutChartProps) => {
   if (!data || data.length === 0) {
-    return <p className="text-center">No data available</p>;
+    return <p className="text-center text-neutral-800">Data tidak tersedia</p>;
   }
 
   const option = {

@@ -1,7 +1,8 @@
 import { dataInstanceColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
 import { DataInstance } from "@/types/type";
-import AlertDialogCreateInstance from "@/app/(root)/master/master-instance/DialogForm";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 async function getData(): Promise<DataInstance[]> {
   const res = await fetch(
@@ -19,7 +20,11 @@ const MasterInsantce = async () => {
   return (
     <section className="mr-16">
       <div className="flex justify-end mb-8">
-        <AlertDialogCreateInstance />
+        <Link href="/master/master-instance/create">
+          <Button className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full">
+            Tambah
+          </Button>
+        </Link>
       </div>
       <DataTables columns={dataInstanceColumns} data={data} filterBy="name" />
     </section>

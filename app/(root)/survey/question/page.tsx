@@ -97,10 +97,14 @@ const SurveyQuestion = () => {
             />
           )}
         </div>
-        {instance ? (
+        {instance || role === "Admin Instansi" ? (
           <Link href="/survey/question/create">
             <Button
-              onClick={() => handlePassIdInstnace(instanceId)}
+              onClick={
+                role === "Admin Instansi"
+                  ? () => handlePassIdInstnace(instansiId)
+                  : () => handlePassIdInstnace(instanceId)
+              }
               className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
             >
               Tambah
@@ -109,11 +113,6 @@ const SurveyQuestion = () => {
         ) : (
           <Button
             disabled={true}
-            onClick={
-              role === "Admin Instansi"
-                ? () => handlePassIdInstnace(instansiId)
-                : () => handlePassIdInstnace(instanceId)
-            }
             className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
           >
             Tambah
