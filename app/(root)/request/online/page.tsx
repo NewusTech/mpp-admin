@@ -25,6 +25,8 @@ const RequestOnline = () => {
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
   const [searchTermService, setSearchTermService] = useState("");
   const [searchInputService, setSearchInputService] = useState(""); // State for search input
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -66,15 +68,41 @@ const RequestOnline = () => {
 
   const serviceId = Number(service);
 
-  let historyUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform?limit=10000000`;
+  const buildUrl = (baseUrl: string, params: Record<string, any>) => {
+    const url = new URL(baseUrl);
+    // Tambahkan parameter lainnya
+    Object.keys(params).forEach((key) => {
+      if (params[key] !== undefined) {
+        url.searchParams.append(key, params[key]);
+      }
+    });
 
-  if (role === "Admin Instansi" && instansiId !== null) {
-    historyUrl += `?instansi_id=${instansiId}&layanan_id=${serviceId}`;
-  } else if (role === "Super Admin") {
-    historyUrl += `?instansi_id=${instanceId}&layanan_id=${serviceId}`;
+    return url.toString();
+  };
+
+  let instanceId2;
+
+  if (role === "Admin Instansi") {
+    instanceId2 = instansiId;
+  } else {
+    instanceId2 = instanceId;
   }
 
-  const { data: histories } = useSWR<any>(historyUrl, fetcher);
+  const params = {
+    instansi_id: instanceId2,
+    layanan_id: serviceId,
+    limit: 10000000, // atau false
+    start_date: startDate, // atau undefined
+    end_date: endDate, // atau undefined
+  };
+
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;
+
+  // Bangun URL berdasarkan role dan instanceId
+  const fixUrl = buildUrl(baseUrl, params);
+
+  // Gunakan URL yang dibangun dengan useSWR
+  const { data: histories } = useSWR<any>(fixUrl, fetcher);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -115,16 +143,24 @@ const RequestOnline = () => {
           />
         </div>
         <div className="flex w-4/12 items-center gap-x-2">
-          <InputComponent typeInput="datepicker" />
+          <InputComponent
+            typeInput="datepicker"
+            date={startDate}
+            setDate={(e) => setStartDate(e)}
+          />
           <p>to</p>
-          <InputComponent typeInput="datepicker" />
+          <InputComponent
+            typeInput="datepicker"
+            date={endDate}
+            setDate={(e) => setEndDate(e)}
+          />
         </div>
       </div>
       {histories && (
         <DataTables
           columns={requestOnlineColumns}
           data={histories?.data}
-          filterBy="nik"
+          filterBy="name"
           type="request"
         />
       )}

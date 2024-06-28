@@ -234,13 +234,17 @@ const Sidebar = () => {
             isDropdownOpen={isDropdownOpen === "/master"}
             handleDropdownOpen={() => handleDropdownOpen("/master")}
           />
-          <Nav
-            route="/manage-user"
-            path="/manage-user"
-            icons="/icons/user-round.svg"
-            iconsActive="/icons/user-round-active.svg"
-            title="Kelola User"
-          />
+          {role === "Admin Instansi" ? (
+            ""
+          ) : (
+            <Nav
+              route="/manage-user"
+              path="/manage-user"
+              icons="/icons/user-round.svg"
+              iconsActive="/icons/user-round-active.svg"
+              title="Kelola User"
+            />
+          )}
           <Nav
             route="/setting"
             path="/setting"

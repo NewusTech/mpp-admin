@@ -20,7 +20,10 @@ import { Loader } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import FileUploader from "@/components/FileUploader";
 import Cookies from "js-cookie";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import useNewsStore from "@/lib/store/useNewsStore";
+import MyEditor from "@/components/Editor";
+import { Label } from "@/components/ui/label";
 
 interface ArticleBySlug {
   title: string;
@@ -31,31 +34,28 @@ interface ArticleBySlug {
 
 const News = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
   const router = useRouter();
+  const selectedId = useNewsStore((state) => state.selectedId);
   const editor1Ref = useRef<{ getContent: () => string }>(null);
-
-  const form = useForm<z.infer<typeof NewsValidation>>({
-    resolver: zodResolver(NewsValidation),
-    defaultValues: {
-      title: "",
-      description: "",
-    },
-  });
-
-  useEffect(() => {
-    if (data) {
-      form.reset({
-        title: data.title,
-        description: data.desc,
-      });
-    }
-  }, [data]);
+  const [image, setImage] = useState<File | null>(null);
+  const titleRef = useRef<HTMLInputElement>(null); // Ref untuk title input
+  const handleFileChange = (files: File[]) => {
+    setImage(files[0]);
+  };
 
   // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof NewsValidation>) {
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const content1: any = editor1Ref.current?.getContent();
+    const title: any = titleRef.current?.value;
+
     const formData = new FormData();
-    formData.append("title", values.title);
-    formData.append("desc", values.description);
-    formData.append("image", values.image[0]);
+    formData.append("instansi_id", selectedId.toString());
+    formData.append("title", title);
+    formData.append("desc", content1);
+    if (image) {
+      formData.append("image", image);
+    }
 
     if (type === "create") {
       try {
@@ -71,9 +71,11 @@ const News = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
         );
 
         const data = await response.json();
-        toast(data.message);
         console.log(data);
-        if (response.ok) router.push("/articles");
+        if (response.ok) {
+          toast(data.message);
+          router.push("/articles");
+        }
       } catch (error: any) {
         toast(error.message);
         console.log(error.message);
@@ -100,68 +102,41 @@ const News = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
     }
   }
 
+  console.log(data);
+
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Judul</FormLabel>
-              <FormControl>
-                <Input
-                  className="rounded-full"
-                  type="text"
-                  placeholder="Masukkan Judul"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Deskripsi</FormLabel>
-              <FormControl>
-                <Textarea
-                  className="h-40"
-                  placeholder="Type your message here."
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="image"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Gambar</FormLabel>
-              <FormControl>
-                <FileUploader
-                  mediaUrl={data?.image}
-                  fileChange={field.onChange}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <div className="space-y-5">
+      <form onSubmit={onSubmit} className="space-y-5">
+        <div className="space-y-2">
+          <Label htmlFor="title">Judul</Label>
+          <Input
+            type="text"
+            name="title"
+            className="rounded-full"
+            defaultValue={data?.title}
+            ref={titleRef}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="editor1">Deskripsi</Label>
+          <MyEditor
+            ref={editor1Ref}
+            name="editor1"
+            initialValue={data?.desc || "<p>Ketik disini</p>"}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="image">Gambar</Label>
+          <FileUploader mediaUrl={data?.image} fileChange={handleFileChange} />
+        </div>
         <Button
-          className="w-full rounded-full bg-primary-700 hover:bg-primary-800 text-neutral-50"
           type="submit"
+          className="w-full rounded-full bg-primary-700 hover:bg-primary-800 text-neutral-50"
         >
           Tambah
         </Button>
       </form>
-    </Form>
+    </div>
   );
 };
 

@@ -23,6 +23,8 @@ const Report = () => {
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<number | null>(null);
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -52,15 +54,49 @@ const Report = () => {
 
   const instanceId = Number(instance);
 
-  let url = `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/report`;
+  const buildUrl = (baseUrl: string, params: Record<string, any>) => {
+    const url = new URL(baseUrl);
+    // Tambahkan parameter lainnya
+    Object.keys(params).forEach((key) => {
+      if (params[key] !== undefined) {
+        url.searchParams.append(key, params[key]);
+      }
+    });
+
+    return url.toString();
+  };
+
+  let instanceId2;
+  let additionalParams: Record<string, any> = { limit: 10000000 };
 
   if (role === "Admin Instansi") {
-    url += `?instansi_id=${instansiId}&search=${searchTermInstance}&limit=10000000`;
-  } else if ("Superadmin") {
-    url += `?instansi_id=${instanceId}&search=${searchTermInstance}&limit=10000000`;
+    instanceId2 = instansiId;
+    additionalParams = {
+      ...additionalParams,
+      instansi_id: instanceId2,
+    };
+  } else if (role === "Superadmin") {
+    instanceId2 = instanceId;
+    additionalParams = {
+      ...additionalParams,
+      instansi_id: instanceId2,
+      search: searchTermInstance,
+    };
   }
 
-  const { data: reports } = useSWR<any>(url, fetcher);
+  const params = {
+    start_date: startDate,
+    end_date: endDate,
+    ...additionalParams,
+  };
+
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/report`;
+
+  // Bangun URL berdasarkan role dan instanceId
+  const fixUrl = buildUrl(baseUrl, params);
+
+  // Gunakan URL yang dibangun dengan useSWR
+  const { data: reports } = useSWR<any>(fixUrl, fetcher);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -72,11 +108,12 @@ const Report = () => {
 
   const result = data?.data;
   const report = reports?.data?.report;
+  console.log(report);
 
   return (
     <section className="mr-16">
       <div className="flex justify-between gap-x-5 mb-8">
-        <div className="flex w-full gap-x-5">
+        <div className="flex w-full gap-x-5 ">
           {role !== "Admin Instansi" && (
             <InputComponent
               typeInput="selectSearch"
@@ -91,10 +128,22 @@ const Report = () => {
               onChange={(e: any) => setInstance(e)}
             />
           )}
-          <div className="flex w-8/12 items-center gap-x-2">
-            <InputComponent typeInput="datepicker" />
-            <p>to</p>
-            <InputComponent typeInput="datepicker" />
+          <div
+            className={`flex items-center gap-x-2 ${role === "Admin Instansi" ? "w-full justify-between" : "w-8/12"}`}
+          >
+            <div className="flex items-center gap-x-2">
+              <InputComponent
+                typeInput="datepicker"
+                date={startDate}
+                setDate={(e) => setStartDate(e)}
+              />
+              <p>to</p>
+              <InputComponent
+                typeInput="datepicker"
+                date={endDate}
+                setDate={(e) => setEndDate(e)}
+              />
+            </div>
             <Button className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[140px] rounded-full">
               <Image
                 src="/icons/printer.svg"

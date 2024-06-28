@@ -45,7 +45,14 @@ const months = [
 
 const TabService = () => {
   const [activeButton, setActiveButton] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState<any>(null);
+  const [selectedMonth, setSelectedMonth] = useState<any>(
+    new Date().getMonth(),
+  );
+  const selectedMonthLabel = months.find(
+    (month) => month.value === Number(selectedMonth),
+  )?.label;
+
+  console.log(selectedMonthLabel);
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/historyform?limit=10000000&status=${activeButton}`,
@@ -53,9 +60,8 @@ const TabService = () => {
   );
 
   const url =
-    selectedMonth === null
-      ? `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/admindinas`
-      : `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/admindinas?month=${selectedMonth}`;
+    selectedMonth &&
+    `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/admindinas?month=${selectedMonth}`;
 
   const { data: stats } = useSWR<any>(url, fetcher);
 
@@ -115,7 +121,7 @@ const TabService = () => {
             </p>
             <div className="rounded-full bg-neutral-50 items-center justify-center w-10 h-10 flex">
               <p className="text-success-700 font-semibold text-sm">
-                {resultStats?.permohonanCountMonth}
+                {resultStats?.permohonanCountMonth || 0}
               </p>
             </div>
           </div>
@@ -125,7 +131,7 @@ const TabService = () => {
             </p>
             <div className="rounded-full bg-neutral-50 items-center justify-center w-10 h-10 flex">
               <p className="text-error-700 font-semibold text-sm">
-                {resultStats?.permohonanGagalMonth}
+                {resultStats?.permohonanGagalMonth || 0}
               </p>
             </div>
           </div>
@@ -135,7 +141,7 @@ const TabService = () => {
         <div className="rounded-[16px] w-1/2 bg-neutral-50 shadow p-4">
           <div className="gap-x-2 mb-8 text-neutral-800 flex justify-center">
             <h3 className="text-primary-800 font-medium">TOP 3 Layanan</h3>
-            <p>Januari</p>
+            <p>{selectedMonthLabel}</p>
           </div>
           <DonutChart data={resultTop3Month} />
           <div className="flex gap-x-5 justify-around mt-4">

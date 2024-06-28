@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import News from "@/components/Form/News";
+import Instance from "@/components/Form/Instance";
 
 async function getDataBySlug(slug: string) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/artikel/get/${slug}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get/${slug}`,
     {
       cache: "no-cache",
     },
@@ -13,19 +14,16 @@ async function getDataBySlug(slug: string) {
   return data.data;
 }
 
-const EditArticle = async ({
+export default async function UpdateInstance({
   params,
 }: {
-  params: {
-    slug: string;
-  };
-}) => {
+  params: { slug: string };
+}) {
   const data = await getDataBySlug(params.slug);
-
   return (
     <section className="mr-16">
       <div className="-ml-14 mb-10">
-        <Link href="/articles">
+        <Link href="/master/master-instance">
           <Image
             src="/icons/back-arrow.svg"
             alt="back-arrow"
@@ -35,14 +33,12 @@ const EditArticle = async ({
         </Link>
       </div>
       <div className="-mt-[78px]">
-        <h1 className="text-2xl text-primary-700 font-bold">Edit Berita</h1>
+        <h1 className="text-2xl text-primary-700 font-bold">Ubah Instansi</h1>
         <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-3 p-8">
-          <h1 className="text-xl font-semibold mb-4">Berita</h1>
-          <News data={data} />
+          <h1 className="text-xl font-semibold mb-4">Instansi</h1>
+          <Instance data={data} label="Ubah" />
         </div>
       </div>
     </section>
   );
-};
-
-export default EditArticle;
+}

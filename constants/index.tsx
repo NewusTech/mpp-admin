@@ -22,7 +22,7 @@ import {
   ManageRequirements,
   ManageUser,
   News,
-  Payment,
+  QueueTab,
   Report,
   RequestOffline,
   RequestOnline,
@@ -39,9 +39,7 @@ import AlertDialogUpdateFaq from "@/app/(root)/master/master-faq/DialogFormUpdat
 import AlertDialogUpdateService from "@/app/(root)/master/master-service/DialogFormUpdate";
 import Image from "next/image";
 import AlertDialogUpdateFacility from "@/app/(root)/master/master-facility/DialogFormUpdate";
-import AlertDialogUpdateInstance from "@/app/(root)/master/master-instance/DialogFormUpdate";
 import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
 import AlertDialogUpdateCarousel from "@/app/(root)/master/carousel/DialogFormUpdate";
 import ModalDelete from "@/components/Dialog/delete";
 import AlertDialogUpdateSurvey from "@/app/(root)/survey/question/DialogFormUpdate";
@@ -60,17 +58,17 @@ function stripHtmlTags(html: any) {
   return html.replace(/<[^>]*>/g, "");
 }
 
-export const columns: ColumnDef<Payment>[] = [
+export const queueColumns: ColumnDef<QueueTab>[] = [
   {
-    accessorKey: "jenis",
+    accessorKey: "name",
     header: "Jenis Layanan",
   },
   {
-    accessorKey: "online",
+    accessorKey: "active_online",
     header: "Online",
   },
   {
-    accessorKey: "offline",
+    accessorKey: "active_offline",
     header: "Offline",
   },
 ];
@@ -530,7 +528,11 @@ export const dataInstanceColumns: ColumnDef<DataInstance>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <AlertDialogUpdateInstance slug={instance.slug} />
+            <DropdownMenuItem className="cursor-pointer">
+              <Link href={`/master/master-instance/${instance.slug}`}>
+                Edit
+              </Link>
+            </DropdownMenuItem>
             <ModalDelete endpoint={`instansi/delete/${instance.slug}`} />
           </DropdownMenuContent>
         </DropdownMenu>
@@ -674,10 +676,10 @@ export const surveyResultColumns: ColumnDef<SurveyResult>[] = [
 
 export const detailSurveyResultColumns: ColumnDef<DetailSurveyResult>[] = [
   {
-    accessorKey: "createdAt",
+    accessorKey: "date",
     header: "Tanggal",
     cell: ({ row }) => {
-      const date = row.original.createdAt;
+      const date = row.original.date;
 
       return <p>{formatDate(date)}</p>;
     },
@@ -686,6 +688,7 @@ export const detailSurveyResultColumns: ColumnDef<DetailSurveyResult>[] = [
     accessorKey: "name",
     header: "Nama",
   },
+  { accessorKey: "kritiksaran", header: "Kritik dan Saran" },
   {
     accessorKey: "nilai",
     header: "Nilai",
@@ -1043,4 +1046,45 @@ export const selectDataTypeForm = [
     value: "date",
     name: "Tanggal",
   },
+];
+
+export const religions = [
+  { id: 1, key: "Islam" },
+  { id: 2, key: "Kristen" },
+  { id: 3, key: "Katolik" },
+  { id: 4, key: "Hindu" },
+  { id: 5, key: "Buddha" },
+  { id: 6, key: "Konghucu" },
+];
+
+export const educations = [
+  { id: 1, key: "Tidak Sekolah" },
+  { id: 2, key: "SD" },
+  { id: 3, key: "SMP" },
+  { id: 4, key: "SMA" },
+  { id: 5, key: "D1" },
+  { id: 6, key: "D2" },
+  { id: 7, key: "D3" },
+  { id: 8, key: "S1" },
+  { id: 9, key: "S2" },
+  { id: 10, key: "S3" },
+];
+
+export const marriedStatus = [
+  { id: 1, key: "Belum Kawin" },
+  { id: 2, key: "Kawin" },
+  { id: 3, key: "Cerai Hidup" },
+  { id: 4, key: "Cerai Mati" },
+];
+
+export const bloodTypes = [
+  { id: 1, key: "A" },
+  { id: 2, key: "B" },
+  { id: 3, key: "AB" },
+  { id: 4, key: "O" },
+];
+
+export const genders = [
+  { id: 1, key: "Laki-Laki" },
+  { id: 2, key: "Perempuan" },
 ];

@@ -15,6 +15,11 @@ interface JwtPayload {
   instansi_id: number;
 }
 
+const buttons: any = [
+  { label: "Offline", value: 0 },
+  { label: "Online", value: 1 },
+];
+
 const HistoryApprovals = () => {
   const [instance, setInstance] = useState<string>("");
   const [service, setService] = useState<string>("");
@@ -24,6 +29,9 @@ const HistoryApprovals = () => {
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
   const [searchTermService, setSearchTermService] = useState("");
   const [searchInputService, setSearchInputService] = useState(""); // State for search input
+  const [activeButton, setActiveButton] = useState("");
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -65,10 +73,42 @@ const HistoryApprovals = () => {
 
   const serviceId = Number(service);
 
-  const { data: histories } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/historyform?instansi_id=${instanceId}&layanan_id=${serviceId}&limit=10000000`,
-    fetcher,
-  );
+  const buildUrl = (baseUrl: string, params: Record<string, any>) => {
+    const url = new URL(baseUrl);
+    // Tambahkan parameter lainnya
+    Object.keys(params).forEach((key) => {
+      if (params[key] !== undefined) {
+        url.searchParams.append(key, params[key]);
+      }
+    });
+
+    return url.toString();
+  };
+
+  let instanceId2;
+
+  if (role === "Admin Instansi") {
+    instanceId2 = instansiId;
+  } else {
+    instanceId2 = instanceId;
+  }
+
+  const params = {
+    instansi_id: instanceId2,
+    layanan_id: serviceId,
+    limit: 10000000,
+    isOnline: activeButton, // atau false
+    start_date: startDate, // atau undefined
+    end_date: endDate, // atau undefined
+  };
+
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;
+
+  // Bangun URL berdasarkan role dan instanceId
+  const fixUrl = buildUrl(baseUrl, params);
+
+  // Gunakan URL yang dibangun dengan useSWR
+  const { data: histories } = useSWR<any>(fixUrl, fetcher);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -82,6 +122,10 @@ const HistoryApprovals = () => {
   const result = data?.data;
   const serviceAll = services?.data;
   const historyAll = histories?.data;
+
+  const handleClick = (value: any) => {
+    setActiveButton(value);
+  };
 
   return (
     <section className="mr-16">
@@ -115,17 +159,32 @@ const HistoryApprovals = () => {
       </div>
       <div className="flex justify-between ">
         <div className="flex gap-x-3">
-          <Button className="border bg-transparent border-primary-700 hover:bg-primary-700 text-primary-700 hover:text-neutral-50 w-[140px] rounded-full">
-            Online
-          </Button>
-          <Button className="border bg-transparent border-primary-700 hover:bg-primary-700 text-primary-700 hover:text-neutral-50 w-[140px] rounded-full">
-            Offline
-          </Button>
+          {buttons.map((button: any) => (
+            <Button
+              key={button.value}
+              className={`border border-primary-700 hover:bg-primary-700 hover:text-neutral-50 w-[140px] rounded-full ${
+                activeButton === button.value
+                  ? "bg-primary-700 text-neutral-50"
+                  : "bg-transparent text-primary-700"
+              }`}
+              onClick={() => handleClick(button.value)}
+            >
+              {button.label}
+            </Button>
+          ))}
         </div>
         <div className="flex w-4/12 items-center gap-x-2">
-          <InputComponent typeInput="datepicker" />
+          <InputComponent
+            typeInput="datepicker"
+            date={startDate}
+            setDate={(e) => setStartDate(e)}
+          />
           <p>to</p>
-          <InputComponent typeInput="datepicker" />
+          <InputComponent
+            typeInput="datepicker"
+            date={endDate}
+            setDate={(e) => setEndDate(e)}
+          />
         </div>
       </div>
       {histories && (

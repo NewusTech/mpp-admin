@@ -42,7 +42,7 @@ export const InstanceValidation = z.object({
   status: z.enum(["0", "1"], {
     required_error: "Kamu harus pilih status",
   }),
-  image: z.custom<File[]>(),
+  image: z.custom<File[]>().optional(),
   address: z.string({ message: "Alamat wajib diisi" }),
   phone: z.string().max(15, { message: "No. Telfon wajib diisi" }),
   pj: z.string({ message: "PJ wajib diisi" }),

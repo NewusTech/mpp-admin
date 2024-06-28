@@ -31,7 +31,7 @@ const ManageRequirements = () => {
   const setSelectedId = useCreateRequirement((state) => state.setSelectedId);
   const [searchTermInstance, setSearchTermInstance] = useState("");
   const [role, setRole] = useState<string | null>(null);
-  const [instansiId, setInstansiId] = useState<number | null>(null);
+  const [instansiId, setInstansiId] = useState<any>(0);
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
 
   useEffect(() => {
@@ -108,10 +108,14 @@ const ManageRequirements = () => {
               />
             )}
           </div>
-          {instance ? (
+          {instance || role === "Admin Instansi" ? (
             <Link href="/manage-requirement/create">
               <Button
-                onClick={() => handlePassIdInstnace(instanceId)}
+                onClick={() =>
+                  role === "Admin Instansi"
+                    ? handlePassIdInstnace(instansiId)
+                    : handlePassIdInstnace(instanceId)
+                }
                 className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
               >
                 Tambah

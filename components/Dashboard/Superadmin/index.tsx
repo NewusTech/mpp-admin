@@ -8,6 +8,17 @@ import { fetcher } from "@/lib/fetch";
 import { DataTables } from "@/components/Datatables";
 import { dashboardSuperadminColumns } from "@/constants";
 import BarChart from "@/components/Dashboard/ChartDashboard/bar";
+import { Loader, Search } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 const Card = ({
   color,
@@ -52,17 +63,42 @@ const DashboardSuperadmin = () => {
   const [instance, setInstance] = useState<string>("");
   const [searchTermInstance, setSearchTermInstance] = useState("");
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
+  const currentYear = new Date().getFullYear();
+  const [years, setYears] = useState<any[]>([]);
+  const [selectedYear, setSelectedYear] = useState<number>(currentYear);
+
+  useEffect(() => {
+    const startYear = 2023; // Tahun mulai yang diinginkan
+    const yearArray = [];
+    for (let year = startYear; year <= currentYear; year++) {
+      yearArray.push(year);
+    }
+    setYears(yearArray);
+  }, [currentYear]);
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
     fetcher,
   );
 
+  const { data: history, isLoading } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/superadmin`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    },
+  );
+
   const instanceId = Number(instance);
 
-  const { data: history } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/superadmin?instansi_id=${instanceId}&limit=10000000`,
+  const { data: serviceData, isLoading: isLoadingService } = useSWR<any>(
+    instance
+      ? `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/superadmin?instansi_id=${instanceId}&limit=10000000`
+      : null,
     fetcher,
+    {
+      revalidateOnFocus: false,
+    },
   );
 
   useEffect(() => {
@@ -73,23 +109,50 @@ const DashboardSuperadmin = () => {
     return () => clearTimeout(delayDebounceFn);
   }, [searchInputInstance]);
 
+  if (isLoading) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center">
+        <Loader className="animate-spin w-40" />
+      </div>
+    );
+  }
+
   const result = data?.data;
   const histories: any = history?.data;
   const countProgress: any = histories?.countbyInstansi;
   const chartCount: any = histories?.monthlyCounts;
-  const serviceData: any = histories?.layananData;
+  const services: any = serviceData?.data?.layananData;
+
+  if (!histories) {
+    return null;
+  }
 
   return (
     <div className="space-y-4">
       <div className="w-full py-4 px-8 rounded-[16px] shadow bg-neutral-50">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-end space-x-4 items-center">
           <div className="flex gap-x-3 text-slate-400">
-            <p className="text-neutral-900">Year</p>
-            <p>Month</p>
-            <p>Week</p>
+            <p className="text-neutral-900">Tahun</p>
           </div>
           <div className="w-2/12">
-            <InputComponent typeInput="select" />
+            <Select
+              value={selectedYear.toString()}
+              onValueChange={(e: any) => setSelectedYear(e)}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Pilih Tahun" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Tahun</SelectLabel>
+                  {years?.map((year) => (
+                    <SelectItem key={year} value={year.toString()}>
+                      {year}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         </div>
         <div className="space-x-4 mt-4 flex justify-between">
@@ -148,7 +211,7 @@ const DashboardSuperadmin = () => {
             <h1 className="text-sm font-medium text-primary-800 w-[251px]">
               Antrian Online & Permohonan Layanan Tiap Instansi
             </h1>
-            <p className="text-[10px] text-neutral-800">2024</p>
+            <p className="text-[10px] text-neutral-800">{selectedYear}</p>
           </div>
           <div className="space-y-8 mt-5">
             {countProgress
@@ -189,10 +252,10 @@ const DashboardSuperadmin = () => {
             <InputComponent typeInput="datepicker" />
           </div>
         </div>
-        {serviceData && (
+        {services && (
           <DataTables
             columns={dashboardSuperadminColumns}
-            data={serviceData}
+            data={services}
             filterBy="layanan_name"
             type="request"
           />

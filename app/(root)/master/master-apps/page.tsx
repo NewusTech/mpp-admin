@@ -1,7 +1,6 @@
 import { dataAppsColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
 import { DataApps } from "@/types/type";
-import AlertDialogCreateInstance from "@/app/(root)/master/master-instance/DialogForm";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 

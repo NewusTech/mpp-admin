@@ -1,3 +1,5 @@
+"use client";
+
 import ChartDashboard from "@/components/Dashboard/ChartDashboard";
 import {
   Select,
@@ -9,6 +11,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CardDashboardQueueProps } from "@/types/interface";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetch";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import { DataTables } from "@/components/Datatables";
+import { queueColumns } from "@/constants";
+
+interface JwtPayload {
+  role?: string;
+  instansi_id: number;
+}
 
 const CardDashboardQueue = ({
   title,
@@ -26,6 +40,37 @@ const CardDashboardQueue = ({
 };
 
 const TabQueue = () => {
+  const [role, setRole] = useState<string | null>(null);
+  const [instansiId, setInstansiId] = useState<any>(0);
+
+  useEffect(() => {
+    // Ambil token dari cookies
+    const token = Cookies.get("token");
+
+    // Periksa apakah token ada dan decode token jika ada
+    if (token) {
+      try {
+        // Decode token untuk mendapatkan payload
+        const decoded = jwtDecode<JwtPayload>(token);
+
+        // Pastikan token terdecode dan mengandung informasi role dan instansi_id
+        if (decoded && decoded.role && decoded.instansi_id !== undefined) {
+          setRole(decoded.role);
+          setInstansiId(decoded.instansi_id);
+        }
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, []);
+
+  const { data } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get/${instansiId}?limit=10000000`,
+    fetcher,
+  );
+
+  const result = data?.data;
+
   return (
     <>
       <section className="grid grid-cols-3 gap-x-5">
@@ -45,7 +90,7 @@ const TabQueue = () => {
           background="bg-primary-700"
         />
       </section>
-      <div className="flex gap-x-2 mt-4">
+      <div className="flex gap-x-2 my-4">
         <div className="w-8/12 rounded-[20px] p-6 shadow">
           <div className="flex items-center gap-x-6">
             <h4 className="text-[16px] text-neutral-900 font-semibold">
@@ -111,7 +156,14 @@ const TabQueue = () => {
           </div>
         </div>
       </div>
-      {/*<DataTables columns={columns} data={data} filterBy="name" />*/}
+      {result && (
+        <DataTables
+          columns={queueColumns}
+          data={result}
+          filterBy="name"
+          type="requirement"
+        />
+      )}
     </>
   );
 };
