@@ -103,7 +103,45 @@ export const FlowValidation = z.object({
   image: z.custom<File[]>(),
 });
 
+export const FlowBookingValidation = z.object({
+  desc: z.string({ message: "Wajib Diisi" }),
+});
+
 // Skema lengkap untuk validasi formulir dengan file video
 export const uploadVideoSchema = z.object({
   video: z.custom<File[]>(),
+});
+
+export const userValidation = z.object({
+  name: z.string({
+    message: "Nama harus diisi",
+  }),
+  nik: z.string({
+    message: "NIK harus diisi",
+  }),
+  email: z.string({
+    message: "Email harus diisi",
+  }),
+  agama: z.string().optional(),
+  telepon: z.string().optional(),
+  alamat: z.string().optional(),
+  tempat_lahir: z.string().optional(),
+  tgl_lahir: z.date().optional(),
+  status_kawin: z.string().optional(),
+  gender: z.string().optional(),
+  pekerjaan: z.string().optional(),
+  goldar: z.string().optional(),
+  pendidikan: z.string().optional(),
+  kecamatan_id: z
+    .string()
+    .transform((val) => Number(val))
+    .optional(),
+  desa_id: z
+    .string()
+    .transform((val) => Number(val))
+    .optional(),
+  rt: z.string().optional(),
+  rw: z.string().optional(),
+  filektp: z.custom<File[]>(),
+  filekk: z.custom<File[]>(),
 });

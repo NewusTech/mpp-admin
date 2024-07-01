@@ -18,6 +18,7 @@ import {
   DetailSurveyResult,
   Facility,
   FAQ,
+  FlowBooking,
   ManageApprovals,
   ManageRequirements,
   ManageUser,
@@ -43,6 +44,10 @@ import { cn } from "@/lib/utils";
 import AlertDialogUpdateCarousel from "@/app/(root)/master/carousel/DialogFormUpdate";
 import ModalDelete from "@/components/Dialog/delete";
 import AlertDialogUpdateSurvey from "@/app/(root)/survey/question/DialogFormUpdate";
+import SwitchActive from "@/components/SwitchActive";
+import AlertDialogCreateMasterFlowBooking from "@/app/(root)/master/flow-booking/DialogForm";
+import AlertDialogUpdateMasterFlowBooking from "@/app/(root)/master/flow-booking/DialogFormUpdate";
+import AlertDialogUpdateMasterFlowPermohonan from "@/app/(root)/master/flow-request/DialogFormUpdate";
 
 function formatDate(dateString: any) {
   const date = new Date(dateString);
@@ -66,10 +71,20 @@ export const queueColumns: ColumnDef<QueueTab>[] = [
   {
     accessorKey: "active_online",
     header: "Online",
+    cell: ({ row }) => {
+      const online = row.original.active_online;
+      const id = row.original.id;
+      return <SwitchActive id={id} status={online} type="active_online" />;
+    },
   },
   {
     accessorKey: "active_offline",
     header: "Offline",
+    cell: ({ row }) => {
+      const offline = row.original.active_offline;
+      const id = row.original.id;
+      return <SwitchActive id={id} status={offline} type="active_offline" />;
+    },
   },
 ];
 
@@ -930,6 +945,66 @@ export const flowColumns: ColumnDef<Slider>[] = [
         <div>
           <Image src={flow.image} alt="image" width={200} height={200} />
         </div>
+      );
+    },
+  },
+];
+
+export const flowBookingColumns: ColumnDef<FlowBooking>[] = [
+  {
+    accessorKey: "desc",
+    header: "Deskripsi",
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const flow = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <AlertDialogUpdateMasterFlowBooking id={flow.id} />
+            <ModalDelete endpoint={`alurbooking/delete/${flow.id}`} />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
+
+export const flowRequestColumns: ColumnDef<FlowBooking>[] = [
+  {
+    accessorKey: "desc",
+    header: "Deskripsi",
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const flow = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <AlertDialogUpdateMasterFlowPermohonan id={flow.id} />
+            <ModalDelete endpoint={`alurpermohonan/delete/${flow.id}`} />
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
   },

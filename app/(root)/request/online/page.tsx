@@ -94,6 +94,7 @@ const RequestOnline = () => {
     limit: 10000000, // atau false
     start_date: startDate, // atau undefined
     end_date: endDate, // atau undefined
+    status: 0,
   };
 
   const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;

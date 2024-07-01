@@ -44,21 +44,13 @@ import FileUploader from "@/components/FileUploader";
 import MyEditor from "@/components/Editor";
 import InputComponent from "@/components/InputComponent";
 
-export default function AlertDialogCreateService() {
+export default function AlertDialogCreateService({ id }: { id: number }) {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const editor = useRef<{ getContent: () => string }>(null);
-  const [selectedInstansi, setSelectedInstansi] = useState("");
   const [namaLayanan, setNamaLayanan] = useState("");
   const [status, setStatus] = useState("1");
-  const [searchTermInstance, setSearchTermInstance] = useState("");
-  const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
 
   const content1 = editor.current?.getContent();
-
-  const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher,
-  );
 
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
@@ -68,18 +60,14 @@ export default function AlertDialogCreateService() {
     setAddModalOpen(false);
   };
 
-  const result = data?.data;
-
   // 2. Define a submit handler.
   async function onSubmit() {
     const formData = {
       name: namaLayanan,
-      instansi_id: Number(selectedInstansi),
+      instansi_id: id,
       desc: content1,
       status: Number(status),
     };
-
-    console.log(formData);
 
     try {
       const response = await fetch(
@@ -95,22 +83,15 @@ export default function AlertDialogCreateService() {
       );
 
       const data = await response.json();
-      toast(data.message);
-      console.log(data);
-      handleAddModalClose();
+      if (response.ok) {
+        toast(data.message);
+        handleAddModalClose();
+      }
     } catch (error: any) {
       toast(error.message);
       console.log(error);
     }
   }
-
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      setSearchTermInstance(searchInputInstance);
-    }, 300); // Debounce time to avoid excessive API calls
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchInputInstance]);
 
   return (
     <AlertDialog open={addModalOpen}>
@@ -122,28 +103,13 @@ export default function AlertDialogCreateService() {
           Tambah
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="p-0 border-0 overflow-auto h-full w-full">
+      <AlertDialogContent className="p-0 border-0 overflow-auto h-full max-w-[50%]">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
             Tambah Layanan
           </AlertDialogTitle>
         </AlertDialogHeader>
         <div className="p-6 space-y-5">
-          <div className="space-y-2">
-            <Label>Instansi</Label>
-            <InputComponent
-              typeInput="selectSearch"
-              valueInput={searchInputInstance}
-              onChangeInputSearch={(e) =>
-                setSearchInputInstance(e.target.value)
-              }
-              items={result}
-              label="Instansi"
-              placeholder="Pilih Instansi"
-              value={selectedInstansi}
-              onChange={(e: any) => setSelectedInstansi(e)}
-            />
-          </div>
           <div className="space-y-2">
             <Label>Nama Layanan</Label>
             <Input

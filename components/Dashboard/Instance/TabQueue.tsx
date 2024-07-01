@@ -18,6 +18,8 @@ import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { DataTables } from "@/components/Datatables";
 import { queueColumns } from "@/constants";
+import useQueueStore from "@/lib/store/useQueueStore";
+import { Button } from "@/components/ui/button";
 
 interface JwtPayload {
   role?: string;
@@ -42,6 +44,9 @@ const CardDashboardQueue = ({
 const TabQueue = () => {
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<any>(0);
+  const { switchValues } = useQueueStore();
+
+  console.log(switchValues);
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -157,12 +162,19 @@ const TabQueue = () => {
         </div>
       </div>
       {result && (
-        <DataTables
-          columns={queueColumns}
-          data={result}
-          filterBy="name"
-          type="requirement"
-        />
+        <>
+          <DataTables
+            columns={queueColumns}
+            data={result}
+            filterBy="name"
+            type="requirement"
+          />
+          <div className="-mt-8">
+            <Button className="bg-primary-700 hover:bg-primary-800 rounded-full">
+              Submit
+            </Button>
+          </div>
+        </>
       )}
     </>
   );
