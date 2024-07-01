@@ -2,7 +2,7 @@ import { flowColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
 import { Slider } from "@/types/type";
 import AlertDialogCreateVisionMission from "@/app/(root)/master/vision-mission/DialogForm";
-import AlertDialogCreateMasterFlow from "@/app/(root)/master/flow/DialogForm";
+import AlertDialogCreateMasterFlow from "@/app/(root)/master/flow-mpp/DialogForm";
 
 async function getData(): Promise<Slider> {
   const res = await fetch(

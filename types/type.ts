@@ -1,5 +1,5 @@
 export type QueueTab = {
-  id: string;
+  id: number;
   name: string;
   active_online: boolean;
   active_offline: boolean;
@@ -114,6 +114,11 @@ export type Facility = {
 export type Slider = {
   id: number;
   image: string;
+};
+
+export type FlowBooking = {
+  id: number;
+  desc: string;
 };
 
 export type Video = {

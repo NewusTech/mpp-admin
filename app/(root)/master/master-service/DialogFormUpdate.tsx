@@ -36,14 +36,19 @@ import { z } from "zod";
 import { ServiceValidation } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import FileUploader from "@/components/FileUploader";
+import MyEditor from "@/components/Editor";
 
 export default function AlertDialogUpdateService({ id }: { id: number }) {
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const editor = useRef<{ getContent: () => string }>(null);
+  const [namaLayanan, setNamaLayanan] = useState("");
+  const [status, setStatus] = useState("1");
+  const content1 = editor.current?.getContent();
 
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
@@ -52,17 +57,6 @@ export default function AlertDialogUpdateService({ id }: { id: number }) {
   const handleAddModalClose = () => {
     setAddModalOpen(false);
   };
-
-  const form = useForm<z.infer<typeof ServiceValidation>>({
-    resolver: zodResolver(ServiceValidation),
-  });
-
-  const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get`,
-    fetcher,
-  );
-
-  const result = data?.data;
 
   const { data: service } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/get/${id}`,
@@ -73,22 +67,18 @@ export default function AlertDialogUpdateService({ id }: { id: number }) {
 
   useEffect(() => {
     if (serviceOne) {
-      form.reset({
-        name: serviceOne.name,
-        desc: serviceOne.desc,
-        status: serviceOne.status,
-        instansi_id: serviceOne.instansi_id.toString(),
-      });
+      setNamaLayanan(serviceOne.name);
+      setStatus(serviceOne.status ? "1" : "0");
     }
   }, [serviceOne]);
 
   // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof ServiceValidation>) {
+  async function onSubmit() {
     const formData = {
-      instansi_id: values.instansi_id,
-      name: values.name,
-      desc: values.desc,
-      status: values.status,
+      name: namaLayanan,
+      instansi_id: id,
+      desc: content1,
+      status: Number(status),
     };
 
     try {
@@ -105,8 +95,10 @@ export default function AlertDialogUpdateService({ id }: { id: number }) {
       );
 
       const data = await response.json();
-      toast(data.message);
-      handleAddModalClose();
+      if (response.ok) {
+        toast(data.message);
+        handleAddModalClose();
+      }
     } catch (error: any) {
       toast(error.message);
       console.log(error);
@@ -123,132 +115,64 @@ export default function AlertDialogUpdateService({ id }: { id: number }) {
           <p className="text-sm">Edit</p>
         </div>
       </AlertDialogTrigger>
-      <AlertDialogContent className="p-0 border-0 overflow-auto h-full">
+      <AlertDialogContent className="p-0 border-0 overflow-auto h-full max-w-[50%]">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
             Ubah Layanan
           </AlertDialogTitle>
         </AlertDialogHeader>
-        <div className="p-6">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="instansi_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Instansi</FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value?.toString()}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Pilih Instansi" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {result?.map((data: any) => (
-                            <SelectItem
-                              value={data.id.toString()}
-                              key={data.id}
-                            >
-                              {data.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nama Layanan</FormLabel>
-                    <FormControl>
-                      <Input
-                        className="rounded-full"
-                        type="text"
-                        placeholder="Masukkan Judul"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="desc"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        className="h-20"
-                        placeholder="Type your message here."
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel>Status</FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="flex space-x-1"
-                      >
-                        <FormItem className="flex items-center space-x-2 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="1" />
-                          </FormControl>
-                          <FormLabel className="font-normal">Aktif</FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-2 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="0" />
-                          </FormControl>
-                          <FormLabel className="font-normal">
-                            Tidak Aktif
-                          </FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <AlertDialogFooter className="p-6">
-                <AlertDialogCancel
-                  onClick={handleAddModalClose}
-                  className="bg-transparent border border-primary-700 rounded-full hover:bg-primary-700 hover:text-neutral-50 text-primary-700"
-                >
-                  Batal
-                </AlertDialogCancel>
-                <AlertDialogAction
-                  type="submit"
-                  className="bg-primary-700 hover:bg-primary-800 rounded-full"
-                >
-                  Ubah
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </form>
-          </Form>
+        <div className="p-6 space-y-5">
+          <div className="space-y-2">
+            <Label>Nama Layanan</Label>
+            <Input
+              className="rounded-full"
+              type="text"
+              placeholder="Masukkan Layanan"
+              value={namaLayanan}
+              onChange={(e) => setNamaLayanan(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Informasi Layanan</Label>
+            <MyEditor
+              ref={editor}
+              name="editor"
+              initialValue={serviceOne?.desc || "Deskripsi"}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Status</Label>
+            <RadioGroup
+              className="flex space-x-2"
+              value={status}
+              onValueChange={(value) => setStatus(value)}
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="1" id="aktif" />
+                <Label htmlFor="aktif">Aktif</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="0" id="tidak" />
+                <Label htmlFor="tidak">Tidak Aktif</Label>
+              </div>
+            </RadioGroup>
+          </div>
         </div>
+        <AlertDialogFooter className="p-6">
+          <AlertDialogCancel
+            onClick={handleAddModalClose}
+            className="bg-transparent border border-primary-700 rounded-full hover:bg-primary-700 hover:text-neutral-50 text-primary-700"
+          >
+            Batal
+          </AlertDialogCancel>
+          <AlertDialogAction
+            type="submit"
+            onClick={onSubmit}
+            className="bg-primary-700 hover:bg-primary-800 rounded-full"
+          >
+            Ubah
+          </AlertDialogAction>
+        </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   );

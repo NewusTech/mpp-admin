@@ -8,6 +8,8 @@ import { ManageUser as User } from "@/types/type";
 import Cookies from "js-cookie";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 // async function getData(): Promise<User[]> {
 //   const res = await fetch(
@@ -34,35 +36,11 @@ const ManageUser = () => {
   return (
     <section className="mr-16">
       <div className="flex justify-end mb-8">
-        <AlertDialogPopup
-          title="Tambah"
-          style="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
-          header="Tambah User"
-          content={
-            <>
-              <div className="pt-6 px-6">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-2">
-                    <p className="font-normal">Nama</p>
-                    <InputComponent />
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-normal">Email</p>
-                    <InputComponent />
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-normal">Role</p>
-                    <InputComponent />
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-normal">Status</p>
-                    <InputComponent typeInput="select" />
-                  </div>
-                </div>
-              </div>
-            </>
-          }
-        />
+        <Link href="/manage-user/create">
+          <Button className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full">
+            Tambah
+          </Button>
+        </Link>
       </div>
       {result && (
         <DataTables columns={manageUserColumns} data={result} filterBy="name" />
