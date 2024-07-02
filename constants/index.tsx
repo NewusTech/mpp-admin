@@ -793,7 +793,9 @@ export const manageUserColumns: ColumnDef<ManageUser>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={`/manage-user/${user.slug}`}>Edit</Link>
+            </DropdownMenuItem>
             <ModalDelete endpoint={`alluserinfo/delete/${user.slug}`} />
           </DropdownMenuContent>
         </DropdownMenu>

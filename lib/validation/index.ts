@@ -136,12 +136,7 @@ export const userValidation = z.object({
     .string()
     .transform((val) => Number(val))
     .optional(),
-  desa_id: z
-    .string()
-    .transform((val) => Number(val))
-    .optional(),
+  desa_id: z.string().optional(),
   rt: z.string().optional(),
   rw: z.string().optional(),
-  filektp: z.custom<File[]>(),
-  filekk: z.custom<File[]>(),
 });
