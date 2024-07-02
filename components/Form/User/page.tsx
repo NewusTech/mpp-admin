@@ -39,7 +39,13 @@ import FileUploader from "@/components/FileUploader";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { genders, marriedStatus, religions } from "@/constants";
+import {
+  bloodTypes,
+  educations,
+  genders,
+  marriedStatus,
+  religions,
+} from "@/constants";
 import { cn } from "@/lib/utils";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
@@ -55,7 +61,9 @@ const UserData = ({
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [kecamatan, setKecamatan] = useState<any>(null);
+  const [kecamatan, setKecamatan] = useState<any>(
+    data && data.kecamatan_id ? data.kecamatan_id.toString() : "",
+  );
   const [searchKecamatanTerm, setSearchKecamatanTerm] = useState("");
   const [searchKecamatanInput, setSearchKecamatanInput] = useState("");
   const [searchVillageTerm, setSearchVillageTerm] = useState("");
@@ -87,65 +95,81 @@ const UserData = ({
     resolver: zodResolver(userValidation),
   });
 
-  // useEffect(() => {
-  //   if (data) {
-  //     form.reset({
-  //       name: data.name,
-  //       desc: data.desc,
-  //       status: data?.status === true ? "1" : "0",
-  //       address: data.alamat,
-  //       phone: data.telp,
-  //       pj: data.pj,
-  //       nip_pj: data.nip_pj,
-  //       active_offline: data?.active_offline === true ? "1" : "0",
-  //       active_online: data?.active_online === true ? "1" : "0",
-  //       open: data.jam_buka,
-  //       closed: data.jam_tutup,
-  //     });
-  //   }
-  // }, [data]);
+  function formatDateToRegexPattern(isoDateString: any) {
+    const dateObject = new Date(isoDateString);
+    const year = dateObject.getFullYear();
+    const month = ("0" + (dateObject.getMonth() + 1)).slice(-2);
+    const day = ("0" + dateObject.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+  }
+
+  useEffect(() => {
+    if (data) {
+      form.reset({
+        name: data.name,
+        nik: data.nik,
+        email: data.email,
+        agama: data.agama,
+        telepon: data.telepon,
+        alamat: data.alamat,
+        tempat_lahir: data.tempat_lahir,
+        tgl_lahir: data.tgl_lahir,
+        status_kawin: data.status_kawin,
+        gender: data.gender,
+        pekerjaan: data.pekerjaan,
+        goldar: data.goldar,
+        pendidikan: data.pendidikan,
+        kecamatan_id: data.kecamatan_id.toString(),
+        desa_id: data.desa_id.toString(),
+        rt: data.rt,
+        rw: data.rw,
+      });
+    }
+  }, [data]);
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof userValidation>) {
     setIsLoading(true);
-    const formData = new FormData();
-    formData.append("name", values.name);
-    formData.append("nik", values.nik);
-    formData.append("email", values.email);
-    formData.append("telepon", values.telepon);
-    formData.append("alamat", values.alamat);
-    formData.append("agama", values.agama);
-    formData.append("tempat_lahir", values.tempat_lahir);
-    formData.append("tgl_lahir", values.tgl_lahir);
-    formData.append("status_kawin", values.status_kawin);
-    formData.append("gender", values.gender);
-    formData.append("pekerjaan", values.pekerjaan);
-    formData.append("goldar", values.goldar);
-    formData.append("kecamatan_id", values.kecamatan);
-    formData.append("desa_id", values.desa_id);
-    formData.append("rt", values.rt);
-    formData.append("rw", values.rw);
-    formData.append("pekerjaan", values.pekerjaan);
-    if (values.filektp && values.filektp.length > 0) {
-      formData.append("image", values.filektp[0]);
-    }
+    const formattedDate = formatDateToRegexPattern(values.tgl_lahir);
+    const formData = {
+      name: values.name,
+      nik: values.nik,
+      email: values.email,
+      agama: Number(values.agama),
+      telepon: values.telepon,
+      alamat: values.alamat,
+      tempat_lahir: values.tempat_lahir,
+      tgl_lahir: formattedDate,
+      status_kawin: Number(values.status_kawin),
+      gender: Number(values.gender),
+      pekerjaan: values.pekerjaan,
+      goldar: Number(values.goldar),
+      pendidikan: Number(values.pendidikan),
+      kecamatan_id: kecamatan,
+      desa_id: values.desa_id,
+      rt: values.rt,
+      rw: values.rw,
+    };
+
     if (type === "create") {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/create`,
+          `${process.env.NEXT_PUBLIC_API_URL}/user/userinfo/create`,
           {
             method: "POST",
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${Cookies.get("token")}`,
             },
-            body: formData,
+            body: JSON.stringify(formData),
           },
         );
 
         const data = await response.json();
+        console.log(data);
         if (response.ok) {
           toast(data.message);
-          router.push("/master/master-instance");
+          router.push("/manage-user");
         }
       } catch (error: any) {
         toast(error.message);
@@ -153,21 +177,22 @@ const UserData = ({
     } else {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/update/${data?.slug}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/user/userinfo/update/${data?.slug}`,
           {
             method: "PUT",
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${Cookies.get("token")}`,
             },
-            body: formData,
+            body: JSON.stringify(formData),
           },
         );
 
         const result = await response.json();
-
+        console.log(result);
         if (response.ok) {
           toast(result.message);
-          router.push("/master/master-instance");
+          router.push("/manage-user");
         }
       } catch (error: any) {
         toast(error.message);
@@ -193,6 +218,24 @@ const UserData = ({
                       className="rounded-full"
                       type="text"
                       placeholder="Masukkan NIK"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="rounded-full"
+                      type="text"
+                      placeholder="Masukkan Email"
                       {...field}
                     />
                   </FormControl>
@@ -282,7 +325,7 @@ const UserData = ({
               control={form.control}
               name="tgl_lahir"
               render={({ field }) => (
-                <FormItem className="space-y-3 flex flex-col">
+                <FormItem className="space-y-5 flex flex-col">
                   <FormLabel>Tanggal Lahir</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
@@ -318,6 +361,32 @@ const UserData = ({
             />
             <FormField
               control={form.control}
+              name="goldar"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>Golongan Darah</FormLabel>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Pilih Goldar" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {bloodTypes.map((v) => (
+                          <SelectItem key={v.id} value={v.id.toString()}>
+                            {v.key}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="status_kawin"
               render={({ field }) => (
                 <FormItem className="space-y-3">
@@ -342,6 +411,8 @@ const UserData = ({
                 </FormItem>
               )}
             />
+          </div>
+          <div className="space-y-3 w-full">
             <FormField
               control={form.control}
               name="gender"
@@ -375,9 +446,35 @@ const UserData = ({
                 <FormItem className="space-y-3">
                   <FormLabel>Pendidikan</FormLabel>
                   <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Pilih Pendidikan" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {educations.map((v) => (
+                          <SelectItem key={v.id} value={v.id.toString()}>
+                            {v.key}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="pekerjaan"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>Pekerjaan</FormLabel>
+                  <FormControl>
                     <Input
                       className="rounded-full"
-                      placeholder="Masukan pendidikan."
+                      placeholder="Masukan pekerjaan."
                       {...field}
                     />
                   </FormControl>
@@ -385,8 +482,6 @@ const UserData = ({
                 </FormItem>
               )}
             />
-          </div>
-          <div className="space-y-3 w-full">
             <FormField
               control={form.control}
               name="kecamatan_id"
@@ -395,7 +490,7 @@ const UserData = ({
                   <FormLabel>Kecamatan</FormLabel>
                   <FormControl>
                     <Select
-                      value={kecamatan?.toString()}
+                      value={kecamatan?.toString() || field.value?.toString()}
                       onValueChange={(e) => setKecamatan(e)}
                     >
                       <SelectTrigger className="w-full">
@@ -443,7 +538,7 @@ const UserData = ({
                       onValueChange={field.onChange}
                     >
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Pilih Kecamatan" />
+                        <SelectValue placeholder="Pilih Desa" />
                       </SelectTrigger>
                       <SelectContent className="pt-10">
                         <div className="px-2 fixed border-b w-full top-0 flex items-center justify-between z-10">
