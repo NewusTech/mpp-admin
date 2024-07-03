@@ -140,6 +140,7 @@ const CreateManageRequirementPageStep2 = () => {
         tipedata: card.tipedata,
         isrequired: card.isrequired,
         layanan_id: serviceId,
+        status: 1,
       };
 
       if (card.tipedata === "radio" || card.tipedata === "checkbox") {
