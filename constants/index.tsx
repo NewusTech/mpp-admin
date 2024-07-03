@@ -12,6 +12,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  Complaint,
+  Contact,
   DataApps,
   DataInstance,
   DataServices,
@@ -1032,6 +1034,21 @@ export const videoColumns: ColumnDef<Video>[] = [
   },
 ];
 
+export const contactColumns: ColumnDef<Contact>[] = [
+  {
+    accessorKey: "alamat",
+    header: "Alamat",
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+  },
+  {
+    accessorKey: "telp",
+    header: "Telepon",
+  },
+];
+
 export const dashboardSuperadminColumns: ColumnDef<any>[] = [
   {
     accessorKey: "layanan_createdAt",
@@ -1088,6 +1105,50 @@ export const VisionMissionColumns: ColumnDef<VisionMission>[] = [
     cell: ({ row }) => {
       const misi = row.original.misi;
       return <p>{stripHtmlTags(misi)}</p>;
+    },
+  },
+];
+
+export const complaintColumns: ColumnDef<Complaint>[] = [
+  {
+    accessorKey: "createdAt",
+    header: "Tanggal",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{formatDate(date)}</p>;
+    },
+  },
+  {
+    accessorKey: "Instansi.name",
+    header: "Nama",
+  },
+  {
+    accessorKey: "Layanan.name",
+    header: "Jenis Layanan",
+  },
+  {
+    accessorKey: "judul",
+    header: "Judul Pengaduan",
+  },
+  {
+    id: "actions",
+    header: "Aksi",
+    cell: ({ row }) => {
+      const complaint = row.original;
+
+      return (
+        <div className="flex gap-x-2">
+          <Link href={`/complaint/${complaint.id}`}>
+            <Button
+              size="sm"
+              className="text-sm rounded-full bg-secondary-700 hover:bg-secondary-800"
+            >
+              Balas
+            </Button>
+          </Link>
+        </div>
+      );
     },
   },
 ];

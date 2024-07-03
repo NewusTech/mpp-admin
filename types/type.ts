@@ -126,8 +126,27 @@ export type Video = {
   video: string;
 };
 
+export type Contact = {
+  id: number;
+  alamat: string;
+  email: string;
+  telp: string;
+};
+
 export type VisionMission = {
   id: number;
   visi: any;
   misi: any;
+};
+
+export type Complaint = {
+  id: number;
+  createdAt: string;
+  Instansi: {
+    name: string;
+  };
+  Layanan: {
+    name: string;
+  };
+  judul: string;
 };

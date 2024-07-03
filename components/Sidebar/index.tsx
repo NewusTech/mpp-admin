@@ -163,6 +163,15 @@ const Sidebar = () => {
             iconsActive="/icons/newspaper-active.svg"
             title="Berita"
           />
+          {role === "Admin Instansi" && (
+            <Nav
+              route="/complaint"
+              path="/complaint"
+              icons="/icons/send.svg"
+              iconsActive="/icons/send-active.svg"
+              title="Pengaduan"
+            />
+          )}
           <Nav
             route="#"
             path="/master"
@@ -229,6 +238,11 @@ const Sidebar = () => {
                         className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/master-apps") || pathname.startsWith("/master/master-apps") ? "text-primary-700" : ""}`}
                       >
                         <Link href="/master/master-apps">Aplikasi Dinas</Link>
+                      </li>
+                      <li
+                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/contact") || pathname.startsWith("/master/contact") ? "text-primary-700" : ""}`}
+                      >
+                        <Link href="/master/contact">Kontak</Link>
                       </li>
                     </>
                   ) : (
