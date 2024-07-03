@@ -140,3 +140,21 @@ export const userValidation = z.object({
   rt: z.string().optional(),
   rw: z.string().optional(),
 });
+
+export const ContactValidation = z.object({
+  alamat: z.string({
+    message: "Alamat harus diisi",
+  }),
+  email: z.string({
+    message: "Email harus diisi",
+  }),
+  telp: z.string({
+    message: "Telp harus diisi",
+  }),
+  latitude: z.string({
+    message: "Garis lintang harus diisi",
+  }),
+  longitude: z.string({
+    message: "Garis bujur harus diisi",
+  }),
+});
