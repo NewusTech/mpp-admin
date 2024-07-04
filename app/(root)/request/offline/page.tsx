@@ -12,7 +12,7 @@ import { requestOfflineColumns } from "@/constants";
 import useCreateRequestOffline from "@/lib/store/useCreateRequestOffline";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
-// import Cookies from "js-cookie";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface JwtPayload {
   role?: string;
@@ -122,100 +122,102 @@ const RequestOffline = () => {
   }, [searchInputInstance, searchInputService]);
 
   return (
-    <section className="mr-16">
-      <div className="flex justify-between gap-x-5 mb-8">
-        <div className="flex w-7/12 gap-x-5">
-          {role !== "Admin Instansi" && (
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
+      <section className="mr-16">
+        <div className="flex justify-between gap-x-5 mb-8">
+          <div className="flex w-7/12 gap-x-5">
+            {role !== "Admin Instansi" && (
+              <InputComponent
+                typeInput="selectSearch"
+                valueInput={searchInputInstance}
+                onChangeInputSearch={(e) =>
+                  setSearchInputInstance(e.target.value)
+                }
+                items={data?.data}
+                label="Instansi"
+                placeholder="Pilih Instansi"
+                value={instance}
+                onChange={(e: any) => setInstance(e)}
+              />
+            )}
             <InputComponent
               typeInput="selectSearch"
-              valueInput={searchInputInstance}
-              onChangeInputSearch={(e) =>
-                setSearchInputInstance(e.target.value)
-              }
-              items={data?.data}
-              label="Instansi"
-              placeholder="Pilih Instansi"
-              value={instance}
-              onChange={(e: any) => setInstance(e)}
+              items={services?.data}
+              valueInput={searchInputService}
+              onChangeInputSearch={(e) => setSearchInputService(e.target.value)}
+              label="Layanan"
+              placeholder="Pilih Layanan"
+              value={service}
+              onChange={(e: any) => setService(e)}
             />
+          </div>
+          <div className="flex w-5/12 items-center gap-x-2">
+            <InputComponent
+              typeInput="datepicker"
+              date={startDate}
+              setDate={(e) => setStartDate(e)}
+            />
+            <p>to</p>
+            <InputComponent
+              typeInput="datepicker"
+              date={endDate}
+              setDate={(e) => setEndDate(e)}
+            />
+          </div>
+        </div>
+        <div className="flex justify-start ">
+          {role === "Superadmin" ? (
+            <div>
+              {instansiId && serviceId ? (
+                <Link href="/request/offline/create">
+                  <Button
+                    onClick={() => handlePassId(serviceId)}
+                    className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
+                  >
+                    Tambah
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  disabled
+                  className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
+                >
+                  Tambah
+                </Button>
+              )}
+            </div>
+          ) : (
+            <div>
+              {serviceId ? (
+                <Link href="/request/offline/create">
+                  <Button
+                    onClick={() => handlePassId(serviceId)}
+                    className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
+                  >
+                    Tambah
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  disabled
+                  className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
+                >
+                  Tambah
+                </Button>
+              )}
+            </div>
           )}
-          <InputComponent
-            typeInput="selectSearch"
-            items={services?.data}
-            valueInput={searchInputService}
-            onChangeInputSearch={(e) => setSearchInputService(e.target.value)}
-            label="Layanan"
-            placeholder="Pilih Layanan"
-            value={service}
-            onChange={(e: any) => setService(e)}
-          />
         </div>
-        <div className="flex w-5/12 items-center gap-x-2">
-          <InputComponent
-            typeInput="datepicker"
-            date={startDate}
-            setDate={(e) => setStartDate(e)}
+        {histories && (
+          <DataTables
+            columns={requestOfflineColumns}
+            data={histories?.data}
+            filterBy="nik"
+            type="request"
           />
-          <p>to</p>
-          <InputComponent
-            typeInput="datepicker"
-            date={endDate}
-            setDate={(e) => setEndDate(e)}
-          />
-        </div>
-      </div>
-      <div className="flex justify-start ">
-        {role === "Superadmin" ? (
-          <div>
-            {instansiId && serviceId ? (
-              <Link href="/request/offline/create">
-                <Button
-                  onClick={() => handlePassId(serviceId)}
-                  className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
-                >
-                  Tambah
-                </Button>
-              </Link>
-            ) : (
-              <Button
-                disabled
-                className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
-              >
-                Tambah
-              </Button>
-            )}
-          </div>
-        ) : (
-          <div>
-            {serviceId ? (
-              <Link href="/request/offline/create">
-                <Button
-                  onClick={() => handlePassId(serviceId)}
-                  className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
-                >
-                  Tambah
-                </Button>
-              </Link>
-            ) : (
-              <Button
-                disabled
-                className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
-              >
-                Tambah
-              </Button>
-            )}
-          </div>
         )}
-      </div>
-      {histories && (
-        <DataTables
-          columns={requestOfflineColumns}
-          data={histories?.data}
-          filterBy="nik"
-          type="request"
-        />
-      )}
-    </section>
+      </section>
+    </ProtectedRoute>
   );
 };
 

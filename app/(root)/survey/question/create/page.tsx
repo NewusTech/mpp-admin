@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface Props {
   value: string;
@@ -94,57 +95,59 @@ const CreateQuestion = () => {
   };
 
   return (
-    <section className="mr-16">
-      <div className="-ml-14 mb-10">
-        <Link href="/survey/question">
-          <Image
-            src="/icons/back-arrow.svg"
-            alt="back-arrow"
-            width={48}
-            height={48}
-          />
-        </Link>
-      </div>
-      <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-3 p-8">
-        <h1 className="text-xl font-semibold">Survey Kepuasan Masyarakat</h1>
-        {inputs.map((input, index) => (
-          <div key={index} className="space-y-2 mt-4">
-            <p className="text-sm">Pertanyaan</p>
-            <InputComponent
-              value={input.field}
-              onChange={(value) => handleChangeInput(value, index)}
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
+      <section className="mr-16">
+        <div className="-ml-14 mb-10">
+          <Link href="/survey/question">
+            <Image
+              src="/icons/back-arrow.svg"
+              alt="back-arrow"
+              width={48}
+              height={48}
             />
-            <div className="flex justify-end mt-3">
-              <div
-                className="cursor-pointer"
-                onClick={() => handleRemoveInput(index)}
-              >
-                <Image
-                  src="/icons/trash.svg"
-                  alt="trash"
-                  width={24}
-                  height={24}
-                />
+          </Link>
+        </div>
+        <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-3 p-8">
+          <h1 className="text-xl font-semibold">Survey Kepuasan Masyarakat</h1>
+          {inputs.map((input, index) => (
+            <div key={index} className="space-y-2 mt-4">
+              <p className="text-sm">Pertanyaan</p>
+              <InputComponent
+                value={input.field}
+                onChange={(value) => handleChangeInput(value, index)}
+              />
+              <div className="flex justify-end mt-3">
+                <div
+                  className="cursor-pointer"
+                  onClick={() => handleRemoveInput(index)}
+                >
+                  <Image
+                    src="/icons/trash.svg"
+                    alt="trash"
+                    width={24}
+                    height={24}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-        <Button
-          onClick={handleAddInput}
-          className="border border-primary-700 bg-neutral-50 text-primary-700 hover:bg-primary-700 hover:text-neutral-50 w-[140px] rounded-full mt-10"
-        >
-          Tambah
-        </Button>
-      </div>
-      <div className="text-right mt-8 mb-[46px]">
-        <Button
-          onClick={handleSave}
-          className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
-        >
-          Simpan
-        </Button>
-      </div>
-    </section>
+          ))}
+          <Button
+            onClick={handleAddInput}
+            className="border border-primary-700 bg-neutral-50 text-primary-700 hover:bg-primary-700 hover:text-neutral-50 w-[140px] rounded-full mt-10"
+          >
+            Tambah
+          </Button>
+        </div>
+        <div className="text-right mt-8 mb-[46px]">
+          <Button
+            onClick={handleSave}
+            className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
+          >
+            Simpan
+          </Button>
+        </div>
+      </section>
+    </ProtectedRoute>
   );
 };
 

@@ -9,6 +9,7 @@ import { fetcher } from "@/lib/fetch";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface JwtPayload {
   role?: string;
@@ -130,74 +131,76 @@ const ManageApprovals = () => {
   };
 
   return (
-    <section className="mr-16">
-      <div className="flex justify-between gap-x-5 mb-8">
-        <div className="flex w-full gap-x-5">
-          {role !== "Admin Instansi" && (
+    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Staff Instansi"]}>
+      <section className="mr-16">
+        <div className="flex justify-between gap-x-5 mb-8">
+          <div className="flex w-full gap-x-5">
+            {role !== "Admin Instansi" && (
+              <InputComponent
+                typeInput="selectSearch"
+                valueInput={searchInputInstance}
+                onChangeInputSearch={(e) =>
+                  setSearchInputInstance(e.target.value)
+                }
+                items={result}
+                label="Instansi"
+                placeholder="Pilih Instansi"
+                value={instance}
+                onChange={(e: any) => setInstance(e)}
+              />
+            )}
             <InputComponent
               typeInput="selectSearch"
-              valueInput={searchInputInstance}
-              onChangeInputSearch={(e) =>
-                setSearchInputInstance(e.target.value)
-              }
-              items={result}
-              label="Instansi"
-              placeholder="Pilih Instansi"
-              value={instance}
-              onChange={(e: any) => setInstance(e)}
+              items={serviceAll}
+              valueInput={searchInputService}
+              onChangeInputSearch={(e) => setSearchInputService(e.target.value)}
+              label="Layanan"
+              placeholder="Pilih Layanan"
+              value={service}
+              onChange={(e: any) => setService(e)}
             />
-          )}
-          <InputComponent
-            typeInput="selectSearch"
-            items={serviceAll}
-            valueInput={searchInputService}
-            onChangeInputSearch={(e) => setSearchInputService(e.target.value)}
-            label="Layanan"
-            placeholder="Pilih Layanan"
-            value={service}
-            onChange={(e: any) => setService(e)}
-          />
+          </div>
         </div>
-      </div>
-      <div className="flex justify-between ">
-        <div className="flex gap-x-3">
-          {buttons.map((button: any) => (
-            <Button
-              key={button.value}
-              className={`border border-primary-700 hover:bg-primary-700 hover:text-neutral-50 w-[140px] rounded-full ${
-                activeButton === button.value
-                  ? "bg-primary-700 text-neutral-50"
-                  : "bg-transparent text-primary-700"
-              }`}
-              onClick={() => handleClick(button.value)}
-            >
-              {button.label}
-            </Button>
-          ))}
+        <div className="flex justify-between ">
+          <div className="flex gap-x-3">
+            {buttons.map((button: any) => (
+              <Button
+                key={button.value}
+                className={`border border-primary-700 hover:bg-primary-700 hover:text-neutral-50 w-[140px] rounded-full ${
+                  activeButton === button.value
+                    ? "bg-primary-700 text-neutral-50"
+                    : "bg-transparent text-primary-700"
+                }`}
+                onClick={() => handleClick(button.value)}
+              >
+                {button.label}
+              </Button>
+            ))}
+          </div>
+          <div className="flex w-4/12 items-center gap-x-2">
+            <InputComponent
+              typeInput="datepicker"
+              date={startDate}
+              setDate={(e) => setStartDate(e)}
+            />
+            <p>to</p>
+            <InputComponent
+              typeInput="datepicker"
+              date={endDate}
+              setDate={(e) => setEndDate(e)}
+            />
+          </div>
         </div>
-        <div className="flex w-4/12 items-center gap-x-2">
-          <InputComponent
-            typeInput="datepicker"
-            date={startDate}
-            setDate={(e) => setStartDate(e)}
+        {histories && (
+          <DataTables
+            columns={manageApprovalColumns}
+            data={historyAll}
+            filterBy="name"
+            type="requirement"
           />
-          <p>to</p>
-          <InputComponent
-            typeInput="datepicker"
-            date={endDate}
-            setDate={(e) => setEndDate(e)}
-          />
-        </div>
-      </div>
-      {histories && (
-        <DataTables
-          columns={manageApprovalColumns}
-          data={historyAll}
-          filterBy="name"
-          type="requirement"
-        />
-      )}
-    </section>
+        )}
+      </section>
+    </ProtectedRoute>
   );
 };
 

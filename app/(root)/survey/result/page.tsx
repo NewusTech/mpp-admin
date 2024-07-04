@@ -1,16 +1,14 @@
 "use client";
 
 import InputComponent from "@/components/InputComponent";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { surveyResultColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
-import Image from "next/image";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface JwtPayload {
   role?: string;
@@ -74,34 +72,36 @@ const SurveyResult = () => {
   const surveys = resultSurvey?.data;
 
   return (
-    <section className="mr-16">
-      <div className="flex justify-between mb-8">
-        <div className="w-1/2">
-          {role !== "Admin Instansi" && (
-            <InputComponent
-              typeInput="selectSearch"
-              valueInput={searchInputInstance}
-              onChangeInputSearch={(e) =>
-                setSearchInputInstance(e.target.value)
-              }
-              items={result}
-              label="Instansi"
-              placeholder="Pilih Instansi"
-              value={instance}
-              onChange={(e: any) => setInstance(e)}
-            />
-          )}
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
+      <section className="mr-16">
+        <div className="flex justify-between mb-8">
+          <div className="w-1/2">
+            {role !== "Admin Instansi" && (
+              <InputComponent
+                typeInput="selectSearch"
+                valueInput={searchInputInstance}
+                onChangeInputSearch={(e) =>
+                  setSearchInputInstance(e.target.value)
+                }
+                items={result}
+                label="Instansi"
+                placeholder="Pilih Instansi"
+                value={instance}
+                onChange={(e: any) => setInstance(e)}
+              />
+            )}
+          </div>
         </div>
-      </div>
-      {surveys && (
-        <DataTables
-          columns={surveyResultColumns}
-          data={surveys}
-          filterBy="layanan_name"
-          type="requirement"
-        />
-      )}
-    </section>
+        {surveys && (
+          <DataTables
+            columns={surveyResultColumns}
+            data={surveys}
+            filterBy="layanan_name"
+            type="requirement"
+          />
+        )}
+      </section>
+    </ProtectedRoute>
   );
 };
 

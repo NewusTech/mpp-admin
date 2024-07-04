@@ -3,8 +3,6 @@
 import InputComponent from "@/components/InputComponent";
 import { dataServiceColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
-import { AlertDialogPopup } from "@/components/Dialog";
-import { DataServices } from "@/types/type";
 import AlertDialogCreateService from "@/app/(root)/master/master-service/DialogForm";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
@@ -12,6 +10,7 @@ import { jwtDecode } from "jwt-decode";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import { Button } from "@/components/ui/button";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface JwtPayload {
   role?: string;
@@ -76,47 +75,49 @@ const MasterService = () => {
   console.log(serviceAll);
 
   return (
-    <section className="mr-16">
-      <div
-        className={`flex gap-x-6 ${role === "Admin Instansi" ? "justify-end mb-8" : "justify-between mb-[86px]"}`}
-      >
-        <div className="w-full">
-          {role !== "Admin Instansi" && (
-            <InputComponent
-              typeInput="selectSearch"
-              valueInput={searchInputInstance}
-              onChangeInputSearch={(e) =>
-                setSearchInputInstance(e.target.value)
-              }
-              items={result}
-              label="Instansi"
-              placeholder="Pilih Instansi"
-              value={instance}
-              onChange={(e: any) => setInstance(e)}
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
+      <section className="mr-16">
+        <div
+          className={`flex gap-x-6 ${role === "Admin Instansi" ? "justify-end mb-8" : "justify-between mb-[86px]"}`}
+        >
+          <div className="w-full">
+            {role !== "Admin Instansi" && (
+              <InputComponent
+                typeInput="selectSearch"
+                valueInput={searchInputInstance}
+                onChangeInputSearch={(e) =>
+                  setSearchInputInstance(e.target.value)
+                }
+                items={result}
+                label="Instansi"
+                placeholder="Pilih Instansi"
+                value={instance}
+                onChange={(e: any) => setInstance(e)}
+              />
+            )}
+          </div>
+          {instance || role === "Admin Instansi" ? (
+            <AlertDialogCreateService
+              id={role === "Admin Instansi" ? instansiId : instanceId}
             />
+          ) : (
+            <Button
+              disabled={true}
+              className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
+            >
+              Tambah
+            </Button>
           )}
         </div>
-        {instance || role === "Admin Instansi" ? (
-          <AlertDialogCreateService
-            id={role === "Admin Instansi" ? instansiId : instanceId}
+        {serviceAll && (
+          <DataTables
+            columns={dataServiceColumns}
+            data={serviceAll}
+            filterBy="name"
           />
-        ) : (
-          <Button
-            disabled={true}
-            className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
-          >
-            Tambah
-          </Button>
         )}
-      </div>
-      {serviceAll && (
-        <DataTables
-          columns={dataServiceColumns}
-          data={serviceAll}
-          filterBy="name"
-        />
-      )}
-    </section>
+      </section>
+    </ProtectedRoute>
   );
 };
 

@@ -43,6 +43,7 @@ const CardDashboardQueue = ({
 
 const TabQueue = () => {
   const [role, setRole] = useState<string | null>(null);
+  const [showButton, setShowButton] = useState(false);
   const [instansiId, setInstansiId] = useState<any>(0);
   const { switchValues } = useQueueStore();
 
@@ -68,6 +69,14 @@ const TabQueue = () => {
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (switchValues.length > 0) {
+      setShowButton(true);
+    } else {
+      setShowButton(false);
+    }
+  }, [switchValues]);
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get/${instansiId}?limit=10000000`,
@@ -170,9 +179,11 @@ const TabQueue = () => {
             type="requirement"
           />
           <div className="-mt-8">
-            <Button className="bg-primary-700 hover:bg-primary-800 rounded-full">
-              Submit
-            </Button>
+            {showButton && (
+              <Button className="bg-primary-700 hover:bg-primary-800 rounded-full">
+                Submit
+              </Button>
+            )}
           </div>
         </>
       )}

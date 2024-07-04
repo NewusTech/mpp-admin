@@ -1,8 +1,8 @@
 import { videoColumns, VisionMissionColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
-import { Video, VisionMission } from "@/types/type";
-import AlertDialogCreateVisionMission from "@/app/(root)/master/vision-mission/DialogForm";
+import { Video } from "@/types/type";
 import AlertDialogCreateVideo from "@/app/(root)/master/video/DialogForm";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 async function getData(): Promise<Video> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/video/get`, {
@@ -17,12 +17,14 @@ const MasterVisionMission = async () => {
   const result: Video[] = [data];
 
   return (
-    <section className="mr-16">
-      <div className="flex justify-end mb-8">
-        <AlertDialogCreateVideo />
-      </div>
-      <DataTables columns={videoColumns} data={result} filterBy="video" />
-    </section>
+    <ProtectedRoute roles={["Super Admin"]}>
+      <section className="mr-16">
+        <div className="flex justify-end mb-8">
+          <AlertDialogCreateVideo />
+        </div>
+        <DataTables columns={videoColumns} data={result} filterBy="video" />
+      </section>
+    </ProtectedRoute>
   );
 };
 

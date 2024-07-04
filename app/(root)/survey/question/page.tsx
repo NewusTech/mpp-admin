@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import useCreateSurvey from "@/lib/store/useCreateSurvey";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface JwtPayload {
   role?: string;
@@ -79,55 +80,57 @@ const SurveyQuestion = () => {
   };
 
   return (
-    <section className="mr-16">
-      <div className="flex justify-between mb-8">
-        <div className="w-1/2">
-          {role !== "Admin Instansi" && (
-            <InputComponent
-              typeInput="selectSearch"
-              valueInput={searchInputInstance}
-              onChangeInputSearch={(e) =>
-                setSearchInputInstance(e.target.value)
-              }
-              items={result}
-              label="Instansi"
-              placeholder="Pilih Instansi"
-              value={instance}
-              onChange={(e: any) => setInstance(e)}
-            />
-          )}
-        </div>
-        {instance || role === "Admin Instansi" ? (
-          <Link href="/survey/question/create">
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
+      <section className="mr-16">
+        <div className="flex justify-between mb-8">
+          <div className="w-1/2">
+            {role !== "Admin Instansi" && (
+              <InputComponent
+                typeInput="selectSearch"
+                valueInput={searchInputInstance}
+                onChangeInputSearch={(e) =>
+                  setSearchInputInstance(e.target.value)
+                }
+                items={result}
+                label="Instansi"
+                placeholder="Pilih Instansi"
+                value={instance}
+                onChange={(e: any) => setInstance(e)}
+              />
+            )}
+          </div>
+          {instance || role === "Admin Instansi" ? (
+            <Link href="/survey/question/create">
+              <Button
+                onClick={
+                  role === "Admin Instansi"
+                    ? () => handlePassIdInstnace(instansiId)
+                    : () => handlePassIdInstnace(instanceId)
+                }
+                className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
+              >
+                Tambah
+              </Button>
+            </Link>
+          ) : (
             <Button
-              onClick={
-                role === "Admin Instansi"
-                  ? () => handlePassIdInstnace(instansiId)
-                  : () => handlePassIdInstnace(instanceId)
-              }
+              disabled={true}
               className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
             >
               Tambah
             </Button>
-          </Link>
-        ) : (
-          <Button
-            disabled={true}
-            className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
-          >
-            Tambah
-          </Button>
+          )}
+        </div>
+        {surveyAll && (
+          <DataTables
+            columns={surveyQuestionColumns}
+            data={surveyAll}
+            filterBy="field"
+            type="requirement"
+          />
         )}
-      </div>
-      {surveyAll && (
-        <DataTables
-          columns={surveyQuestionColumns}
-          data={surveyAll}
-          filterBy="field"
-          type="requirement"
-        />
-      )}
-    </section>
+      </section>
+    </ProtectedRoute>
   );
 };
 

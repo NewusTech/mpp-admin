@@ -19,10 +19,12 @@ import { useRouter } from "next/navigation";
 import { Loader } from "lucide-react";
 import Cookies from "js-cookie";
 import { useState } from "react";
+import useAuthStore from "@/lib/store/useAuthStore";
 
 const FormSignin = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const login = useAuthStore((state) => state.login);
 
   const form = useForm<z.infer<typeof SigninValidation>>({
     resolver: zodResolver(SigninValidation),
@@ -50,7 +52,8 @@ const FormSignin = () => {
 
       const data = await response.json();
       if (response.ok) {
-        Cookies.set("token", data.data.token);
+        const tokenAuth = data.data.token;
+        login(tokenAuth);
         await new Promise((resolve) => setTimeout(resolve, 300));
         toast(data.message);
         router.push("/");

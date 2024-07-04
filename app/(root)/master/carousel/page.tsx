@@ -2,6 +2,7 @@ import { carouselColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
 import { Facility } from "@/types/type";
 import AlertDialogCreateCarousel from "@/app/(root)/master/carousel/DialogForm";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 async function getData(): Promise<Facility[]> {
   const res = await fetch(
@@ -17,12 +18,14 @@ async function getData(): Promise<Facility[]> {
 const MasterCarousel = async () => {
   const data = await getData();
   return (
-    <section className="mr-16">
-      <div className="flex justify-end mb-8">
-        <AlertDialogCreateCarousel />
-      </div>
-      <DataTables columns={carouselColumns} data={data} filterBy="image" />
-    </section>
+    <ProtectedRoute roles={["Super Admin"]}>
+      <section className="mr-16">
+        <div className="flex justify-end mb-8">
+          <AlertDialogCreateCarousel />
+        </div>
+        <DataTables columns={carouselColumns} data={data} filterBy="image" />
+      </section>
+    </ProtectedRoute>
   );
 };
 

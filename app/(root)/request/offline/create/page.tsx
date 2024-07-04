@@ -8,7 +8,6 @@ import useCreateRequestOffline from "@/lib/store/useCreateRequestOffline";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useState, ChangeEvent, useEffect } from "react";
@@ -26,6 +25,7 @@ import {
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 // Define types
 type FormValue = string | number | boolean | Record<string, boolean>;
@@ -243,163 +243,75 @@ const CreateOffline = () => {
   };
 
   return (
-    <section className="mr-16">
-      <div className="-ml-14 mb-10">
-        <Link href="/request/offline">
-          <Image
-            src="/icons/back-arrow.svg"
-            alt="back-arrow"
-            width={48}
-            height={48}
-          />
-        </Link>
-      </div>
-      <div className="flex space-x-5 items-center">
-        <h1 className="text-lg font-semibold">Cari NIK</h1>
-        <div className="w-1/2">
-          <Select
-            value={selectedUser}
-            onValueChange={(e: string) => setSelectedUser(e)}
-          >
-            <SelectTrigger name="nik" className="w-full rounded-full ">
-              <SelectValue placeholder="Pilih NIK" />
-            </SelectTrigger>
-            <SelectContent className="pt-10">
-              <div className="px-2 fixed border-b w-full top-0 flex items-center justify-between z-10">
-                <Search className="text-slate-400" />
-                <Input
-                  placeholder="Search..."
-                  className="w-full border-0"
-                  value={searchInput}
-                  onChange={(event) => setSearchInput(event.target.value)}
-                />
-              </div>
-              {resultUser?.map((item: any) => (
-                <SelectItem
-                  key={item.id}
-                  className="w-full"
-                  value={item.id.toString()}
-                >
-                  <div className="py-1 w-full">
-                    <h2 className="font-bold">{item.nik}</h2>
-                    <p className="text-sm">{item.name}</p>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
+      <section className="mr-16">
+        <div className="-ml-14 mb-10">
+          <Link href="/request/offline">
+            <Image
+              src="/icons/back-arrow.svg"
+              alt="back-arrow"
+              width={48}
+              height={48}
+            />
+          </Link>
         </div>
-        {/*<p className="text-error-700">NIK Belum Terdaftar</p>*/}
-      </div>
-      <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-8 p-8">
-        {userData ? (
-          <div className="flex justify-between gap-x-10">
-            <div className="w-1/2 space-y-4">
-              <h1 className="text-xl font-semibold mb-4">Data Diri</h1>
-              <div className="space-y-2">
-                <p>Nama</p>
-                <InputComponent value={userData.name} />
-              </div>
-              <div className="space-y-2">
-                <p>NIK</p>
-                <InputComponent value={userData.nik} />
-              </div>
-              <div className="space-y-2">
-                <p>Nomor Telepon</p>
-                <InputComponent value={userData.telepon} />
-              </div>
-              <div className="space-y-2">
-                <p>Email</p>
-                <InputComponent value={userData.email} />
-              </div>
-            </div>
-            <div className="w-1/2 space-y-4">
-              <h1 className="text-xl font-semibold mb-4">Alamat</h1>
-              <div className="flex gap-x-4">
-                <div className="w-full space-y-2">
-                  <p>Kecamatan</p>
-                  <InputComponent
-                    typeInput="selectSearch"
-                    valueInput={searchKecamatanInput}
-                    onChangeInputSearch={(e) =>
-                      setSearchKecamatanInput(e.target.value)
-                    }
-                    items={resultKec}
-                    label="Kecamatan"
-                    placeholder="Pilih Kecamatan"
-                    value={kecamatan || userData.kecamatan_id}
-                    onChange={(e: any) => setKecamatan(e)}
+        <div className="flex space-x-5 items-center">
+          <h1 className="text-lg font-semibold">Cari NIK</h1>
+          <div className="w-1/2">
+            <Select
+              value={selectedUser}
+              onValueChange={(e: string) => setSelectedUser(e)}
+            >
+              <SelectTrigger name="nik" className="w-full rounded-full ">
+                <SelectValue placeholder="Pilih NIK" />
+              </SelectTrigger>
+              <SelectContent className="pt-10">
+                <div className="px-2 fixed border-b w-full top-0 flex items-center justify-between z-10">
+                  <Search className="text-slate-400" />
+                  <Input
+                    placeholder="Search..."
+                    className="w-full border-0"
+                    value={searchInput}
+                    onChange={(event) => setSearchInput(event.target.value)}
                   />
                 </div>
-                <div className="w-full space-y-2">
-                  <p>Desa</p>
-                  <InputComponent
-                    typeInput="selectSearch"
-                    valueInput={searchVillageInput}
-                    onChangeInputSearch={(e) =>
-                      setSearchVillageInput(e.target.value)
-                    }
-                    items={resultDesa}
-                    label="Desa"
-                    placeholder="Pilih Desa"
-                    value={village || userData.desa_id}
-                    onChange={(e: any) => setVillage(e)}
-                  />
-                </div>
-              </div>
-              <div className="flex gap-x-4">
-                <div className="w-full space-y-2">
-                  <p>RT</p>
-                  <InputComponent value={userData.rt} />
-                </div>
-                <div className="w-full space-y-2">
-                  <p>RW</p>
-                  <InputComponent value={userData.rw} />
-                </div>
-              </div>
-              <div className="w-full space-y-2">
-                <p>Alamat</p>
-                <InputComponent typeInput="textarea" value={userData.alamat} />
-              </div>
-            </div>
+                {resultUser?.map((item: any) => (
+                  <SelectItem
+                    key={item.id}
+                    className="w-full"
+                    value={item.id.toString()}
+                  >
+                    <div className="py-1 w-full">
+                      <h2 className="font-bold">{item.nik}</h2>
+                      <p className="text-sm">{item.name}</p>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-        ) : (
-          <>
+          {/*<p className="text-error-700">NIK Belum Terdaftar</p>*/}
+        </div>
+        <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-8 p-8">
+          {userData ? (
             <div className="flex justify-between gap-x-10">
               <div className="w-1/2 space-y-4">
                 <h1 className="text-xl font-semibold mb-4">Data Diri</h1>
                 <div className="space-y-2">
                   <p>Nama</p>
-                  <InputComponent
-                    value={form.name}
-                    name="name"
-                    onChange={handleChangeUserData}
-                  />
+                  <InputComponent value={userData.name} />
                 </div>
                 <div className="space-y-2">
                   <p>NIK</p>
-                  <InputComponent
-                    value={form.nik}
-                    name="nik"
-                    onChange={handleChangeUserData}
-                  />
+                  <InputComponent value={userData.nik} />
                 </div>
                 <div className="space-y-2">
                   <p>Nomor Telepon</p>
-                  <InputComponent
-                    value={form.telepon}
-                    name="telepon"
-                    onChange={handleChangeUserData}
-                  />
+                  <InputComponent value={userData.telepon} />
                 </div>
                 <div className="space-y-2">
                   <p>Email</p>
-                  <InputComponent
-                    value={form.email}
-                    name="email"
-                    type="email"
-                    onChange={handleChangeUserData}
-                  />
+                  <InputComponent value={userData.email} />
                 </div>
               </div>
               <div className="w-1/2 space-y-4">
@@ -416,7 +328,7 @@ const CreateOffline = () => {
                       items={resultKec}
                       label="Kecamatan"
                       placeholder="Pilih Kecamatan"
-                      value={kecamatan}
+                      value={kecamatan || userData.kecamatan_id}
                       onChange={(e: any) => setKecamatan(e)}
                     />
                   </div>
@@ -431,7 +343,7 @@ const CreateOffline = () => {
                       items={resultDesa}
                       label="Desa"
                       placeholder="Pilih Desa"
-                      value={village}
+                      value={village || userData.desa_id}
                       onChange={(e: any) => setVillage(e)}
                     />
                   </div>
@@ -439,150 +351,246 @@ const CreateOffline = () => {
                 <div className="flex gap-x-4">
                   <div className="w-full space-y-2">
                     <p>RT</p>
-                    <InputComponent
-                      value={form.rt}
-                      name="rt"
-                      onChange={handleChangeUserData}
-                    />
+                    <InputComponent value={userData.rt} />
                   </div>
                   <div className="w-full space-y-2">
                     <p>RW</p>
-                    <InputComponent
-                      value={form.rw}
-                      name="rw"
-                      onChange={handleChangeUserData}
-                    />
+                    <InputComponent value={userData.rw} />
                   </div>
                 </div>
                 <div className="w-full space-y-2">
                   <p>Alamat</p>
                   <InputComponent
                     typeInput="textarea"
-                    name="alamat"
-                    value={form.alamat}
-                    onChange={handleChangeUserData}
+                    value={userData.alamat}
                   />
                 </div>
               </div>
             </div>
-            <Button
-              onClick={handleCreateUser}
-              className="w-full bg-primary-700 rounded-full hover:bg-primary-800 mt-7"
-            >
-              Submit
-            </Button>
-          </>
-        )}
-      </div>
-      <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-8 p-8">
-        <div className="flex justify-between gap-x-10">
-          <div className="w-full space-y-4">
-            <h1 className="text-xl font-semibold mb-4">Formulir</h1>
-            {resultForm.map((v) => (
-              <div className="space-y-2" key={v.id}>
-                <p>{v.field}</p>
-                {v.tipedata === "radio" ? (
-                  <RadioGroup
-                    className="flex space-x-4"
-                    onValueChange={(value) => handleChange(v.id, value)}
-                  >
-                    {v.datajson?.map((option) => (
-                      <div
-                        key={option.id}
-                        className="flex items-center space-x-2"
-                      >
-                        <RadioGroupItem value={option.id} id={option.key} />
-                        <Label htmlFor={option.key}>{option.key}</Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                ) : v.tipedata === "checkbox" ? (
-                  <div className="flex space-x-4">
-                    {v.datajson?.map((option) => (
-                      <div
-                        key={option.id}
-                        className="space-x-2 flex items-center"
-                      >
-                        <input
-                          type="checkbox"
-                          id={option.key}
-                          checked={
-                            !!(
-                              formValues[v.id] &&
-                              (formValues[v.id] as Record<string, boolean>)[
-                                option.id
-                              ]
-                            )
-                          }
-                          onChange={(e) => {
-                            const checked = e.target.checked;
-                            handleChange(v.id, {
-                              ...(formValues[v.id] as Record<string, boolean>),
-                              [option.id]: checked,
-                            });
-                          }}
-                        />
-                        <Label htmlFor={option.key}>{option.key}</Label>
-                      </div>
-                    ))}
+          ) : (
+            <>
+              <div className="flex justify-between gap-x-10">
+                <div className="w-1/2 space-y-4">
+                  <h1 className="text-xl font-semibold mb-4">Data Diri</h1>
+                  <div className="space-y-2">
+                    <p>Nama</p>
+                    <InputComponent
+                      value={form.name}
+                      name="name"
+                      onChange={handleChangeUserData}
+                    />
                   </div>
-                ) : v.tipedata === "textarea" ? (
-                  <Textarea
-                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-                      handleChange(v.id, e.target.value)
-                    }
-                    className="w-full h-40 p-2 border rounded-md"
-                  />
-                ) : (
-                  <Input
-                    type={v.tipedata}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      handleChange(v.id, e.target.value)
-                    }
-                    className="rounded-full w-full pr-96 "
-                  />
-                )}
+                  <div className="space-y-2">
+                    <p>NIK</p>
+                    <InputComponent
+                      value={form.nik}
+                      name="nik"
+                      onChange={handleChangeUserData}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <p>Nomor Telepon</p>
+                    <InputComponent
+                      value={form.telepon}
+                      name="telepon"
+                      onChange={handleChangeUserData}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <p>Email</p>
+                    <InputComponent
+                      value={form.email}
+                      name="email"
+                      type="email"
+                      onChange={handleChangeUserData}
+                    />
+                  </div>
+                </div>
+                <div className="w-1/2 space-y-4">
+                  <h1 className="text-xl font-semibold mb-4">Alamat</h1>
+                  <div className="flex gap-x-4">
+                    <div className="w-full space-y-2">
+                      <p>Kecamatan</p>
+                      <InputComponent
+                        typeInput="selectSearch"
+                        valueInput={searchKecamatanInput}
+                        onChangeInputSearch={(e) =>
+                          setSearchKecamatanInput(e.target.value)
+                        }
+                        items={resultKec}
+                        label="Kecamatan"
+                        placeholder="Pilih Kecamatan"
+                        value={kecamatan}
+                        onChange={(e: any) => setKecamatan(e)}
+                      />
+                    </div>
+                    <div className="w-full space-y-2">
+                      <p>Desa</p>
+                      <InputComponent
+                        typeInput="selectSearch"
+                        valueInput={searchVillageInput}
+                        onChangeInputSearch={(e) =>
+                          setSearchVillageInput(e.target.value)
+                        }
+                        items={resultDesa}
+                        label="Desa"
+                        placeholder="Pilih Desa"
+                        value={village}
+                        onChange={(e: any) => setVillage(e)}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex gap-x-4">
+                    <div className="w-full space-y-2">
+                      <p>RT</p>
+                      <InputComponent
+                        value={form.rt}
+                        name="rt"
+                        onChange={handleChangeUserData}
+                      />
+                    </div>
+                    <div className="w-full space-y-2">
+                      <p>RW</p>
+                      <InputComponent
+                        value={form.rw}
+                        name="rw"
+                        onChange={handleChangeUserData}
+                      />
+                    </div>
+                  </div>
+                  <div className="w-full space-y-2">
+                    <p>Alamat</p>
+                    <InputComponent
+                      typeInput="textarea"
+                      name="alamat"
+                      value={form.alamat}
+                      onChange={handleChangeUserData}
+                    />
+                  </div>
+                </div>
               </div>
-            ))}
+              <Button
+                onClick={handleCreateUser}
+                className="w-full bg-primary-700 rounded-full hover:bg-primary-800 mt-7"
+              >
+                Submit
+              </Button>
+            </>
+          )}
+        </div>
+        <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-8 p-8">
+          <div className="flex justify-between gap-x-10">
+            <div className="w-full space-y-4">
+              <h1 className="text-xl font-semibold mb-4">Formulir</h1>
+              {resultForm.map((v) => (
+                <div className="space-y-2" key={v.id}>
+                  <p>{v.field}</p>
+                  {v.tipedata === "radio" ? (
+                    <RadioGroup
+                      className="flex space-x-4"
+                      onValueChange={(value) => handleChange(v.id, value)}
+                    >
+                      {v.datajson?.map((option) => (
+                        <div
+                          key={option.id}
+                          className="flex items-center space-x-2"
+                        >
+                          <RadioGroupItem value={option.id} id={option.key} />
+                          <Label htmlFor={option.key}>{option.key}</Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
+                  ) : v.tipedata === "checkbox" ? (
+                    <div className="flex space-x-4">
+                      {v.datajson?.map((option) => (
+                        <div
+                          key={option.id}
+                          className="space-x-2 flex items-center"
+                        >
+                          <input
+                            type="checkbox"
+                            id={option.key}
+                            checked={
+                              !!(
+                                formValues[v.id] &&
+                                (formValues[v.id] as Record<string, boolean>)[
+                                  option.id
+                                ]
+                              )
+                            }
+                            onChange={(e) => {
+                              const checked = e.target.checked;
+                              handleChange(v.id, {
+                                ...(formValues[v.id] as Record<
+                                  string,
+                                  boolean
+                                >),
+                                [option.id]: checked,
+                              });
+                            }}
+                          />
+                          <Label htmlFor={option.key}>{option.key}</Label>
+                        </div>
+                      ))}
+                    </div>
+                  ) : v.tipedata === "textarea" ? (
+                    <Textarea
+                      onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                        handleChange(v.id, e.target.value)
+                      }
+                      className="w-full h-40 p-2 border rounded-md"
+                    />
+                  ) : (
+                    <Input
+                      type={v.tipedata}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        handleChange(v.id, e.target.value)
+                      }
+                      className="rounded-full w-full pr-96 "
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-      <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-8 p-8">
-        <h1 className="text-xl font-semibold mb-4">Dokumen</h1>
-        {resultDocs.map((v) => (
-          <div
-            key={v.id}
-            className="flex items-center justify-between w-full rounded-[20px] py-6 px-4 bg-neutral-50"
+        <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-8 p-8">
+          <h1 className="text-xl font-semibold mb-4">Dokumen</h1>
+          {resultDocs.map((v) => (
+            <div
+              key={v.id}
+              className="flex items-center justify-between w-full rounded-[20px] py-6 px-4 bg-neutral-50"
+            >
+              <div className="w-11/12 space-y-2">
+                <h3 className="font-semibold text-[16px] text-primary-800">
+                  {v.field}
+                </h3>
+              </div>
+              <div>
+                <InputComponent
+                  typeInput="upload"
+                  label={docValues[v.id] ? docValues[v.id]?.name : "Upload"}
+                  onChange={(e) =>
+                    handleDocChange(
+                      v.id,
+                      e.target.files ? e.target.files[0] : null,
+                    )
+                  }
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="text-right mt-5">
+          <Button
+            className="bg-success-700 hover:bg-primary-800 w-[140px] rounded-full"
+            onClick={handleSubmit}
           >
-            <div className="w-11/12 space-y-2">
-              <h3 className="font-semibold text-[16px] text-primary-800">
-                {v.field}
-              </h3>
-            </div>
-            <div>
-              <InputComponent
-                typeInput="upload"
-                label={docValues[v.id] ? docValues[v.id]?.name : "Upload"}
-                onChange={(e) =>
-                  handleDocChange(
-                    v.id,
-                    e.target.files ? e.target.files[0] : null,
-                  )
-                }
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="text-right mt-5">
-        <Button
-          className="bg-success-700 hover:bg-primary-800 w-[140px] rounded-full"
-          onClick={handleSubmit}
-        >
-          Validasi
-        </Button>
-      </div>
-    </section>
+            Validasi
+          </Button>
+        </div>
+      </section>
+    </ProtectedRoute>
   );
 };
 

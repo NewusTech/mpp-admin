@@ -7,19 +7,11 @@ import { manageRequirementColumns } from "@/constants";
 import Link from "next/link";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useEffect, useState } from "react";
 import useCreateRequirement from "@/lib/store/useCreateRequirement";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface JwtPayload {
   role?: string;
@@ -88,58 +80,60 @@ const ManageRequirements = () => {
   const serviceAll = services?.data;
 
   return (
-    <section className="mr-16">
-      <div>
-        <h1 className="text-lg font-semibold">Kelola Persyaratan</h1>
-        <div className="flex justify-between mt-4">
-          <div className="w-1/2">
-            {role !== "Admin Instansi" && (
-              <InputComponent
-                typeInput="selectSearch"
-                valueInput={searchInputInstance}
-                onChangeInputSearch={(e) =>
-                  setSearchInputInstance(e.target.value)
-                }
-                items={result}
-                label="Instansi"
-                placeholder="Pilih Instansi"
-                value={instance}
-                onChange={(e: any) => setInstance(e)}
-              />
-            )}
-          </div>
-          {instance || role === "Admin Instansi" ? (
-            <Link href="/manage-requirement/create">
+    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Staff Instansi"]}>
+      <section className="mr-16">
+        <div>
+          <h1 className="text-lg font-semibold">Kelola Persyaratan</h1>
+          <div className="flex justify-between mt-4">
+            <div className="w-1/2">
+              {role !== "Admin Instansi" && (
+                <InputComponent
+                  typeInput="selectSearch"
+                  valueInput={searchInputInstance}
+                  onChangeInputSearch={(e) =>
+                    setSearchInputInstance(e.target.value)
+                  }
+                  items={result}
+                  label="Instansi"
+                  placeholder="Pilih Instansi"
+                  value={instance}
+                  onChange={(e: any) => setInstance(e)}
+                />
+              )}
+            </div>
+            {instance || role === "Admin Instansi" ? (
+              <Link href="/manage-requirement/create">
+                <Button
+                  onClick={() =>
+                    role === "Admin Instansi"
+                      ? handlePassIdInstnace(instansiId)
+                      : handlePassIdInstnace(instanceId)
+                  }
+                  className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
+                >
+                  Tambah
+                </Button>
+              </Link>
+            ) : (
               <Button
-                onClick={() =>
-                  role === "Admin Instansi"
-                    ? handlePassIdInstnace(instansiId)
-                    : handlePassIdInstnace(instanceId)
-                }
+                disabled={true}
                 className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
               >
                 Tambah
               </Button>
-            </Link>
-          ) : (
-            <Button
-              disabled={true}
-              className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
-            >
-              Tambah
-            </Button>
+            )}
+          </div>
+          {serviceAll && (
+            <DataTables
+              columns={manageRequirementColumns}
+              data={serviceAll}
+              filterBy="name"
+              type="requirement"
+            />
           )}
         </div>
-        {serviceAll && (
-          <DataTables
-            columns={manageRequirementColumns}
-            data={serviceAll}
-            filterBy="name"
-            type="requirement"
-          />
-        )}
-      </div>
-    </section>
+      </section>
+    </ProtectedRoute>
   );
 };
 

@@ -9,6 +9,7 @@ import { fetcher } from "@/lib/fetch";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { Button } from "@/components/ui/button";
+import ProtectedRoute from "@/components/ProtectedRoute";
 interface JwtPayload {
   role?: string;
   instansi_id: number;
@@ -78,40 +79,56 @@ const SettingPage = () => {
   const serviceAll = services?.data;
 
   return (
-    <section className="mr-16">
-      <div className="flex justify-between gap-x-5 mb-8">
-        <div className="flex w-full gap-x-5">
-          {role !== "Admin Instansi" && (
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
+      <section className="mr-16">
+        <div className="flex justify-between gap-x-5 mb-8">
+          <div className="flex w-full gap-x-5">
+            {role !== "Admin Instansi" && (
+              <InputComponent
+                typeInput="selectSearch"
+                valueInput={searchInputInstance}
+                onChangeInputSearch={(e) =>
+                  setSearchInputInstance(e.target.value)
+                }
+                items={result}
+                label="Instansi"
+                placeholder="Pilih Instansi"
+                value={instance}
+                onChange={(e: any) => setInstance(e)}
+              />
+            )}
             <InputComponent
               typeInput="selectSearch"
-              valueInput={searchInputInstance}
-              onChangeInputSearch={(e) =>
-                setSearchInputInstance(e.target.value)
-              }
-              items={result}
-              label="Instansi"
-              placeholder="Pilih Instansi"
-              value={instance}
-              onChange={(e: any) => setInstance(e)}
+              items={serviceAll}
+              valueInput={searchInputService}
+              onChangeInputSearch={(e) => setSearchInputService(e.target.value)}
+              label="Layanan"
+              placeholder="Pilih Layanan"
+              value={service}
+              onChange={(e: any) => setService(e)}
             />
-          )}
-          <InputComponent
-            typeInput="selectSearch"
-            items={serviceAll}
-            valueInput={searchInputService}
-            onChangeInputSearch={(e) => setSearchInputService(e.target.value)}
-            label="Layanan"
-            placeholder="Pilih Layanan"
-            value={service}
-            onChange={(e: any) => setService(e)}
-          />
+          </div>
         </div>
-      </div>
-      {role === "Superadmin" ? (
-        <div>
-          {instansiId && serviceId ? (
-            <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-700 hover:bg-primary-800 duration-300 transition-colors">
-              <Link href={`/setting/${serviceId}`}>
+        {role === "Superadmin" ? (
+          <div>
+            {instansiId && serviceId ? (
+              <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-700 hover:bg-primary-800 duration-300 transition-colors">
+                <Link href={`/setting/${serviceId}`}>
+                  <div className="w-full h-full space-y-8 flex flex-col items-center justify-center">
+                    <Image
+                      src="/icons/letter.svg"
+                      alt="Surat"
+                      width={100}
+                      height={100}
+                    />
+                    <p className="text-xl font-semibold text-neutral-50">
+                      Format Surat
+                    </p>
+                  </div>
+                </Link>
+              </div>
+            ) : (
+              <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-600">
                 <div className="w-full h-full space-y-8 flex flex-col items-center justify-center">
                   <Image
                     src="/icons/letter.svg"
@@ -123,29 +140,29 @@ const SettingPage = () => {
                     Format Surat
                   </p>
                 </div>
-              </Link>
-            </div>
-          ) : (
-            <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-600">
-              <div className="w-full h-full space-y-8 flex flex-col items-center justify-center">
-                <Image
-                  src="/icons/letter.svg"
-                  alt="Surat"
-                  width={100}
-                  height={100}
-                />
-                <p className="text-xl font-semibold text-neutral-50">
-                  Format Surat
-                </p>
               </div>
-            </div>
-          )}
-        </div>
-      ) : (
-        <div>
-          {serviceId ? (
-            <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-700 hover:bg-primary-800 duration-300 transition-colors">
-              <Link href={`/setting/${serviceId}`}>
+            )}
+          </div>
+        ) : (
+          <div>
+            {serviceId ? (
+              <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-700 hover:bg-primary-800 duration-300 transition-colors">
+                <Link href={`/setting/${serviceId}`}>
+                  <div className="w-full h-full space-y-8 flex flex-col items-center justify-center">
+                    <Image
+                      src="/icons/letter.svg"
+                      alt="Surat"
+                      width={100}
+                      height={100}
+                    />
+                    <p className="text-xl font-semibold text-neutral-50">
+                      Format Surat
+                    </p>
+                  </div>
+                </Link>
+              </div>
+            ) : (
+              <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-600">
                 <div className="w-full h-full space-y-8 flex flex-col items-center justify-center">
                   <Image
                     src="/icons/letter.svg"
@@ -157,41 +174,27 @@ const SettingPage = () => {
                     Format Surat
                   </p>
                 </div>
-              </Link>
-            </div>
-          ) : (
-            <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-600">
-              <div className="w-full h-full space-y-8 flex flex-col items-center justify-center">
-                <Image
-                  src="/icons/letter.svg"
-                  alt="Surat"
-                  width={100}
-                  height={100}
-                />
-                <p className="text-xl font-semibold text-neutral-50">
-                  Format Surat
-                </p>
               </div>
-            </div>
-          )}
-        </div>
-      )}
-      {/*<div className="w-[270px] h-[260px] rounded-[10px] bg-primary-700 hover:bg-primary-800 duration-300 transition-colors">*/}
-      {/*  <Link href={`/setting/${serviceId}`}>*/}
-      {/*    <div className="w-full h-full space-y-8 flex flex-col items-center justify-center">*/}
-      {/*      <Image*/}
-      {/*        src="/icons/letter.svg"*/}
-      {/*        alt="Surat"*/}
-      {/*        width={100}*/}
-      {/*        height={100}*/}
-      {/*      />*/}
-      {/*      <p className="text-xl font-semibold text-neutral-50">*/}
-      {/*        Format Surat*/}
-      {/*      </p>*/}
-      {/*    </div>*/}
-      {/*  </Link>*/}
-      {/*</div>*/}
-    </section>
+            )}
+          </div>
+        )}
+        {/*<div className="w-[270px] h-[260px] rounded-[10px] bg-primary-700 hover:bg-primary-800 duration-300 transition-colors">*/}
+        {/*  <Link href={`/setting/${serviceId}`}>*/}
+        {/*    <div className="w-full h-full space-y-8 flex flex-col items-center justify-center">*/}
+        {/*      <Image*/}
+        {/*        src="/icons/letter.svg"*/}
+        {/*        alt="Surat"*/}
+        {/*        width={100}*/}
+        {/*        height={100}*/}
+        {/*      />*/}
+        {/*      <p className="text-xl font-semibold text-neutral-50">*/}
+        {/*        Format Surat*/}
+        {/*      </p>*/}
+        {/*    </div>*/}
+        {/*  </Link>*/}
+        {/*</div>*/}
+      </section>
+    </ProtectedRoute>
   );
 };
 
