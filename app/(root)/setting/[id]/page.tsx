@@ -10,6 +10,7 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 const CreateFormat = ({
   params,
@@ -73,68 +74,70 @@ const CreateFormat = ({
   };
 
   return (
-    <section className="mr-16">
-      <div className="-ml-14 mb-10 w-12 h-12">
-        <Link href="/setting">
-          <Image
-            src="/icons/back-arrow.svg"
-            alt="back-arrow"
-            width={48}
-            height={48}
-          />
-        </Link>
-      </div>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
-          <label htmlFor="editor1">Kepala Surat</label>
-          <MyEditor
-            ref={editor1Ref}
-            name="editor1"
-            initialValue={result?.header || "<p>Ketik disni</p>"}
-          />
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
+      <section className="mr-16">
+        <div className="-ml-14 mb-10 w-12 h-12">
+          <Link href="/setting">
+            <Image
+              src="/icons/back-arrow.svg"
+              alt="back-arrow"
+              width={48}
+              height={48}
+            />
+          </Link>
         </div>
-        <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
-          <label htmlFor="editor2">Body Surat</label>
-          <MyEditor
-            ref={editor2Ref}
-            name="editor2"
-            initialValue={result?.body || "<p>Ketik disni</p>"}
-          />
-        </div>
-        <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
-          <label htmlFor="editor3">Penanggung Jawab</label>
-          <MyEditor
-            ref={editor3Ref}
-            name="editor3"
-            initialValue={result?.instansi_pj || "<p>Ketik disni</p>"}
-          />
-        </div>
-        <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
-          <label htmlFor="editor4">NIP Penanggung Jawab</label>
-          <MyEditor
-            ref={editor4Ref}
-            name="editor4"
-            initialValue={result?.nip_pj || "<p>Ketik disni</p>"}
-          />
-        </div>
-        <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
-          <label htmlFor="editor5">Footer</label>
-          <MyEditor
-            ref={editor5Ref}
-            name="editor5"
-            initialValue={result?.footer || "<p>Ketik disni</p>"}
-          />
-        </div>
-        <div className="text-right">
-          <Button
-            type="submit"
-            className="rounded-full bg-primary-700 hover:bg-primary-800"
-          >
-            Submit
-          </Button>
-        </div>
-      </form>
-    </section>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
+            <label htmlFor="editor1">Kepala Surat</label>
+            <MyEditor
+              ref={editor1Ref}
+              name="editor1"
+              initialValue={result?.header || "<p>Ketik disni</p>"}
+            />
+          </div>
+          <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
+            <label htmlFor="editor2">Body Surat</label>
+            <MyEditor
+              ref={editor2Ref}
+              name="editor2"
+              initialValue={result?.body || "<p>Ketik disni</p>"}
+            />
+          </div>
+          <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
+            <label htmlFor="editor3">Penanggung Jawab</label>
+            <MyEditor
+              ref={editor3Ref}
+              name="editor3"
+              initialValue={result?.instansi_pj || "<p>Ketik disni</p>"}
+            />
+          </div>
+          <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
+            <label htmlFor="editor4">NIP Penanggung Jawab</label>
+            <MyEditor
+              ref={editor4Ref}
+              name="editor4"
+              initialValue={result?.nip_pj || "<p>Ketik disni</p>"}
+            />
+          </div>
+          <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
+            <label htmlFor="editor5">Footer</label>
+            <MyEditor
+              ref={editor5Ref}
+              name="editor5"
+              initialValue={result?.footer || "<p>Ketik disni</p>"}
+            />
+          </div>
+          <div className="text-right">
+            <Button
+              type="submit"
+              className="rounded-full bg-primary-700 hover:bg-primary-800"
+            >
+              Submit
+            </Button>
+          </div>
+        </form>
+      </section>
+    </ProtectedRoute>
   );
 };
 

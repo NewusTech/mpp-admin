@@ -25,6 +25,7 @@ import { X } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 const steps = [
   { id: 1, title: "1" },
@@ -178,152 +179,154 @@ const CreateManageRequirementPageStep2 = () => {
   };
 
   return (
-    <section className="mr-16">
-      <div className="-ml-14 mb-10">
-        <Link href="/manage-requirement/create">
-          <Image
-            src="/icons/back-arrow.svg"
-            alt="back-arrow"
-            width={48}
-            height={48}
-          />
-        </Link>
-      </div>
-      <div className="space-y-3 justify-center rounded-[20px] bg-neutral-100 p-8">
-        <div className="flex justify-between">
-          <p className="text-lg font-semibold">Formulir</p>
-          <div className="flex">
-            {steps.map((step, index) => (
-              <Step
-                key={step.id}
-                title={step.title}
-                isLastStep={index === steps.length - 1}
-                isActive={step.id === currentStep}
-              />
-            ))}
-          </div>
+    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Staff Instansi"]}>
+      <section className="mr-16">
+        <div className="-ml-14 mb-10">
+          <Link href="/manage-requirement/create">
+            <Image
+              src="/icons/back-arrow.svg"
+              alt="back-arrow"
+              width={48}
+              height={48}
+            />
+          </Link>
         </div>
-        {cards.map((card) => (
-          <div
-            key={card.id}
-            className="w-full h-full rounded-[20px] bg-neutral-200 p-8"
-          >
-            <div className="flex gap-x-10 items-end">
-              <div className="w-8/12">
-                <InputComponent
-                  typeInput="formInput"
-                  value={card.field}
-                  onChange={(e) =>
-                    handleCardChange(card.id, "field", e.target.value)
-                  }
+        <div className="space-y-3 justify-center rounded-[20px] bg-neutral-100 p-8">
+          <div className="flex justify-between">
+            <p className="text-lg font-semibold">Formulir</p>
+            <div className="flex">
+              {steps.map((step, index) => (
+                <Step
+                  key={step.id}
+                  title={step.title}
+                  isLastStep={index === steps.length - 1}
+                  isActive={step.id === currentStep}
                 />
-              </div>
-              <div className="w-4/12 space-y-2">
-                <p className="text-sm">Tipe Pertanyaan</p>
-                <Select
-                  value={card.tipedata}
-                  onValueChange={(e: string) =>
-                    handleCardChange(card.id, "tipedata", e)
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Pilih Tipe Pertanyaan" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Tipe Pertanyaan</SelectLabel>
-                      {selectDataTypeForm?.map((item: any) => (
-                        <SelectItem key={item.id} value={item.value}>
-                          {item.name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
+              ))}
             </div>
-            <div className="flex justify-between mt-3">
-              <div className="space-y-2 text-sm text-neutral-900">
-                <p>Apakah wajib diisi?</p>
-                <RadioGroup
-                  onValueChange={(e) =>
-                    handleCardChange(card.id, "isrequired", parseInt(e))
-                  }
-                  defaultValue={card.isrequired.toString()}
-                  className="flex space-x-1"
-                >
-                  <div className="flex items-center space-x-2 space-y-0">
-                    <RadioGroupItem value="1" />
-                    <p className="font-normal">Ya</p>
-                  </div>
-                  <div className="flex items-center space-x-2 space-y-0">
-                    <RadioGroupItem value="0" />
-                    <p className="font-normal">Tidak</p>
-                  </div>
-                </RadioGroup>
+          </div>
+          {cards.map((card) => (
+            <div
+              key={card.id}
+              className="w-full h-full rounded-[20px] bg-neutral-200 p-8"
+            >
+              <div className="flex gap-x-10 items-end">
+                <div className="w-8/12">
+                  <InputComponent
+                    typeInput="formInput"
+                    value={card.field}
+                    onChange={(e) =>
+                      handleCardChange(card.id, "field", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="w-4/12 space-y-2">
+                  <p className="text-sm">Tipe Pertanyaan</p>
+                  <Select
+                    value={card.tipedata}
+                    onValueChange={(e: string) =>
+                      handleCardChange(card.id, "tipedata", e)
+                    }
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Pilih Tipe Pertanyaan" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Tipe Pertanyaan</SelectLabel>
+                        {selectDataTypeForm?.map((item: any) => (
+                          <SelectItem key={item.id} value={item.value}>
+                            {item.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-              <div
-                className="cursor-pointer"
-                onClick={() => handleRemoveCard(card.id)}
-              >
-                <Image
-                  src="/icons/trash.svg"
-                  alt="trash"
-                  width={24}
-                  height={24}
-                />
-              </div>
-            </div>
-            {/* Menampilkan opsi tambahan jika tipedata adalah radio atau checkbox */}
-            {(card.tipedata === "radio" || card.tipedata === "checkbox") && (
-              <div className="mt-4 space-y-2">
-                <p className="text-sm">Pilihan</p>
-                {card.options?.map((option) => (
-                  <div key={option.id} className="flex gap-x-3 items-center">
-                    <Input
-                      type="text"
-                      className="rounded-full w-2/12"
-                      value={option.key}
-                      onChange={(e) =>
-                        handleOptionChange(card.id, option.id, e.target.value)
-                      }
-                      placeholder={`Pilihan ${option.id}`}
-                    />
-                    <div
-                      className="cursor-pointer group"
-                      onClick={() => removeOption(card.id, option.id)}
-                    >
-                      <X className="text-error-500 group-hover:text-error-600" />
+              <div className="flex justify-between mt-3">
+                <div className="space-y-2 text-sm text-neutral-900">
+                  <p>Apakah wajib diisi?</p>
+                  <RadioGroup
+                    onValueChange={(e) =>
+                      handleCardChange(card.id, "isrequired", parseInt(e))
+                    }
+                    defaultValue={card.isrequired.toString()}
+                    className="flex space-x-1"
+                  >
+                    <div className="flex items-center space-x-2 space-y-0">
+                      <RadioGroupItem value="1" />
+                      <p className="font-normal">Ya</p>
                     </div>
-                  </div>
-                ))}
-                <Button
-                  size="xs"
-                  className="mt-2 border border-primary-700 bg-transparent text-primary-700 hover:bg-primary-700 hover:text-neutral-50 rounded-full"
-                  onClick={() => addOption(card.id)}
+                    <div className="flex items-center space-x-2 space-y-0">
+                      <RadioGroupItem value="0" />
+                      <p className="font-normal">Tidak</p>
+                    </div>
+                  </RadioGroup>
+                </div>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => handleRemoveCard(card.id)}
                 >
-                  <p className="text-xs">Tambah Pilihan</p>
-                </Button>
+                  <Image
+                    src="/icons/trash.svg"
+                    alt="trash"
+                    width={24}
+                    height={24}
+                  />
+                </div>
               </div>
-            )}
-          </div>
-        ))}
-        <Button
-          className="border border-primary-700 bg-transparent text-primary-700 hover:bg-primary-700 hover:text-neutral-50 rounded-full w-[120px]"
-          onClick={handleAddCard}
-        >
-          Tambah
-        </Button>
-        <div className="flex justify-center items-center pt-8">
+              {/* Menampilkan opsi tambahan jika tipedata adalah radio atau checkbox */}
+              {(card.tipedata === "radio" || card.tipedata === "checkbox") && (
+                <div className="mt-4 space-y-2">
+                  <p className="text-sm">Pilihan</p>
+                  {card.options?.map((option) => (
+                    <div key={option.id} className="flex gap-x-3 items-center">
+                      <Input
+                        type="text"
+                        className="rounded-full w-2/12"
+                        value={option.key}
+                        onChange={(e) =>
+                          handleOptionChange(card.id, option.id, e.target.value)
+                        }
+                        placeholder={`Pilihan ${option.id}`}
+                      />
+                      <div
+                        className="cursor-pointer group"
+                        onClick={() => removeOption(card.id, option.id)}
+                      >
+                        <X className="text-error-500 group-hover:text-error-600" />
+                      </div>
+                    </div>
+                  ))}
+                  <Button
+                    size="xs"
+                    className="mt-2 border border-primary-700 bg-transparent text-primary-700 hover:bg-primary-700 hover:text-neutral-50 rounded-full"
+                    onClick={() => addOption(card.id)}
+                  >
+                    <p className="text-xs">Tambah Pilihan</p>
+                  </Button>
+                </div>
+              )}
+            </div>
+          ))}
           <Button
-            className="bg-primary-700 hover:bg-primary-800 rounded-full w-[290px]"
-            onClick={handleSubmit}
+            className="border border-primary-700 bg-transparent text-primary-700 hover:bg-primary-700 hover:text-neutral-50 rounded-full w-[120px]"
+            onClick={handleAddCard}
           >
-            Lanjut
+            Tambah
           </Button>
+          <div className="flex justify-center items-center pt-8">
+            <Button
+              className="bg-primary-700 hover:bg-primary-800 rounded-full w-[290px]"
+              onClick={handleSubmit}
+            >
+              Lanjut
+            </Button>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </ProtectedRoute>
   );
 };
 

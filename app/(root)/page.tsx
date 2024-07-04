@@ -5,6 +5,8 @@ import InstanceDashboard from "@/components/Dashboard/Instance";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import DashboardBupati from "@/components/Dashboard/Bupati";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface JwtPayload {
   role?: string;
@@ -24,6 +26,7 @@ export default function Home() {
       try {
         // Decode token untuk mendapatkan payload
         const decoded = jwtDecode<JwtPayload>(token);
+        console.log(decoded);
 
         // Pastikan token terdecode dan mengandung informasi role dan instansi_id
         if (decoded && decoded.role && decoded.instansi_id !== undefined) {
@@ -37,8 +40,18 @@ export default function Home() {
   }, []);
 
   return (
-    <section className="mr-16">
-      {role === "Super Admin" ? <DashboardSuperadmin /> : <InstanceDashboard />}
-    </section>
+    <ProtectedRoute
+      roles={["Super Admin", "Admin Instansi", "Bupati", "Staff Instansi"]}
+    >
+      <section className="mr-16">
+        {role === "Super Admin" ? (
+          <DashboardSuperadmin />
+        ) : role === "Admin Instansi" || role === "Staff Instansi" ? (
+          <InstanceDashboard />
+        ) : (
+          <DashboardBupati />
+        )}
+      </section>
+    </ProtectedRoute>
   );
 }

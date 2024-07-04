@@ -1,7 +1,5 @@
-import Image from "next/image";
 import { Inter } from "next/font/google";
 import Nav from "@/components/Nav";
-import DashboardIcon from "@/assets/icons/dashboard-icons";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
@@ -9,6 +7,7 @@ import { jwtDecode } from "jwt-decode";
 import { LogOut } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
+import useAuthStore from "@/lib/store/useAuthStore";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -29,6 +28,7 @@ const Sidebar = () => {
   const [instansiId, setInstansiId] = useState<number | null>(null);
   const [instanceName, setInstanceName] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState<string | null>(null);
+  const logout = useAuthStore((state) => state.logout);
 
   const isActive = (path: string) => pathname === path;
 
@@ -45,12 +45,13 @@ const Sidebar = () => {
       try {
         // Decode token untuk mendapatkan payload
         const decoded = jwtDecode<JwtPayload>(token);
-
         // Pastikan token terdecode dan mengandung informasi role dan instansi_id
         if (decoded && decoded.role && decoded.instansi_id !== undefined) {
           setRole(decoded.role);
           setInstansiId(decoded.instansi_id);
           setInstanceName(decoded.instansi);
+        } else if (decoded && decoded.role) {
+          setRole(decoded.role);
         }
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -59,7 +60,7 @@ const Sidebar = () => {
   }, []);
 
   const handleLogout = () => {
-    Cookies.remove("token");
+    logout();
     toast("Berhasil logout");
     router.push("/login");
   };

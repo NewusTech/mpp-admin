@@ -2,6 +2,7 @@ import { VisionMissionColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
 import { VisionMission } from "@/types/type";
 import AlertDialogCreateVisionMission from "@/app/(root)/master/vision-mission/DialogForm";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 async function getData(): Promise<VisionMission> {
   const res = await fetch(
@@ -19,16 +20,18 @@ const MasterVisionMission = async () => {
   const result: VisionMission[] = [data];
 
   return (
-    <section className="mr-16">
-      <div className="flex justify-end mb-8">
-        <AlertDialogCreateVisionMission />
-      </div>
-      <DataTables
-        columns={VisionMissionColumns}
-        data={result}
-        filterBy="misi"
-      />
-    </section>
+    <ProtectedRoute roles={["Super Admin"]}>
+      <section className="mr-16">
+        <div className="flex justify-end mb-8">
+          <AlertDialogCreateVisionMission />
+        </div>
+        <DataTables
+          columns={VisionMissionColumns}
+          data={result}
+          filterBy="misi"
+        />
+      </section>
+    </ProtectedRoute>
   );
 };
 

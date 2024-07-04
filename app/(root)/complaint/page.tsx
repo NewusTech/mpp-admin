@@ -8,6 +8,7 @@ import { fetcher } from "@/lib/fetch";
 import useSWR from "swr";
 import { DataTables } from "@/components/Datatables";
 import { complaintColumns, manageApprovalColumns } from "@/constants";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface JwtPayload {
   role?: string;
@@ -51,23 +52,29 @@ export default function ComplaintPage() {
   console.log(result);
 
   return (
-    <section className="mr-16">
-      <div className="flex w-full items-center gap-x-2 justify-end mb-8">
-        <InputComponent
-          typeInput="datepicker"
-          date={startDate}
-          setDate={(e) => setStartDate(e)}
-        />
-        <p>to</p>
-        <InputComponent
-          typeInput="datepicker"
-          date={endDate}
-          setDate={(e) => setEndDate(e)}
-        />
-      </div>
-      {result && (
-        <DataTables columns={complaintColumns} data={result} filterBy="judul" />
-      )}
-    </section>
+    <ProtectedRoute roles={["Admin Instansi", "Staff Instansi"]}>
+      <section className="mr-16">
+        <div className="flex w-full items-center gap-x-2 justify-end mb-8">
+          <InputComponent
+            typeInput="datepicker"
+            date={startDate}
+            setDate={(e) => setStartDate(e)}
+          />
+          <p>to</p>
+          <InputComponent
+            typeInput="datepicker"
+            date={endDate}
+            setDate={(e) => setEndDate(e)}
+          />
+        </div>
+        {result && (
+          <DataTables
+            columns={complaintColumns}
+            data={result}
+            filterBy="judul"
+          />
+        )}
+      </section>
+    </ProtectedRoute>
   );
 }

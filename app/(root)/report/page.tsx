@@ -11,6 +11,7 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface JwtPayload {
   role?: string;
@@ -111,60 +112,62 @@ const Report = () => {
   console.log(report);
 
   return (
-    <section className="mr-16">
-      <div className="flex justify-between gap-x-5 mb-8">
-        <div className="flex w-full gap-x-5 ">
-          {role !== "Admin Instansi" && (
-            <InputComponent
-              typeInput="selectSearch"
-              valueInput={searchInputInstance}
-              onChangeInputSearch={(e) =>
-                setSearchInputInstance(e.target.value)
-              }
-              items={result}
-              label="Instansi"
-              placeholder="Pilih Instansi"
-              value={instance}
-              onChange={(e: any) => setInstance(e)}
-            />
-          )}
-          <div
-            className={`flex items-center gap-x-2 ${role === "Admin Instansi" ? "w-full justify-between" : "w-8/12"}`}
-          >
-            <div className="flex items-center gap-x-2">
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
+      <section className="mr-16">
+        <div className="flex justify-between gap-x-5 mb-8">
+          <div className="flex w-full gap-x-5 ">
+            {role !== "Admin Instansi" && (
               <InputComponent
-                typeInput="datepicker"
-                date={startDate}
-                setDate={(e) => setStartDate(e)}
+                typeInput="selectSearch"
+                valueInput={searchInputInstance}
+                onChangeInputSearch={(e) =>
+                  setSearchInputInstance(e.target.value)
+                }
+                items={result}
+                label="Instansi"
+                placeholder="Pilih Instansi"
+                value={instance}
+                onChange={(e: any) => setInstance(e)}
               />
-              <p>to</p>
-              <InputComponent
-                typeInput="datepicker"
-                date={endDate}
-                setDate={(e) => setEndDate(e)}
-              />
+            )}
+            <div
+              className={`flex items-center gap-x-2 ${role === "Admin Instansi" ? "w-full justify-between" : "w-8/12"}`}
+            >
+              <div className="flex items-center gap-x-2">
+                <InputComponent
+                  typeInput="datepicker"
+                  date={startDate}
+                  setDate={(e) => setStartDate(e)}
+                />
+                <p>to</p>
+                <InputComponent
+                  typeInput="datepicker"
+                  date={endDate}
+                  setDate={(e) => setEndDate(e)}
+                />
+              </div>
+              <Button className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[140px] rounded-full">
+                <Image
+                  src="/icons/printer.svg"
+                  alt="print"
+                  width={24}
+                  height={24}
+                />
+                Print
+              </Button>
             </div>
-            <Button className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[140px] rounded-full">
-              <Image
-                src="/icons/printer.svg"
-                alt="print"
-                width={24}
-                height={24}
-              />
-              Print
-            </Button>
           </div>
         </div>
-      </div>
-      {report && (
-        <DataTables
-          columns={reportColumns}
-          data={report}
-          filterBy="name"
-          type="requirement"
-        />
-      )}
-    </section>
+        {report && (
+          <DataTables
+            columns={reportColumns}
+            data={report}
+            filterBy="name"
+            type="requirement"
+          />
+        )}
+      </section>
+    </ProtectedRoute>
   );
 };
 

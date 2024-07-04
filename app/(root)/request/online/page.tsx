@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface JwtPayload {
   role?: string;
@@ -115,57 +116,59 @@ const RequestOnline = () => {
   }, [searchInputInstance, searchInputService]);
 
   return (
-    <section className="mr-16">
-      <div className="flex justify-between gap-x-5 mb-14">
-        <div className="flex w-8/12 gap-x-5">
-          {role !== "Admin Instansi" && (
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
+      <section className="mr-16">
+        <div className="flex justify-between gap-x-5 mb-14">
+          <div className="flex w-8/12 gap-x-5">
+            {role !== "Admin Instansi" && (
+              <InputComponent
+                typeInput="selectSearch"
+                valueInput={searchInputInstance}
+                onChangeInputSearch={(e) =>
+                  setSearchInputInstance(e.target.value)
+                }
+                items={data?.data}
+                label="Instansi"
+                placeholder="Pilih Instansi"
+                value={instance}
+                onChange={(e: any) => setInstance(e)}
+              />
+            )}
             <InputComponent
               typeInput="selectSearch"
-              valueInput={searchInputInstance}
-              onChangeInputSearch={(e) =>
-                setSearchInputInstance(e.target.value)
-              }
-              items={data?.data}
-              label="Instansi"
-              placeholder="Pilih Instansi"
-              value={instance}
-              onChange={(e: any) => setInstance(e)}
+              items={services?.data}
+              valueInput={searchInputService}
+              onChangeInputSearch={(e) => setSearchInputService(e.target.value)}
+              label="Layanan"
+              placeholder="Pilih Layanan"
+              value={service}
+              onChange={(e: any) => setService(e)}
             />
-          )}
-          <InputComponent
-            typeInput="selectSearch"
-            items={services?.data}
-            valueInput={searchInputService}
-            onChangeInputSearch={(e) => setSearchInputService(e.target.value)}
-            label="Layanan"
-            placeholder="Pilih Layanan"
-            value={service}
-            onChange={(e: any) => setService(e)}
-          />
+          </div>
+          <div className="flex w-4/12 items-center gap-x-2">
+            <InputComponent
+              typeInput="datepicker"
+              date={startDate}
+              setDate={(e) => setStartDate(e)}
+            />
+            <p>to</p>
+            <InputComponent
+              typeInput="datepicker"
+              date={endDate}
+              setDate={(e) => setEndDate(e)}
+            />
+          </div>
         </div>
-        <div className="flex w-4/12 items-center gap-x-2">
-          <InputComponent
-            typeInput="datepicker"
-            date={startDate}
-            setDate={(e) => setStartDate(e)}
+        {histories && (
+          <DataTables
+            columns={requestOnlineColumns}
+            data={histories?.data}
+            filterBy="name"
+            type="request"
           />
-          <p>to</p>
-          <InputComponent
-            typeInput="datepicker"
-            date={endDate}
-            setDate={(e) => setEndDate(e)}
-          />
-        </div>
-      </div>
-      {histories && (
-        <DataTables
-          columns={requestOnlineColumns}
-          data={histories?.data}
-          filterBy="name"
-          type="request"
-        />
-      )}
-    </section>
+        )}
+      </section>
+    </ProtectedRoute>
   );
 };
 

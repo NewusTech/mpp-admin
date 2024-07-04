@@ -5,7 +5,7 @@ const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import { ApexOptions } from "apexcharts"; // Import the ApexOptions type
 
 interface AreaChartProps {
-  data: {
+  data?: {
     LayananId: number;
     LayananName: string;
     LayananformnumCount: number;

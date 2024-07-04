@@ -2,6 +2,7 @@ import { flowRequestColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
 import { FlowBooking } from "@/types/type";
 import AlertDialogCreateMasterFlowRequest from "@/app/(root)/master/flow-request/DialogForm";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 async function getData(): Promise<FlowBooking[]> {
   const res = await fetch(
@@ -18,12 +19,14 @@ const MasterFlowRequest = async () => {
   const data = await getData();
 
   return (
-    <section className="mr-16">
-      <div className="flex justify-end mb-8">
-        <AlertDialogCreateMasterFlowRequest />
-      </div>
-      <DataTables columns={flowRequestColumns} data={data} filterBy="desc" />
-    </section>
+    <ProtectedRoute roles={["Super Admin"]}>
+      <section className="mr-16">
+        <div className="flex justify-end mb-8">
+          <AlertDialogCreateMasterFlowRequest />
+        </div>
+        <DataTables columns={flowRequestColumns} data={data} filterBy="desc" />
+      </section>
+    </ProtectedRoute>
   );
 };
 

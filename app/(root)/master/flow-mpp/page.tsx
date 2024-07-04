@@ -1,8 +1,8 @@
 import { flowColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
 import { Slider } from "@/types/type";
-import AlertDialogCreateVisionMission from "@/app/(root)/master/vision-mission/DialogForm";
 import AlertDialogCreateMasterFlow from "@/app/(root)/master/flow-mpp/DialogForm";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 async function getData(): Promise<Slider> {
   const res = await fetch(
@@ -20,12 +20,14 @@ const MasterFlow = async () => {
   const result: Slider[] = [data];
 
   return (
-    <section className="mr-16">
-      <div className="flex justify-end mb-8">
-        <AlertDialogCreateMasterFlow />
-      </div>
-      <DataTables columns={flowColumns} data={result} filterBy="image" />
-    </section>
+    <ProtectedRoute roles={["Super Admin"]}>
+      <section className="mr-16">
+        <div className="flex justify-end mb-8">
+          <AlertDialogCreateMasterFlow />
+        </div>
+        <DataTables columns={flowColumns} data={result} filterBy="image" />
+      </section>
+    </ProtectedRoute>
   );
 };
 
