@@ -96,6 +96,8 @@ const Instance = ({
         }
       } catch (error: any) {
         toast(error.message);
+      } finally {
+        setIsLoading(false); // Stop loading
       }
     } else {
       try {

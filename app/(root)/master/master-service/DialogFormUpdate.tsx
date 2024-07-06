@@ -46,9 +46,14 @@ import MyEditor from "@/components/Editor";
 export default function AlertDialogUpdateService({ id }: { id: number }) {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const editor = useRef<{ getContent: () => string }>(null);
+  const editor1 = useRef<{ getContent: () => string }>(null);
+  const editor2 = useRef<{ getContent: () => string }>(null);
   const [namaLayanan, setNamaLayanan] = useState("");
   const [status, setStatus] = useState("1");
+  const [loading, setLoading] = useState<boolean>(false);
   const content1 = editor.current?.getContent();
+  const content2 = editor1.current?.getContent();
+  const content3 = editor2.current?.getContent();
 
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
@@ -74,10 +79,13 @@ export default function AlertDialogUpdateService({ id }: { id: number }) {
 
   // 2. Define a submit handler.
   async function onSubmit() {
+    setLoading(true);
     const formData = {
       name: namaLayanan,
       instansi_id: id,
       desc: content1,
+      dasarhukum: content2,
+      syarat: content3,
       status: Number(status),
     };
 
@@ -102,6 +110,8 @@ export default function AlertDialogUpdateService({ id }: { id: number }) {
     } catch (error: any) {
       toast(error.message);
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -133,11 +143,27 @@ export default function AlertDialogUpdateService({ id }: { id: number }) {
             />
           </div>
           <div className="space-y-2">
-            <Label>Informasi Layanan</Label>
+            <Label>Pelayanan</Label>
             <MyEditor
               ref={editor}
               name="editor"
               initialValue={serviceOne?.desc || "Deskripsi"}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Dasar Hukum</Label>
+            <MyEditor
+              ref={editor1}
+              name="editor1"
+              initialValue={serviceOne?.dasarhukum || "Dasar hukum"}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Persyaratan</Label>
+            <MyEditor
+              ref={editor2}
+              name="editor2"
+              initialValue={serviceOne?.syarat || "persyaratan"}
             />
           </div>
           <div className="space-y-2">
@@ -169,20 +195,12 @@ export default function AlertDialogUpdateService({ id }: { id: number }) {
             type="submit"
             onClick={onSubmit}
             className="bg-primary-700 hover:bg-primary-800 rounded-full"
+            disabled={loading ? true : false}
           >
-            Ubah
+            {loading ? <Loader className="animate-spin" /> : "Ubah"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   );
 }
-
-// useEffect(() => {
-//   if (data) {
-//     form.reset({
-//       question: data.question,
-//       answer: data.answer,
-//     });
-//   }
-// }, [data]);
