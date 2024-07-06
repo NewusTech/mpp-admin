@@ -56,7 +56,12 @@ const FormSignin = () => {
         login(tokenAuth);
         await new Promise((resolve) => setTimeout(resolve, 300));
         toast(data.message);
-        router.push("/");
+
+        // Redirect ke path tujuan setelah login
+        const pathBeforeLogin =
+          sessionStorage.getItem("pathBeforeLogin") || "/";
+        sessionStorage.removeItem("pathBeforeLogin");
+        router.push(pathBeforeLogin);
       }
     } catch (e: any) {
       toast(e.message);

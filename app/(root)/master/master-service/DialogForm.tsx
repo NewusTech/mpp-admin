@@ -13,44 +13,25 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Loader } from "lucide-react";
 import Cookies from "js-cookie";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { ServiceValidation } from "@/lib/validation";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import useSWR from "swr";
-import { fetcher } from "@/lib/fetch";
-import FileUploader from "@/components/FileUploader";
 import MyEditor from "@/components/Editor";
-import InputComponent from "@/components/InputComponent";
 
 export default function AlertDialogCreateService({ id }: { id: number }) {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const editor = useRef<{ getContent: () => string }>(null);
+  const editor1 = useRef<{ getContent: () => string }>(null);
+  const editor2 = useRef<{ getContent: () => string }>(null);
   const [namaLayanan, setNamaLayanan] = useState("");
   const [status, setStatus] = useState("1");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const content1 = editor.current?.getContent();
+  const content2 = editor1.current?.getContent();
+  const content3 = editor2.current?.getContent();
 
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
@@ -62,10 +43,13 @@ export default function AlertDialogCreateService({ id }: { id: number }) {
 
   // 2. Define a submit handler.
   async function onSubmit() {
+    setLoading(true);
     const formData = {
       name: namaLayanan,
       instansi_id: id,
       desc: content1,
+      dasarhukum: content2,
+      syarat: content3,
       status: Number(status),
     };
 
@@ -90,6 +74,8 @@ export default function AlertDialogCreateService({ id }: { id: number }) {
     } catch (error: any) {
       toast(error.message);
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -103,7 +89,7 @@ export default function AlertDialogCreateService({ id }: { id: number }) {
           Tambah
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="p-0 border-0 overflow-auto h-full max-w-[50%]">
+      <AlertDialogContent className="p-0 border-0 overflow-auto h-full max-w-[80%]">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
             Tambah Layanan
@@ -121,8 +107,16 @@ export default function AlertDialogCreateService({ id }: { id: number }) {
             />
           </div>
           <div className="space-y-2">
-            <Label>Informasi Layanan</Label>
+            <Label>Pelayanan</Label>
             <MyEditor ref={editor} name="editor" initialValue="Deskripsi" />
+          </div>
+          <div className="space-y-2">
+            <Label>Dasar Hukum</Label>
+            <MyEditor ref={editor1} name="editor1" initialValue="Dasar hukum" />
+          </div>
+          <div className="space-y-2">
+            <Label>Persyaratan</Label>
+            <MyEditor ref={editor2} name="editor2" initialValue="persyaratan" />
           </div>
           <div className="space-y-2">
             <Label>Status</Label>
@@ -153,8 +147,9 @@ export default function AlertDialogCreateService({ id }: { id: number }) {
             type="submit"
             onClick={onSubmit}
             className="bg-primary-700 hover:bg-primary-800 rounded-full"
+            disabled={loading ? true : false}
           >
-            Tambah
+            {loading ? <Loader className="animate-spin" /> : "Tambah"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

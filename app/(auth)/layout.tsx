@@ -15,6 +15,6 @@ export default function AuthLayout({
     if (token) {
       router.push("/");
     }
-  }, []);
+  }, [router, token]);
   return <main className="font-poppins">{children}</main>;
 }

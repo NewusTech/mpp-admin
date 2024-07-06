@@ -10,8 +10,13 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Mal Pelayanan Publik Lampung Timur",
-  description: "Mal Pelayanan Publik Lampung Timur",
+  title: "Mal Pelayanan Publik Kabupaten Lampung Timur",
+  description: "Mal Pelayanan Publik Kabupaten Lampung Timur",
+  icons: {
+    icon: {
+      url: "/logo.svg",
+    },
+  },
 };
 
 export default function RootLayout({

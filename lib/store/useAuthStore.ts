@@ -10,6 +10,7 @@ interface User {
 
 interface AuthStore {
   user: User | null;
+  isInitialized: boolean;
   initialize: () => void;
   login: (token: string) => void;
   logout: () => void;
@@ -17,14 +18,17 @@ interface AuthStore {
 
 const useAuthStore = create<AuthStore>((set) => ({
   user: null,
+  isInitialized: false,
   initialize: () => {
     const token = Cookies.get("token");
     if (token) {
       const decoded = jwtDecode(token) as { role: string };
       if (decoded) {
-        set({ user: { token, role: decoded.role } });
+        set({ user: { token, role: decoded.role }, isInitialized: true });
+        return;
       }
     }
+    set({ isInitialized: true });
   },
   login: (token: string) => {
     const decoded = jwtDecode(token) as { role: string };
