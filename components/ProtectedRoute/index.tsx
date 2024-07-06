@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/lib/store/useAuthStore";
+import { Loader } from "lucide-react";
 
 interface ProtectedRouteProps {
   roles?: string[];
@@ -11,18 +12,27 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ children, roles }: ProtectedRouteProps) => {
   const user = useAuthStore((state) => state.user);
+  const isInitialized = useAuthStore((state) => state.isInitialized);
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) {
-      router.push("/login");
-    } else if (roles && !roles.includes(user.role)) {
-      router.push("/");
+    if (isInitialized) {
+      if (!user) {
+        const pathBeforeLogin = window.location.pathname;
+        sessionStorage.setItem("pathBeforeLogin", pathBeforeLogin);
+        router.push("/login");
+      } else if (roles && !roles.includes(user.role)) {
+        router.push("/");
+      }
     }
-  }, [user, router, roles]);
+  }, [user, router, roles, isInitialized]);
 
-  if (!user || (roles && !roles.includes(user.role))) {
-    return null;
+  if (!isInitialized) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader className="animate-spin" />
+      </div>
+    );
   }
 
   return <>{children}</>;

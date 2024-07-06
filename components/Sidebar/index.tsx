@@ -59,6 +59,19 @@ const Sidebar = () => {
     }
   }, []);
 
+  useEffect(() => {
+    // Set isDropdownOpen to true if current path matches "/request" or its subpaths
+    if (pathname.startsWith("/request")) {
+      setIsDropdownOpen("/request");
+    } else if (pathname.startsWith("/survey")) {
+      setIsDropdownOpen("/survey");
+    } else if (pathname.startsWith("/master")) {
+      setIsDropdownOpen("/master");
+    } else {
+      setIsDropdownOpen(null);
+    }
+  }, [pathname]);
+
   const handleLogout = () => {
     logout();
     toast("Berhasil logout");
