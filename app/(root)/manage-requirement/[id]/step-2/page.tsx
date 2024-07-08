@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -20,7 +19,7 @@ import { CardType, OptionType } from "@/types/interface";
 import { Input } from "@/components/ui/input";
 import InputComponent from "@/components/InputComponent";
 import Step from "@/components/Steps";
-import { X } from "lucide-react";
+import { Loader, X } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
@@ -36,6 +35,7 @@ const currentStep = 2;
 
 const UpdateManageRequirementPageStep2 = () => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { serviceId, layananforms, dataStep2, setDataStep2 } =
     useUpdateRequirementStore();
 
@@ -154,6 +154,7 @@ const UpdateManageRequirementPageStep2 = () => {
   }, [cards, setDataStep2]);
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     const formattedData = dataStep2.map((card) => {
       const formattedCard: any = {
         id: card.id,
@@ -192,6 +193,8 @@ const UpdateManageRequirementPageStep2 = () => {
       }
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -326,8 +329,9 @@ const UpdateManageRequirementPageStep2 = () => {
             <Button
               className="bg-primary-700 hover:bg-primary-800 rounded-full w-[290px]"
               onClick={handleSubmit}
+              disabled={isLoading ? true : false}
             >
-              Lanjut
+              {isLoading ? <Loader className="animate-spin" /> : "Lanjut"}
             </Button>
           </div>
         </div>

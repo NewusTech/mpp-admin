@@ -16,13 +16,11 @@ import { toast } from "sonner";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search } from "lucide-react";
+import { Loader, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -45,6 +43,8 @@ const CreateOffline = () => {
   const router = useRouter();
   const serviceId = useCreateRequestOffline((state) => state.serviceId);
   const [formValues, setFormValues] = useState<Record<string, FormValue>>({});
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [docValues, setDocValues] = useState<Record<string, File | null>>({});
   const [userData, setUserData] = useState<any>(null); // State for storing selected user data
   const [searchTerm, setSearchTerm] = useState("");
@@ -141,6 +141,7 @@ const CreateOffline = () => {
   }, [selectedUser, resultUser]);
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     const formData = new FormData();
 
     formData.append("userId", selectedUser);
@@ -193,6 +194,8 @@ const CreateOffline = () => {
       }
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -206,6 +209,7 @@ const CreateOffline = () => {
   }, [searchKecamatanInput, searchVillageInput]);
 
   const handleCreateUser = async () => {
+    setLoading(true);
     const formData = {
       name: form.name,
       nik: form.nik,
@@ -239,6 +243,8 @@ const CreateOffline = () => {
       }
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -472,8 +478,9 @@ const CreateOffline = () => {
               <Button
                 onClick={handleCreateUser}
                 className="w-full bg-primary-700 rounded-full hover:bg-primary-800 mt-7"
+                disabled={loading ? true : false}
               >
-                Submit
+                {loading ? <Loader className="animate-spin" /> : "Submit"}
               </Button>
             </>
           )}
@@ -559,7 +566,7 @@ const CreateOffline = () => {
           {resultDocs.map((v) => (
             <div
               key={v.id}
-              className="flex items-center justify-between w-full rounded-[20px] py-6 px-4 bg-neutral-50"
+              className="flex items-center justify-between w-full rounded-[20px] py-6 px-4 bg-neutral-50 mb-4"
             >
               <div className="w-11/12 space-y-2">
                 <h3 className="font-semibold text-[16px] text-primary-800">
@@ -585,8 +592,9 @@ const CreateOffline = () => {
           <Button
             className="bg-success-700 hover:bg-primary-800 w-[140px] rounded-full"
             onClick={handleSubmit}
+            disabled={isLoading ? true : false}
           >
-            Validasi
+            {isLoading ? <Loader className="animate-spin" /> : "Validasi"}
           </Button>
         </div>
       </section>

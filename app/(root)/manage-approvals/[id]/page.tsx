@@ -15,6 +15,11 @@ import {
 } from "@/constants";
 import { UserInfoLeft, UserInfoRight } from "@/components/BiodataUser";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
+import { useState } from "react";
+import { Loader } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const DetailApproval = ({
   params,
@@ -27,6 +32,9 @@ const DetailApproval = ({
     `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/detail/${params.id}`,
     fetcher,
   );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   const result = data?.data;
   const userInfo = result?.userinfo;
@@ -55,19 +63,65 @@ const DetailApproval = ({
     (item: any) => item.layananform_tipedata === "file",
   );
 
-  const handleDownload = (url: string, filename: string) => {
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", filename);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+  const handleDownload = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/surat/${result?.layanan_id}/${result?.id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        },
+      );
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "surat.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      if (response.ok) {
+        toast("Berhasil download surat");
+      }
+    } catch (e: any) {
+      toast("Gagal download surat");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  // Extract filename and extension from URL
-  const getFileNameFromUrl = (url: string) => {
-    const urlParts = url.split("/");
-    return urlParts[urlParts.length - 1];
+  const handleValidationStatus = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/updatestatus/${result?.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+          body: JSON.stringify({
+            status: 2,
+          }),
+        },
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        toast(data.message);
+        router.push("/manage-approvals");
+      }
+    } catch (e: any) {
+      toast(e.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -118,9 +172,9 @@ const DetailApproval = ({
             <div className="space-y-2 mt-3" key={v.id}>
               <p>{v.layananform_name}</p>
               <Button
-                onClick={() =>
-                  handleDownload(v.data, getFileNameFromUrl(v.data))
-                }
+                // onClick={() =>
+                //   handleDownload(v.data, getFileNameFromUrl(v.data))
+                // }
                 className="mt-2 w-[25vh] rounded-[20px] bg-neutral-50 hover:bg-neutral-100 shadow p-3 flex justify-around items-center"
               >
                 <Image
@@ -138,13 +192,21 @@ const DetailApproval = ({
           </h2>
           <div className="flex gap-x-5 items-center">
             <AlertDialogUploadFile id={params.id} />
-            <Link href="/">
-              <p className="underline text-[#3A28FF] text-sm">Unduh Template</p>
-            </Link>
+            <div onClick={handleDownload} className="cursor-pointer">
+              {isLoading ? (
+                <Loader className="animate-spin" />
+              ) : (
+                <p className="underline text-[#3A28FF] text-sm">Unduh Surat</p>
+              )}
+            </div>
           </div>
           <div className="text-right">
-            <Button className="bg-success-700 hover:bg-success-800 w-[140px] rounded-full">
-              Setujui
+            <Button
+              onClick={handleValidationStatus}
+              className="bg-success-700 hover:bg-success-800 w-[140px] rounded-full"
+              disabled={loading ? true : false}
+            >
+              {loading ? <Loader className="animate-spin" /> : "Setujui"}
             </Button>
           </div>
         </div>

@@ -42,7 +42,7 @@ const EditArticle = async ({
           </h1>
           <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-3 p-8">
             <h1 className="text-xl font-semibold mb-4">Aplikasi Dinas</h1>
-            <Apps data={data} />
+            <Apps data={data} label="Ubah" />
           </div>
         </div>
       </section>

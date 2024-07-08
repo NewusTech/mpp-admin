@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { FacilitiesValidation } from "@/lib/validation";
+import { carouselValidation } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -31,6 +31,7 @@ import FileUploader from "@/components/FileUploader";
 
 export default function AlertDialogCreateCarousel() {
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
   };
@@ -39,12 +40,13 @@ export default function AlertDialogCreateCarousel() {
     setAddModalOpen(false);
   };
 
-  const form = useForm<z.infer<typeof FacilitiesValidation>>({
-    resolver: zodResolver(FacilitiesValidation),
+  const form = useForm<z.infer<typeof carouselValidation>>({
+    resolver: zodResolver(carouselValidation),
   });
 
   // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof FacilitiesValidation>) {
+  async function onSubmit(values: z.infer<typeof carouselValidation>) {
+    setIsLoading(true);
     const formData = new FormData();
     formData.append("image", values.image[0]);
 
@@ -61,14 +63,15 @@ export default function AlertDialogCreateCarousel() {
       );
 
       const data = await response.json();
+      console.log(data);
       if (response.ok) {
         toast(data.message);
-        console.log(data);
         handleAddModalClose();
       }
     } catch (error: any) {
       toast(error.message);
-      console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -114,8 +117,9 @@ export default function AlertDialogCreateCarousel() {
                 <AlertDialogAction
                   type="submit"
                   className="bg-primary-700 hover:bg-primary-800 rounded-full"
+                  disabled={isLoading ? true : false}
                 >
-                  Tambah
+                  {isLoading ? <Loader className="animate-spin" /> : "Tambah"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </form>

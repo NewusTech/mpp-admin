@@ -33,6 +33,7 @@ import { useState } from "react";
 
 export default function AlertDialogCreateFaq() {
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
   };
@@ -51,6 +52,7 @@ export default function AlertDialogCreateFaq() {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof FAQValidation>) {
+    setIsLoading(true);
     const formData = {
       question: values.question,
       answer: values.answer,
@@ -70,11 +72,15 @@ export default function AlertDialogCreateFaq() {
       );
 
       const data = await response.json();
-      toast(data.message);
-      handleAddModalClose();
+      if (response.ok) {
+        toast(data.message);
+        handleAddModalClose();
+      }
     } catch (error: any) {
       toast(error.message);
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -142,8 +148,9 @@ export default function AlertDialogCreateFaq() {
                 <AlertDialogAction
                   type="submit"
                   className="bg-primary-700 hover:bg-primary-800 rounded-full"
+                  disabled={isLoading ? true : false}
                 >
-                  Tambah
+                  {isLoading ? <Loader className="animate-spin" /> : "Tambah"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </form>

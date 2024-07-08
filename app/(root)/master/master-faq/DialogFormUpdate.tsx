@@ -29,9 +29,11 @@ import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
+import { Loader } from "lucide-react";
 
 export default function AlertDialogUpdateFaq({ id }: { id: number }) {
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
   };
@@ -66,6 +68,7 @@ export default function AlertDialogUpdateFaq({ id }: { id: number }) {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof FAQValidation>) {
+    setIsLoading(true);
     const formData = {
       question: values.question,
       answer: values.answer,
@@ -85,11 +88,15 @@ export default function AlertDialogUpdateFaq({ id }: { id: number }) {
       );
 
       const result = await response.json();
-      toast(result.message);
-      handleAddModalClose();
+      if (response.ok) {
+        toast(result.message);
+        handleAddModalClose();
+      }
     } catch (error: any) {
       toast(error.message);
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -157,8 +164,9 @@ export default function AlertDialogUpdateFaq({ id }: { id: number }) {
                 <AlertDialogAction
                   type="submit"
                   className="bg-primary-700 hover:bg-primary-800 rounded-full"
+                  disabled={isLoading ? true : false}
                 >
-                  Ubah
+                  {isLoading ? <Loader className="animate-spin" /> : "Ubah"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </form>

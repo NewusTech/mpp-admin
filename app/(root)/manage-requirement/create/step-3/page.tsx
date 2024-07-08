@@ -5,14 +5,16 @@ import Step from "@/components/Steps";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { useState } from "react";
+// import { Switch } from "@/components/ui/switch";
+import React, { useState } from "react";
 import { CardTypeFile } from "@/types/interface";
 import useCreateRequirement from "@/lib/store/useCreateRequirement";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { Loader } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const steps = [
   { id: 1, title: "1" },
@@ -23,6 +25,7 @@ const currentStep = 3;
 
 const CreateManageRequirementPageStep3 = () => {
   const { serviceId } = useCreateRequirement();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
   const [cards, setCards] = useState<CardTypeFile[]>([
     {
@@ -30,6 +33,7 @@ const CreateManageRequirementPageStep3 = () => {
       toggle: false,
       field: "",
       tipedata: "file",
+      isrequired: "",
     },
   ]);
 
@@ -48,6 +52,7 @@ const CreateManageRequirementPageStep3 = () => {
         id: Date.now(),
         toggle: false,
         field: "",
+        isrequired: "",
         tipedata: "file",
       },
     ]);
@@ -66,6 +71,7 @@ const CreateManageRequirementPageStep3 = () => {
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     const requestData = cards.map((card) => ({
       field: card.field,
       tipedata: card.tipedata,
@@ -90,10 +96,13 @@ const CreateManageRequirementPageStep3 = () => {
       const data = await response.json();
       if (response.ok) {
         toast(data.message);
+        localStorage.removeItem("requirement");
         router.push("/manage-requirement");
       }
     } catch (error) {
       toast("An error occurred while submitting the form.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -137,21 +146,40 @@ const CreateManageRequirementPageStep3 = () => {
                 }
               />
               <div className="mt-8">
-                <div className="flex items-center gap-x-4">
-                  <p className="text-sm text-neutral-900">
-                    Hanya izinkan dengan file tertentu
-                  </p>
-                  <Switch
-                    onClick={() => handleSwitch(card.id)}
-                    className="data-[state=checked]:bg-neutral-800 data-[state=unchecked]:bg-transparent data-[state=unchecked]:border data-[state=unchecked]:border-neutral-800"
-                    thumbClassName="data-[state=unchecked]:border data-[state=unchecked]:border-neutral-800 data-[state=unchecked]:ml-[2px]"
-                  />
+                <div className="space-y-2 text-sm text-neutral-900">
+                  <p>Apakah wajib diisi?</p>
+                  <RadioGroup
+                    onValueChange={(e) =>
+                      handleInputChange(card.id, "isrequired", parseInt(e))
+                    }
+                    defaultValue={card?.isrequired}
+                    className="flex space-x-1"
+                  >
+                    <div className="flex items-center space-x-2 space-y-0">
+                      <RadioGroupItem value="1" />
+                      <p className="font-normal">Ya</p>
+                    </div>
+                    <div className="flex items-center space-x-2 space-y-0">
+                      <RadioGroupItem value="0" />
+                      <p className="font-normal">Tidak</p>
+                    </div>
+                  </RadioGroup>
                 </div>
-                {card.toggle && (
-                  <div className="w-[321px] flex mt-6">
-                    <InputComponent typeInput="radio" />
-                  </div>
-                )}
+                {/*  <div className="flex items-center gap-x-4">*/}
+                {/*    <p className="text-sm text-neutral-900">*/}
+                {/*      Hanya izinkan dengan file tertentu*/}
+                {/*    </p>*/}
+                {/*    <Switch*/}
+                {/*      onClick={() => handleSwitch(card.id)}*/}
+                {/*      className="data-[state=checked]:bg-neutral-800 data-[state=unchecked]:bg-transparent data-[state=unchecked]:border data-[state=unchecked]:border-neutral-800"*/}
+                {/*      thumbClassName="data-[state=unchecked]:border data-[state=unchecked]:border-neutral-800 data-[state=unchecked]:ml-[2px]"*/}
+                {/*    />*/}
+                {/*  </div>*/}
+                {/*  {card.toggle && (*/}
+                {/*    <div className="w-[321px] flex mt-6">*/}
+                {/*      <InputComponent typeInput="radio" />*/}
+                {/*    </div>*/}
+                {/*  )}*/}
               </div>
               <div className="flex justify-end mt-3">
                 <div
@@ -178,8 +206,9 @@ const CreateManageRequirementPageStep3 = () => {
             <Button
               onClick={handleSubmit}
               className="bg-primary-700 hover:bg-primary-800 rounded-full w-[290px]"
+              disabled={isLoading ? true : false}
             >
-              Submit
+              {isLoading ? <Loader className="animate-spin" /> : "Submit"}
             </Button>
           </div>
         </div>

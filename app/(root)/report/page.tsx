@@ -12,6 +12,8 @@ import { fetcher } from "@/lib/fetch";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { toast } from "sonner";
+import { Loader } from "lucide-react";
 
 interface JwtPayload {
   role?: string;
@@ -26,6 +28,7 @@ const Report = () => {
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -67,7 +70,7 @@ const Report = () => {
     return url.toString();
   };
 
-  let instanceId2;
+  let instanceId2: any;
   let additionalParams: Record<string, any> = { limit: 10000000 };
 
   if (role === "Admin Instansi") {
@@ -99,6 +102,40 @@ const Report = () => {
   // Gunakan URL yang dibangun dengan useSWR
   const { data: reports } = useSWR<any>(fixUrl, fetcher);
 
+  const handleDownload = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/report-pdf?instansi_id=${instanceId2}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        },
+      );
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "report.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast(data.message);
+      }
+    } catch (e: any) {
+      toast(e.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       setSearchTermInstance(searchInputInstance);
@@ -109,7 +146,6 @@ const Report = () => {
 
   const result = data?.data;
   const report = reports?.data?.report;
-  console.log(report);
 
   return (
     <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
@@ -131,9 +167,9 @@ const Report = () => {
               />
             )}
             <div
-              className={`flex items-center gap-x-2 ${role === "Admin Instansi" ? "w-full justify-between" : "w-8/12"}`}
+              className={`flex items-center gap-x-2 ${role === "Admin Instansi" ? "w-full justify-between" : "w-8/12 justify-end"}`}
             >
-              <div className="flex items-center gap-x-2">
+              <div className="flex items-center gap-x-2 w-8/12">
                 <InputComponent
                   typeInput="datepicker"
                   date={startDate}
@@ -146,14 +182,23 @@ const Report = () => {
                   setDate={(e) => setEndDate(e)}
                 />
               </div>
-              <Button className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[140px] rounded-full">
-                <Image
-                  src="/icons/printer.svg"
-                  alt="print"
-                  width={24}
-                  height={24}
-                />
-                Print
+              <Button
+                onClick={handleDownload}
+                className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[140px] rounded-full"
+              >
+                {isLoading ? (
+                  <Loader className="animate-spin" />
+                ) : (
+                  <>
+                    <Image
+                      src="/icons/printer.svg"
+                      alt="print"
+                      width={24}
+                      height={24}
+                    />
+                    Print
+                  </>
+                )}
               </Button>
             </div>
           </div>

@@ -12,12 +12,19 @@ import {
 import AreaChart from "@/components/Dashboard/ChartDashboard/area";
 import DonutChart from "@/components/Dashboard/ChartDashboard/donut";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import { DataTables } from "@/components/Datatables";
 import { dashboardApprovalColumns } from "@/constants";
 import InputComponent from "@/components/InputComponent";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+
+interface JwtPayload {
+  role?: string;
+  instansi_id: number;
+}
 
 const buttons: any = [
   { label: "Semua", value: "" },
@@ -44,20 +51,66 @@ const months = [
 ];
 
 const TabService = () => {
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [activeButton, setActiveButton] = useState("");
   const [selectedMonth, setSelectedMonth] = useState<any>(
     new Date().getMonth(),
   );
+  const [role, setRole] = useState<string | null>(null);
+  const [instansiId, setInstansiId] = useState<number | null>(null);
+
+  useEffect(() => {
+    // Ambil token dari cookies
+    const token = Cookies.get("token");
+
+    // Periksa apakah token ada dan decode token jika ada
+    if (token) {
+      try {
+        // Decode token untuk mendapatkan payload
+        const decoded = jwtDecode<JwtPayload>(token);
+
+        // Pastikan token terdecode dan mengandung informasi role dan instansi_id
+        if (decoded && decoded.role && decoded.instansi_id !== undefined) {
+          setRole(decoded.role);
+          setInstansiId(decoded.instansi_id);
+        }
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, []);
+
   const selectedMonthLabel = months.find(
     (month) => month.value === Number(selectedMonth),
   )?.label;
 
-  console.log(selectedMonthLabel);
+  const buildUrl = (baseUrl: string, params: Record<string, any>) => {
+    const url = new URL(baseUrl);
+    // Tambahkan parameter lainnya
+    Object.keys(params).forEach((key) => {
+      if (params[key] !== undefined) {
+        url.searchParams.append(key, params[key]);
+      }
+    });
 
-  const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/historyform?limit=10000000&status=${activeButton}`,
-    fetcher,
-  );
+    return url.toString();
+  };
+
+  const params = {
+    instansi_id: instansiId,
+    limit: 10000000,
+    status: activeButton,
+    start_date: startDate,
+    end_date: endDate,
+  };
+
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;
+
+  // Bangun URL berdasarkan role dan instanceId
+  const fixUrl = buildUrl(baseUrl, params);
+
+  const { data } = useSWR<any>(fixUrl, fetcher);
 
   const url =
     selectedMonth &&
@@ -214,9 +267,17 @@ const TabService = () => {
         </div>
         <div className="flex justify-end mt-10">
           <div className="flex items-center w-5/12 space-x-2 ">
-            <InputComponent typeInput="datepicker" />
+            <InputComponent
+              typeInput="datepicker"
+              date={startDate}
+              setDate={(e) => setStartDate(e)}
+            />
             <p>to</p>
-            <InputComponent typeInput="datepicker" />
+            <InputComponent
+              typeInput="datepicker"
+              date={endDate}
+              setDate={(e) => setEndDate(e)}
+            />
           </div>
         </div>
         <div className="mt-8">

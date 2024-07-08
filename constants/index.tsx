@@ -32,12 +32,11 @@ import {
   Slider,
   SurveyQuestion,
   SurveyResult,
+  TermAndCondition,
   Video,
   VisionMission,
 } from "@/types/type";
 import Link from "next/link";
-import { toast } from "sonner";
-import Cookies from "js-cookie";
 import AlertDialogUpdateFaq from "@/app/(root)/master/master-faq/DialogFormUpdate";
 import AlertDialogUpdateService from "@/app/(root)/master/master-service/DialogFormUpdate";
 import Image from "next/image";
@@ -47,7 +46,6 @@ import AlertDialogUpdateCarousel from "@/app/(root)/master/carousel/DialogFormUp
 import ModalDelete from "@/components/Dialog/delete";
 import AlertDialogUpdateSurvey from "@/app/(root)/survey/question/DialogFormUpdate";
 import SwitchActive from "@/components/SwitchActive";
-import AlertDialogCreateMasterFlowBooking from "@/app/(root)/master/flow-booking/DialogForm";
 import AlertDialogUpdateMasterFlowBooking from "@/app/(root)/master/flow-booking/DialogFormUpdate";
 import AlertDialogUpdateMasterFlowPermohonan from "@/app/(root)/master/flow-request/DialogFormUpdate";
 
@@ -61,8 +59,29 @@ function formatDate(dateString: any) {
   return `${day}-${month}-${year}`;
 }
 
-function stripHtmlTags(html: any) {
-  return html.replace(/<[^>]*>/g, "");
+function stripHtmlTags(html: string): string {
+  // Replace <br> and <li> with newlines to preserve structure
+  html = html.replace(/<br\s*\/?>/gi, "\n");
+  html = html.replace(/<\/li>\s*<li>/gi, "\n");
+
+  // Handle ordered and unordered lists
+  html = html.replace(/<\/?(ul|ol|li)>/gi, "");
+
+  // Replace other HTML tags with empty string
+  html = html.replace(/<\/?[^>]+(>|$)/g, "");
+
+  // Replace HTML entities with corresponding characters
+  html = html.replace(/&nbsp;/g, " ");
+  html = html.replace(/&amp;/g, "&");
+  html = html.replace(/&quot;/g, '"');
+  html = html.replace(/&lt;/g, "<");
+  html = html.replace(/&gt;/g, ">");
+
+  // Remove extra newlines and spaces
+  html = html.replace(/\n\s*\n/g, "\n"); // Replace multiple newlines with single newline
+  html = html.replace(/^\s+|\s+$/g, ""); // Trim leading and trailing spaces
+
+  return html;
 }
 
 export const queueColumns: ColumnDef<QueueTab>[] = [
@@ -267,52 +286,17 @@ export const manageApprovalColumns: ColumnDef<ManageApprovals>[] = [
     cell: ({ row }) => {
       const action = row.original;
 
-      const handleValidationStatus = async () => {
-        try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/updatestatus/${action.id}`,
-            {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${Cookies.get("token")}`,
-              },
-              body: JSON.stringify({
-                status: 2,
-              }),
-            },
-          );
-
-          const data = await response.json();
-          if (response.ok) {
-            toast(data.message);
-          }
-        } catch (e: any) {
-          toast(e.message);
-        }
-      };
-
       return (
         <>
           <div className="flex justify-center items-center gap-x-3">
             <Link href={`/manage-approvals/${action.id}`}>
               <Button
                 size="sm"
-                className="text-sm rounded-full py-1 bg-transparent border border-primary-700 text-primary-700 hover:bg-primary-700 hover:text-neutral-50 "
+                className="text-sm rounded-full py-1 bg-secondary-700 text-neutral-50 hover:bg-secondary-800"
               >
-                Upload
+                Lihat Detail
               </Button>
             </Link>
-            <Link href="/">
-              <p className="underline text-[#3A28FF] text-sm">Unduh Template</p>
-            </Link>
-            <Button
-              size="sm"
-              onClick={handleValidationStatus}
-              className="text-sm rounded-full bg-success-700 hover:bg-success-800"
-            >
-              Setujui
-            </Button>
           </div>
         </>
       );
@@ -1105,6 +1089,17 @@ export const VisionMissionColumns: ColumnDef<VisionMission>[] = [
     cell: ({ row }) => {
       const misi = row.original.misi;
       return <p>{stripHtmlTags(misi)}</p>;
+    },
+  },
+];
+
+export const termAndConditionColumns: ColumnDef<TermAndCondition>[] = [
+  {
+    accessorKey: "desc",
+    header: "Deskripsi Syarat & Ketentuan",
+    cell: ({ row }) => {
+      const desc = row.original.desc;
+      return <>{stripHtmlTags(desc)}</>;
     },
   },
 ];

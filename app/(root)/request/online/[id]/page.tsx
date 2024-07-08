@@ -18,6 +18,8 @@ import {
 import Cookies from "js-cookie";
 import { UserInfoLeft, UserInfoRight } from "@/components/BiodataUser";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { useState } from "react";
+import { Loader } from "lucide-react";
 
 const DetailRequestOnline = ({
   params,
@@ -31,6 +33,7 @@ const DetailRequestOnline = ({
     `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/detail/${params.id}`,
     fetcher,
   );
+  const [isLoading, setIsLoading] = useState(false);
 
   const result = data?.data;
   const userInfo = result?.userinfo;
@@ -75,6 +78,7 @@ const DetailRequestOnline = ({
   };
 
   const handleValidationStatus = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/updatestatus/${params.id}`,
@@ -97,6 +101,8 @@ const DetailRequestOnline = ({
       }
     } catch (e: any) {
       toast(e.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -168,8 +174,9 @@ const DetailRequestOnline = ({
             <Button
               onClick={handleValidationStatus}
               className="bg-success-700 hover:bg-success-800 w-[140px] rounded-full"
+              disabled={isLoading ? true : false}
             >
-              Validasi
+              {isLoading ? <Loader className="animate-spin" /> : "Validasi"}
             </Button>
           </div>
         </div>

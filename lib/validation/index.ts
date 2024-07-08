@@ -99,6 +99,10 @@ export const FacilitiesValidation = z.object({
   }),
 });
 
+export const carouselValidation = z.object({
+  image: z.custom<File[]>(),
+});
+
 export const FlowValidation = z.object({
   image: z.custom<File[]>(),
 });
