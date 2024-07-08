@@ -24,6 +24,7 @@ import MyEditor from "@/components/Editor";
 
 export default function AlertDialogCreateVisionMission() {
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
   };
@@ -43,6 +44,7 @@ export default function AlertDialogCreateVisionMission() {
   const editor2Ref = useRef<{ getContent: () => string }>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    setIsLoading(true);
     e.preventDefault();
 
     const content1 = editor1Ref.current?.getContent();
@@ -73,6 +75,8 @@ export default function AlertDialogCreateVisionMission() {
       }
     } catch (error: any) {
       toast(error.message);
+    } finally {
+      setIsLoading(false); // Stop loading
     }
   };
 
@@ -119,8 +123,9 @@ export default function AlertDialogCreateVisionMission() {
             <AlertDialogAction
               type="submit"
               className="bg-primary-700 hover:bg-primary-800 rounded-full"
+              disabled={isLoading ? true : false}
             >
-              Tambah
+              {isLoading ? <Loader className="animate-spin" /> : "Simpan"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </form>

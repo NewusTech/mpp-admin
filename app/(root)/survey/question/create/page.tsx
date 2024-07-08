@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { Loader } from "lucide-react";
 
 interface Props {
   value: string;
@@ -42,6 +43,7 @@ const CreateQuestion = () => {
     inputs: state.inputs,
     setInputs: state.setInputs,
   }));
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const selectedId = useCreateSurvey((state) => state.selectedId);
   const router = useRouter();
 
@@ -62,6 +64,7 @@ const CreateQuestion = () => {
   };
 
   const handleSave = async () => {
+    setIsLoading(true);
     const payload: Payload[] = inputs.map((input) => ({
       field: input.field,
       status: 1,
@@ -91,6 +94,8 @@ const CreateQuestion = () => {
     } catch (error: any) {
       console.error("Fetch error:", error);
       toast(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -142,8 +147,9 @@ const CreateQuestion = () => {
           <Button
             onClick={handleSave}
             className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
+            disabled={isLoading ? true : false}
           >
-            Simpan
+            {isLoading ? <Loader className="animate-spin" /> : "Simpan"}
           </Button>
         </div>
       </section>

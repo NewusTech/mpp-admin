@@ -28,9 +28,11 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import FileUploader from "@/components/FileUploader";
+import { Loader } from "lucide-react";
 
 export default function AlertDialogUpdateCarousel({ id }: { id: number }) {
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
   };
@@ -60,6 +62,7 @@ export default function AlertDialogUpdateCarousel({ id }: { id: number }) {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof FacilitiesValidation>) {
+    setIsLoading(true);
     const formData = new FormData();
     formData.append("image", values.image[0]);
 
@@ -83,6 +86,8 @@ export default function AlertDialogUpdateCarousel({ id }: { id: number }) {
     } catch (error: any) {
       toast(error.message);
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -131,8 +136,9 @@ export default function AlertDialogUpdateCarousel({ id }: { id: number }) {
                 <AlertDialogAction
                   type="submit"
                   className="bg-primary-700 hover:bg-primary-800 rounded-full"
+                  disabled={isLoading ? true : false}
                 >
-                  Ubah
+                  {isLoading ? <Loader className="animate-spin" /> : "Ubah"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </form>

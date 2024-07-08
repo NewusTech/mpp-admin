@@ -32,6 +32,7 @@ import { Input } from "@/components/ui/input";
 
 export default function AlertDialogCreateFacility() {
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
   };
@@ -46,6 +47,7 @@ export default function AlertDialogCreateFacility() {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof FacilitiesValidation>) {
+    setIsLoading(true);
     const formData = new FormData();
     formData.append("image", values.image[0]);
     formData.append("title", values.title);
@@ -63,12 +65,15 @@ export default function AlertDialogCreateFacility() {
       );
 
       const data = await response.json();
-      toast(data.message);
-      console.log(data);
-      handleAddModalClose();
+      if (response.ok) {
+        toast(data.message);
+        handleAddModalClose();
+      }
     } catch (error: any) {
       toast(error.message);
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -131,8 +136,9 @@ export default function AlertDialogCreateFacility() {
                 <AlertDialogAction
                   type="submit"
                   className="bg-primary-700 hover:bg-primary-800 rounded-full"
+                  disabled={isLoading ? true : false}
                 >
-                  Tambah
+                  {isLoading ? <Loader className="animate-spin" /> : "Tambah"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </form>

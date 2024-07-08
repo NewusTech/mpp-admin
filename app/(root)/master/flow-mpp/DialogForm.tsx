@@ -31,6 +31,7 @@ import FileUploader from "@/components/FileUploader";
 
 export default function AlertDialogCreateMasterFlow() {
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
   };
@@ -45,6 +46,7 @@ export default function AlertDialogCreateMasterFlow() {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof FlowValidation>) {
+    setIsLoading(true);
     const formData = new FormData();
     formData.append("image", values.image[0]);
 
@@ -61,12 +63,15 @@ export default function AlertDialogCreateMasterFlow() {
       );
 
       const data = await response.json();
-      toast(data.message);
-      console.log(data);
-      handleAddModalClose();
+      if (response.ok) {
+        toast(data.message);
+        handleAddModalClose();
+      }
     } catch (error: any) {
       toast(error.message);
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -112,8 +117,9 @@ export default function AlertDialogCreateMasterFlow() {
                 <AlertDialogAction
                   type="submit"
                   className="bg-primary-700 hover:bg-primary-800 rounded-full"
+                  disabled={isLoading ? true : false}
                 >
-                  Ubah
+                  {isLoading ? <Loader className="animate-spin" /> : "Ubah"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </form>

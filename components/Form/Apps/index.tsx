@@ -20,7 +20,7 @@ import { Loader } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import FileUploader from "@/components/FileUploader";
 import Cookies from "js-cookie";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface ArticleBySlug {
   name: string;
@@ -39,7 +39,7 @@ const AppsInstance = ({
 }) => {
   const router = useRouter();
   const editor1Ref = useRef<{ getContent: () => string }>(null);
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof AppsValidation>>({
     resolver: zodResolver(AppsValidation),
   });
@@ -56,6 +56,7 @@ const AppsInstance = ({
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof AppsValidation>) {
+    setIsLoading(true);
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("desc", values.description);
@@ -76,12 +77,16 @@ const AppsInstance = ({
         );
 
         const data = await response.json();
-        toast(data.message);
-        console.log(data);
-        if (response.ok) router.push("/master/master-apps");
+
+        if (response.ok) {
+          toast(data.message);
+          router.push("/master/master-apps");
+        }
       } catch (error: any) {
         toast(error.message);
         console.log(error.message);
+      } finally {
+        setIsLoading(false);
       }
     } else {
       try {
@@ -97,10 +102,14 @@ const AppsInstance = ({
         );
 
         const result = await response.json();
-        toast(result.message);
-        if (response.ok) router.push("/master/master-apps");
+        if (response.ok) {
+          toast(result.message);
+          router.push("/master/master-apps");
+        }
       } catch (error: any) {
         toast(error.message);
+      } finally {
+        setIsLoading(false);
       }
     }
   }
@@ -180,8 +189,9 @@ const AppsInstance = ({
         <Button
           className="w-full rounded-full bg-primary-700 hover:bg-primary-800 text-neutral-50"
           type="submit"
+          disabled={isLoading ? true : false}
         >
-          Ubah
+          {isLoading ? <Loader className="animate-spin" /> : "Ubah"}
         </Button>
       </form>
     </Form>

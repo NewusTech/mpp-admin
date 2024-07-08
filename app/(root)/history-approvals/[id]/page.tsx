@@ -175,7 +175,7 @@ const DetailHistoryApproval = ({
             />
             <p className="text-neutral-900">Dokumen</p>
           </Button>
-          {serviceForm.status !== 0 && serviceForm.status !== 2 ? (
+          {serviceForm?.status !== 0 && serviceForm?.status !== 2 ? (
             <Button
               onClick={handleValidationStatus}
               className="mt-7 w-full rounded-full bg-success-700 hover:bg-success-800"

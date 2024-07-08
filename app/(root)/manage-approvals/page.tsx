@@ -177,7 +177,7 @@ const ManageApprovals = () => {
               </Button>
             ))}
           </div>
-          <div className="flex w-4/12 items-center gap-x-2">
+          <div className="flex w-6/12 items-center gap-x-2 justify-end">
             <InputComponent
               typeInput="datepicker"
               date={startDate}

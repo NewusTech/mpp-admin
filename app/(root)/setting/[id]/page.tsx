@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import MyEditor from "@/components/Editor";
 import { Button } from "@/components/ui/button";
 import Cookies from "js-cookie";
@@ -11,6 +11,7 @@ import { fetcher } from "@/lib/fetch";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { Loader } from "lucide-react";
 
 const CreateFormat = ({
   params,
@@ -23,6 +24,7 @@ const CreateFormat = ({
     `${process.env.NEXT_PUBLIC_API_URL}/user/detailsurat/${params.id}`,
     fetcher,
   );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const result = data?.data?.Layanansurat;
@@ -34,6 +36,7 @@ const CreateFormat = ({
   const editor5Ref = useRef<{ getContent: () => string }>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    setIsLoading(true);
     e.preventDefault();
 
     const content1 = editor1Ref.current?.getContent();
@@ -70,6 +73,8 @@ const CreateFormat = ({
       }
     } catch (error: any) {
       toast(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -131,8 +136,9 @@ const CreateFormat = ({
             <Button
               type="submit"
               className="rounded-full bg-primary-700 hover:bg-primary-800"
+              disabled={isLoading ? true : false}
             >
-              Submit
+              {isLoading ? <Loader className="animate-spin" /> : "Submit"}
             </Button>
           </div>
         </form>

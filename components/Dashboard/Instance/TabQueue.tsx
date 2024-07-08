@@ -20,6 +20,7 @@ import { DataTables } from "@/components/Datatables";
 import { queueColumns } from "@/constants";
 import useQueueStore from "@/lib/store/useQueueStore";
 import { Button } from "@/components/ui/button";
+import { AlertDialogChangeStatus } from "@/components/Dialog/change-status";
 
 interface JwtPayload {
   role?: string;
@@ -46,8 +47,6 @@ const TabQueue = () => {
   const [showButton, setShowButton] = useState(false);
   const [instansiId, setInstansiId] = useState<any>(0);
   const { switchValues } = useQueueStore();
-
-  console.log(switchValues);
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -179,11 +178,7 @@ const TabQueue = () => {
             type="requirement"
           />
           <div className="-mt-8">
-            {showButton && (
-              <Button className="bg-primary-700 hover:bg-primary-800 rounded-full">
-                Submit
-              </Button>
-            )}
+            {showButton && <AlertDialogChangeStatus />}
           </div>
         </>
       )}

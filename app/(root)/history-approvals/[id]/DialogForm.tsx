@@ -24,6 +24,7 @@ export default function AlertDialogUploadFile({ id }: { id: number }) {
     setAddModalOpen(true);
   };
   const [selectedFile, setSelectedFile] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleAddModalClose = () => {
     setAddModalOpen(false);
@@ -34,6 +35,7 @@ export default function AlertDialogUploadFile({ id }: { id: number }) {
 
   // 2. Define a submit handler.
   async function onSubmit() {
+    setIsLoading(true);
     const formData = new FormData();
     formData.append("file", selectedFile);
 
@@ -58,6 +60,8 @@ export default function AlertDialogUploadFile({ id }: { id: number }) {
     } catch (error: any) {
       toast(error.message);
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -95,8 +99,9 @@ export default function AlertDialogUploadFile({ id }: { id: number }) {
             type="submit"
             onClick={onSubmit}
             className="bg-primary-700 hover:bg-primary-800 rounded-full"
+            disabled={isLoading ? true : false}
           >
-            Tambah
+            {isLoading ? <Loader className="animate-spin" /> : "Upload"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
