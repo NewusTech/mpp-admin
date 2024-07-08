@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { Loader } from "lucide-react";
 
 const steps = [
   { id: 1, title: "1" },
@@ -25,6 +26,7 @@ const currentStep = 3;
 
 const CreateManageRequirementPageStep3 = () => {
   const { serviceId } = useCreateRequirement();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -67,6 +69,7 @@ const CreateManageRequirementPageStep3 = () => {
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     const requestData = cards.map((card) => ({
       id: card.id,
       field: card.field,
@@ -89,9 +92,12 @@ const CreateManageRequirementPageStep3 = () => {
       if (response.ok) {
         toast(data.message);
         router.push("/manage-requirement");
+        localStorage.removeItem("requirement-update");
       }
     } catch (error) {
       toast("An error occurred while submitting the form.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -170,8 +176,9 @@ const CreateManageRequirementPageStep3 = () => {
             <Button
               onClick={handleSubmit}
               className="bg-primary-700 hover:bg-primary-800 rounded-full w-[290px]"
+              disabled={isLoading ? true : false}
             >
-              Submit
+              {isLoading ? <Loader className="animate-spin" /> : "Submit"}
             </Button>
           </div>
         </div>

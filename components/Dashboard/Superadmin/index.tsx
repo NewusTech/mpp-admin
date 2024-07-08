@@ -66,6 +66,8 @@ const DashboardSuperadmin = () => {
   const currentYear = new Date().getFullYear();
   const [years, setYears] = useState<any[]>([]);
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
     const startYear = 2023; // Tahun mulai yang diinginkan
@@ -91,10 +93,32 @@ const DashboardSuperadmin = () => {
 
   const instanceId = Number(instance);
 
+  const buildUrl = (baseUrl: string, params: Record<string, any>) => {
+    const url = new URL(baseUrl);
+    // Tambahkan parameter lainnya
+    Object.keys(params).forEach((key) => {
+      if (params[key] !== undefined) {
+        url.searchParams.append(key, params[key]);
+      }
+    });
+
+    return url.toString();
+  };
+
+  const params = {
+    instansi_id: instanceId,
+    limit: 10000000, // atau false
+    start_date: startDate, // atau undefined
+    end_date: endDate,
+  };
+
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/superadmin`;
+
+  // Bangun URL berdasarkan role dan instanceId
+  const fixUrl = buildUrl(baseUrl, params);
+
   const { data: serviceData, isLoading: isLoadingService } = useSWR<any>(
-    instance
-      ? `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/superadmin?instansi_id=${instanceId}&limit=10000000`
-      : null,
+    instance ? fixUrl : null,
     fetcher,
     {
       revalidateOnFocus: false,
@@ -247,9 +271,17 @@ const DashboardSuperadmin = () => {
             />
           </div>
           <div className="flex w-1/2 items-center gap-x-2">
-            <InputComponent typeInput="datepicker" />
+            <InputComponent
+              typeInput="datepicker"
+              date={startDate}
+              setDate={(e) => setStartDate(e)}
+            />
             <p>to</p>
-            <InputComponent typeInput="datepicker" />
+            <InputComponent
+              typeInput="datepicker"
+              date={endDate}
+              setDate={(e) => setEndDate(e)}
+            />
           </div>
         </div>
         {services && (

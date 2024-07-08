@@ -27,14 +27,16 @@ import { z } from "zod";
 import { SurveyValidation } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import { Label } from "@/components/ui/label";
 import MyEditor from "@/components/Editor";
+import { Loader } from "lucide-react";
 
 export default function AlertDialogUpdateSurvey({ id }: { id: number }) {
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [form, setForm] = useState<any>({
     field: "",
     status: "",
@@ -67,6 +69,7 @@ export default function AlertDialogUpdateSurvey({ id }: { id: number }) {
 
   // 2. Define a submit handler.
   async function onSubmit() {
+    setIsLoading(true);
     const content1 = editor1Ref.current?.getContent();
 
     const formData = {
@@ -94,6 +97,8 @@ export default function AlertDialogUpdateSurvey({ id }: { id: number }) {
     } catch (error: any) {
       toast(error.message);
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -159,8 +164,9 @@ export default function AlertDialogUpdateSurvey({ id }: { id: number }) {
           <AlertDialogAction
             onClick={onSubmit}
             className="bg-primary-700 hover:bg-primary-800 rounded-full"
+            disabled={isLoading ? true : false}
           >
-            Ubah
+            {isLoading ? <Loader className="animate-spin" /> : "Ubah"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

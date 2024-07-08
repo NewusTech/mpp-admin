@@ -21,7 +21,7 @@ import useCreateRequirement from "@/lib/store/useCreateRequirement";
 import { Input } from "@/components/ui/input";
 import InputComponent from "@/components/InputComponent";
 import Step from "@/components/Steps";
-import { X } from "lucide-react";
+import { Loader, X } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
@@ -36,6 +36,7 @@ const currentStep = 2;
 
 const CreateManageRequirementPageStep2 = () => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { serviceId, dataStep2, setDataStep2 } = useCreateRequirement();
   const [cards, setCards] = useState<CardType[]>(
     dataStep2.length > 0
@@ -135,6 +136,7 @@ const CreateManageRequirementPageStep2 = () => {
   }, [cards, setDataStep2]);
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     const formattedData = dataStep2.map((card) => {
       const formattedCard: any = {
         field: card.field,
@@ -175,6 +177,8 @@ const CreateManageRequirementPageStep2 = () => {
       }
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -320,8 +324,9 @@ const CreateManageRequirementPageStep2 = () => {
             <Button
               className="bg-primary-700 hover:bg-primary-800 rounded-full w-[290px]"
               onClick={handleSubmit}
+              disabled={isLoading ? true : false}
             >
-              Lanjut
+              {isLoading ? <Loader className="animate-spin" /> : "Lanjut"}
             </Button>
           </div>
         </div>

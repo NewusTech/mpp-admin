@@ -267,52 +267,17 @@ export const manageApprovalColumns: ColumnDef<ManageApprovals>[] = [
     cell: ({ row }) => {
       const action = row.original;
 
-      const handleValidationStatus = async () => {
-        try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/updatestatus/${action.id}`,
-            {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${Cookies.get("token")}`,
-              },
-              body: JSON.stringify({
-                status: 2,
-              }),
-            },
-          );
-
-          const data = await response.json();
-          if (response.ok) {
-            toast(data.message);
-          }
-        } catch (e: any) {
-          toast(e.message);
-        }
-      };
-
       return (
         <>
           <div className="flex justify-center items-center gap-x-3">
             <Link href={`/manage-approvals/${action.id}`}>
               <Button
                 size="sm"
-                className="text-sm rounded-full py-1 bg-transparent border border-primary-700 text-primary-700 hover:bg-primary-700 hover:text-neutral-50 "
+                className="text-sm rounded-full py-1 bg-secondary-700 text-neutral-50 hover:bg-secondary-800"
               >
-                Upload
+                Lihat Detail
               </Button>
             </Link>
-            <Link href="/">
-              <p className="underline text-[#3A28FF] text-sm">Unduh Template</p>
-            </Link>
-            <Button
-              size="sm"
-              onClick={handleValidationStatus}
-              className="text-sm rounded-full bg-success-700 hover:bg-success-800"
-            >
-              Setujui
-            </Button>
           </div>
         </>
       );

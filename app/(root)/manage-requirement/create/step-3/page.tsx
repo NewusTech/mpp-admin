@@ -13,6 +13,7 @@ import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { Loader } from "lucide-react";
 
 const steps = [
   { id: 1, title: "1" },
@@ -23,6 +24,7 @@ const currentStep = 3;
 
 const CreateManageRequirementPageStep3 = () => {
   const { serviceId } = useCreateRequirement();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
   const [cards, setCards] = useState<CardTypeFile[]>([
     {
@@ -66,6 +68,7 @@ const CreateManageRequirementPageStep3 = () => {
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     const requestData = cards.map((card) => ({
       field: card.field,
       tipedata: card.tipedata,
@@ -90,10 +93,13 @@ const CreateManageRequirementPageStep3 = () => {
       const data = await response.json();
       if (response.ok) {
         toast(data.message);
+        localStorage.removeItem("requirement");
         router.push("/manage-requirement");
       }
     } catch (error) {
       toast("An error occurred while submitting the form.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -178,8 +184,9 @@ const CreateManageRequirementPageStep3 = () => {
             <Button
               onClick={handleSubmit}
               className="bg-primary-700 hover:bg-primary-800 rounded-full w-[290px]"
+              disabled={isLoading ? true : false}
             >
-              Submit
+              {isLoading ? <Loader className="animate-spin" /> : "Submit"}
             </Button>
           </div>
         </div>
