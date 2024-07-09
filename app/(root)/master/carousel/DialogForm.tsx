@@ -46,6 +46,7 @@ export default function AlertDialogCreateCarousel() {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof carouselValidation>) {
+
     setIsLoading(true);
     const formData = new FormData();
     formData.append("image", values.image[0]);

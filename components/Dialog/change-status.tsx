@@ -14,6 +14,7 @@ import useQueueStore from "@/lib/store/useQueueStore";
 export function AlertDialogChangeStatus() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   const { switchValues } = useQueueStore();
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
