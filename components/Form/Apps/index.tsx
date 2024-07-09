@@ -33,7 +33,9 @@ interface ArticleBySlug {
 const AppsInstance = ({
   data,
   type,
+  label,
 }: {
+  label: string;
   type?: string;
   data?: ArticleBySlug;
 }) => {
@@ -191,7 +193,7 @@ const AppsInstance = ({
           type="submit"
           disabled={isLoading ? true : false}
         >
-          {isLoading ? <Loader className="animate-spin" /> : "Ubah"}
+          {isLoading ? <Loader className="animate-spin" /> : label}
         </Button>
       </form>
     </Form>

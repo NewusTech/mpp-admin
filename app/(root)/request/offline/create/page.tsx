@@ -566,7 +566,7 @@ const CreateOffline = () => {
           {resultDocs.map((v) => (
             <div
               key={v.id}
-              className="flex items-center justify-between w-full rounded-[20px] py-6 px-4 bg-neutral-50"
+              className="flex items-center justify-between w-full rounded-[20px] py-6 px-4 bg-neutral-50 mb-4"
             >
               <div className="w-11/12 space-y-2">
                 <h3 className="font-semibold text-[16px] text-primary-800">

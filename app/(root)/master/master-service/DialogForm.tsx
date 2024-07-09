@@ -89,7 +89,7 @@ export default function AlertDialogCreateService({ id }: { id: number }) {
           Tambah
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="p-0 border-0 overflow-auto h-full max-w-[80%]">
+      <AlertDialogContent className="p-0 border-0 overflow-auto h-full max-w-[90%]">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
             Tambah Layanan

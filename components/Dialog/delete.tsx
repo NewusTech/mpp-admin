@@ -10,9 +10,11 @@ import {
   AlertDialogFooter,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Loader } from "lucide-react";
 
 const ModalDelete = ({ endpoint }: { endpoint: string }) => {
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
   };
@@ -22,6 +24,7 @@ const ModalDelete = ({ endpoint }: { endpoint: string }) => {
   };
 
   const handleValidationStatus = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/user/${endpoint}`,
@@ -41,6 +44,8 @@ const ModalDelete = ({ endpoint }: { endpoint: string }) => {
       }
     } catch (e: any) {
       toast(e.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -63,8 +68,9 @@ const ModalDelete = ({ endpoint }: { endpoint: string }) => {
           <AlertDialogAction
             onClick={handleValidationStatus}
             className="bg-error-700 hover:bg-error-800 text-neutral-50 rounded-full px-[37px]"
+            disabled={isLoading ? true : false}
           >
-            YA
+            {isLoading ? <Loader className="animate-spin" /> : "YA"}
           </AlertDialogAction>
           <AlertDialogCancel
             type="button"

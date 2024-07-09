@@ -22,7 +22,7 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import MyEditor from "@/components/Editor";
 
-export default function AlertDialogCreateVisionMission() {
+export default function AlertDialogCreateTermAndCondition() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const handleOpenAddModal = () => {
@@ -34,30 +34,27 @@ export default function AlertDialogCreateVisionMission() {
   };
 
   const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/visimisi/get`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/termcond/get`,
     fetcher,
   );
 
   const result = data?.data;
 
   const editor1Ref = useRef<{ getContent: () => string }>(null);
-  const editor2Ref = useRef<{ getContent: () => string }>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     setIsLoading(true);
     e.preventDefault();
 
     const content1 = editor1Ref.current?.getContent();
-    const content2 = editor2Ref.current?.getContent();
 
     const payload = {
-      visi: content1,
-      misi: content2,
+      desc: content1,
     };
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/visimisi/update`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/termcond/update`,
         {
           method: "PUT",
           headers: {
@@ -85,32 +82,24 @@ export default function AlertDialogCreateVisionMission() {
       <AlertDialogTrigger asChild>
         <Button
           onClick={handleOpenAddModal}
-          className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
+          className="bg-primary-700 hover:bg-primary-800 w-[170px] rounded-full"
         >
-          Visi Misi
+          Syarat & Ketentuan
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="p-0 border-0 overflow-auto h-full max-w-[70%]">
+      <AlertDialogContent className="p-0 border-0 overflow-auto max-w-[60%]">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
-            Visi Misi
+            Syarat & Ketentuan
           </AlertDialogTitle>
         </AlertDialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 px-4">
           <div className="space-y-2">
-            <label htmlFor="editor1">Visi</label>
+            <label htmlFor="editor1">Syarat & Ketentuan</label>
             <MyEditor
               ref={editor1Ref}
               name="editor1"
-              initialValue={result?.visi || "<p>Ketik disni</p>"}
-            />
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="editor2">Misi</label>
-            <MyEditor
-              ref={editor2Ref}
-              name="editor2"
-              initialValue={result?.misi || "<p>Ketik disni</p>"}
+              initialValue={result?.desc || "<p>Ketik disni</p>"}
             />
           </div>
           <AlertDialogFooter className="p-6">

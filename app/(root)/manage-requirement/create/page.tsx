@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import useCreateRequirement from "@/lib/store/useCreateRequirement";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 const steps = [
@@ -27,6 +27,8 @@ const CreateManageRequirementPage = () => {
     }),
   );
   const [informationService, setInformationService] = useState("");
+  const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
+  const [searchTermInstance, setSearchTermInstance] = useState("");
 
   const { data: services } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get/${selectedId}`,
@@ -48,6 +50,14 @@ const CreateManageRequirementPage = () => {
       setInformationService(selectedService.desc);
     }
   };
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearchTermInstance(searchInputInstance);
+    }, 300); // Debounce time to avoid excessive API calls
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchInputInstance]);
 
   return (
     <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Staff Instansi"]}>
@@ -79,12 +89,16 @@ const CreateManageRequirementPage = () => {
           <div className="py-5 space-y-2">
             <p>Jenis Layanan</p>
             <InputComponent
-              typeInput="select"
-              value={serviceId}
-              onChange={(e) => handleSelectChange(e)}
+              typeInput="selectSearch"
+              valueInput={searchInputInstance}
+              onChangeInputSearch={(e) =>
+                setSearchInputInstance(e.target.value)
+              }
               items={serviceAll}
-              label="Jenis Layanan"
-              placeholder="Pilih Jenis Layanan"
+              label="Instansi"
+              placeholder="Pilih Instansi"
+              value={serviceId}
+              onChange={(e: any) => handleSelectChange(e)}
             />
           </div>
           <div className="space-y-2">

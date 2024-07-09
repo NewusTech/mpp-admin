@@ -258,6 +258,13 @@ const Sidebar = () => {
                       >
                         <Link href="/master/contact">Kontak</Link>
                       </li>
+                      <li
+                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/term-and-condition") || pathname.startsWith("/master/term-and-condition") ? "text-primary-700" : ""}`}
+                      >
+                        <Link href="/master/term-and-condition">
+                          Syarat & Ketentuan
+                        </Link>
+                      </li>
                     </>
                   ) : (
                     <>

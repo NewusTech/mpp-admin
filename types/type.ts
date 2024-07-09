@@ -139,6 +139,11 @@ export type VisionMission = {
   misi: any;
 };
 
+export type TermAndCondition = {
+  id: number;
+  desc: any;
+};
+
 export type Complaint = {
   id: number;
   createdAt: string;

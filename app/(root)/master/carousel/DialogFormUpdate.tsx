@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { FacilitiesValidation } from "@/lib/validation";
+import { carouselValidation } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
@@ -41,8 +41,8 @@ export default function AlertDialogUpdateCarousel({ id }: { id: number }) {
     setAddModalOpen(false);
   };
 
-  const form = useForm<z.infer<typeof FacilitiesValidation>>({
-    resolver: zodResolver(FacilitiesValidation),
+  const form = useForm<z.infer<typeof carouselValidation>>({
+    resolver: zodResolver(carouselValidation),
   });
 
   const { data } = useSWR<any>(
@@ -61,7 +61,7 @@ export default function AlertDialogUpdateCarousel({ id }: { id: number }) {
   }, [result]);
 
   // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof FacilitiesValidation>) {
+  async function onSubmit(values: z.infer<typeof carouselValidation>) {
     setIsLoading(true);
     const formData = new FormData();
     formData.append("image", values.image[0]);

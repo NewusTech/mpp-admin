@@ -8,7 +8,7 @@ const CreateApps = () => {
     <ProtectedRoute roles={["Super Admin"]}>
       <section className="mr-16">
         <div className="-ml-14 mb-10">
-          <Link href="/master-apps">
+          <Link href="/master/master-apps">
             <Image
               src="/icons/back-arrow.svg"
               alt="back-arrow"
@@ -23,7 +23,7 @@ const CreateApps = () => {
           </h1>
           <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-3 p-8">
             <h1 className="text-xl font-semibold mb-4">Berita</h1>
-            <Apps type="create" />
+            <Apps type="create" label="Tambah" />
           </div>
         </div>
       </section>

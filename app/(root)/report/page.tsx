@@ -167,9 +167,9 @@ const Report = () => {
               />
             )}
             <div
-              className={`flex items-center gap-x-2 ${role === "Admin Instansi" ? "w-full justify-between" : "w-8/12"}`}
+              className={`flex items-center gap-x-2 ${role === "Admin Instansi" ? "w-full justify-between" : "w-8/12 justify-end"}`}
             >
-              <div className="flex items-center gap-x-2">
+              <div className="flex items-center gap-x-2 w-8/12">
                 <InputComponent
                   typeInput="datepicker"
                   date={startDate}
