@@ -63,7 +63,9 @@ const AppsInstance = ({
     formData.append("name", values.name);
     formData.append("desc", values.description);
     formData.append("link", values.link);
-    formData.append("image", values.image[0]);
+    if (values.image && values.image.length > 0) {
+      formData.append("image", values.image[0]);
+    }
 
     if (type === "create") {
       try {

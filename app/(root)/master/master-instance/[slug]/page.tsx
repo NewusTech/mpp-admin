@@ -1,25 +1,22 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import Instance from "@/components/Form/Instance";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetch";
 
-async function getDataBySlug(slug: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get/${slug}`,
-    {
-      cache: "no-cache",
-    },
-  );
-  const data = await res.json();
-  return data.data;
-}
-
-export default async function UpdateInstance({
+export default function UpdateInstance({
   params,
 }: {
   params: { slug: string };
 }) {
-  const data = await getDataBySlug(params.slug);
+  const { data } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get/${params.slug}`,
+    fetcher,
+  );
+  const result = data?.data;
   return (
     <ProtectedRoute roles={["Super Admin"]}>
       <section className="mr-16">
@@ -37,7 +34,7 @@ export default async function UpdateInstance({
           <h1 className="text-2xl text-primary-700 font-bold">Ubah Instansi</h1>
           <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-3 p-8">
             <h1 className="text-xl font-semibold mb-4">Instansi</h1>
-            <Instance data={data} label="Ubah" />
+            <Instance data={result} label="Ubah" />
           </div>
         </div>
       </section>

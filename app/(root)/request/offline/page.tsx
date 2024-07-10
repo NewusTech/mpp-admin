@@ -64,7 +64,7 @@ const RequestOffline = () => {
 
   if (role === "Admin Instansi") {
     url += `/${instansiId}?search=${searchTermService}`;
-  } else if ("Superadmin") {
+  } else if ("Super Admin") {
     url += `/${instanceId}?search=${searchTermService}`;
   }
 
@@ -98,6 +98,7 @@ const RequestOffline = () => {
     limit: 10000000, // atau false
     start_date: startDate, // atau undefined
     end_date: endDate, // atau undefined
+    isonline: 0,
   };
 
   const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;

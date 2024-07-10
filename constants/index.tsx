@@ -38,7 +38,6 @@ import {
 } from "@/types/type";
 import Link from "next/link";
 import AlertDialogUpdateFaq from "@/app/(root)/master/master-faq/DialogFormUpdate";
-import AlertDialogUpdateService from "@/app/(root)/master/master-service/DialogFormUpdate";
 import Image from "next/image";
 import AlertDialogUpdateFacility from "@/app/(root)/master/master-facility/DialogFormUpdate";
 import { cn } from "@/lib/utils";
@@ -179,6 +178,10 @@ export const requestOfflineColumns: ColumnDef<RequestOffline>[] = [
 
       return <p>{formatDate(date)}</p>;
     },
+  },
+  {
+    accessorKey: "name",
+    header: "Nama",
   },
   {
     accessorKey: "nik",
@@ -574,7 +577,9 @@ export const dataServiceColumns: ColumnDef<DataServices>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <AlertDialogUpdateService id={service.id} />
+            <DropdownMenuItem>
+              <Link href={`/master/master-service/${service.id}`}>Edit</Link>
+            </DropdownMenuItem>
             <ModalDelete endpoint={`layanan/delete/${service.id}`} />
           </DropdownMenuContent>
         </DropdownMenu>
@@ -688,6 +693,28 @@ export const detailSurveyResultColumns: ColumnDef<DetailSurveyResult>[] = [
   {
     accessorKey: "name",
     header: "Nama",
+  },
+  {
+    accessorKey: "pendidikan",
+    header: "Pendidikan",
+    cell: ({ row }) => {
+      const education2 = row.original.pendidikan;
+      const education =
+        educations.find((item: any) => item.id === education2)?.key ||
+        "Tidak Diketahui";
+      return <p>{education}</p>;
+    },
+  },
+  {
+    accessorKey: "gender",
+    header: "Jenis Kelamin",
+    cell: ({ row }) => {
+      const gender2 = row.original.gender;
+      const gender =
+        genders.find((item: any) => item.id === gender2)?.key ||
+        "Tidak Diketahui";
+      return <p>{gender}</p>;
+    },
   },
   { accessorKey: "kritiksaran", header: "Kritik dan Saran" },
   {

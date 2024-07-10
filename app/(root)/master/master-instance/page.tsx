@@ -1,23 +1,20 @@
+"use client";
+
 import { dataInstanceColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
 import { DataInstance } from "@/types/type";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetch";
 
-async function getData(): Promise<DataInstance[]> {
-  const res = await fetch(
+const MasterInsantce = () => {
+  const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?limit=1000000`,
-    {
-      cache: "no-store",
-    },
+    fetcher,
   );
-  const data = await res.json();
-  return data.data;
-}
-
-const MasterInsantce = async () => {
-  const data = await getData();
+  const result = data?.data;
   return (
     <ProtectedRoute roles={["Super Admin"]}>
       <section className="mr-16">
@@ -28,7 +25,13 @@ const MasterInsantce = async () => {
             </Button>
           </Link>
         </div>
-        <DataTables columns={dataInstanceColumns} data={data} filterBy="name" />
+        {result && (
+          <DataTables
+            columns={dataInstanceColumns}
+            data={result}
+            filterBy="name"
+          />
+        )}
       </section>
     </ProtectedRoute>
   );
