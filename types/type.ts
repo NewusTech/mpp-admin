@@ -15,6 +15,7 @@ export type RequestOnline = {
 export type RequestOffline = {
   id: number;
   createdAt: string;
+  name: string;
   nik: string;
   status: string;
 };
@@ -72,6 +73,8 @@ export type DetailSurveyResult = {
   date: string;
   name: string;
   kritiksaran: string;
+  pendidikan: number;
+  gender: number;
   nilai: string;
 };
 

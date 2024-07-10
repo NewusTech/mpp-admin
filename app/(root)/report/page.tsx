@@ -79,7 +79,7 @@ const Report = () => {
       ...additionalParams,
       instansi_id: instanceId2,
     };
-  } else if (role === "Superadmin") {
+  } else if (role === "Super Admin") {
     instanceId2 = instanceId;
     additionalParams = {
       ...additionalParams,
@@ -127,10 +127,10 @@ const Report = () => {
       const data = await response.json();
 
       if (response.ok) {
-        toast(data.message);
+        toast("Berhasil download laporan");
       }
     } catch (e: any) {
-      toast(e.message);
+      console.log(e.message);
     } finally {
       setIsLoading(false);
     }
@@ -185,6 +185,7 @@ const Report = () => {
               <Button
                 onClick={handleDownload}
                 className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[140px] rounded-full"
+                disabled={isLoading}
               >
                 {isLoading ? (
                   <Loader className="animate-spin" />

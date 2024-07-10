@@ -9,6 +9,10 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { Loader } from "lucide-react";
 
 interface JwtPayload {
   role?: string;
@@ -21,6 +25,7 @@ const SurveyResult = () => {
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<number | null>(null);
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -58,6 +63,43 @@ const SurveyResult = () => {
     url += `?instansi_id=${instanceId}&limit=1000000`;
   }
 
+  const handleDownload = async () => {
+    setIsLoading(true);
+    let urlDownload = `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/pdf`;
+
+    if (role === "Admin Instansi") {
+      urlDownload += `?instansi_id=${instansiId}`;
+    } else if ("Superadmin") {
+      urlDownload += `?instansi_id=${instanceId}`;
+    }
+
+    try {
+      const response = await fetch(urlDownload, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
+      });
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "report skm.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      if (response.ok) {
+        toast("Berhasil download laporan");
+      }
+    } catch (e: any) {
+      console.log(e.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const { data: resultSurvey } = useSWR<any>(url, fetcher);
 
   useEffect(() => {
@@ -91,6 +133,40 @@ const SurveyResult = () => {
               />
             )}
           </div>
+          {instance || role === "Admin Instansi" || role === "Staff Admin" ? (
+            <Button
+              disabled={isLoading}
+              onClick={handleDownload}
+              className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[140px] rounded-full"
+            >
+              {isLoading ? (
+                <Loader className="animate-spin" />
+              ) : (
+                <>
+                  <Image
+                    src="/icons/printer.svg"
+                    alt="print"
+                    width={24}
+                    height={24}
+                  />
+                  Print
+                </>
+              )}
+            </Button>
+          ) : (
+            <Button
+              disabled={true}
+              className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[140px] rounded-full"
+            >
+              <Image
+                src="/icons/printer.svg"
+                alt="print"
+                width={24}
+                height={24}
+              />
+              Print
+            </Button>
+          )}
         </div>
         {surveys && (
           <DataTables

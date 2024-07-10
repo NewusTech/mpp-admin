@@ -3,7 +3,6 @@
 import InputComponent from "@/components/InputComponent";
 import { dataServiceColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
-import AlertDialogCreateService from "@/app/(root)/master/master-service/DialogForm";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
@@ -11,6 +10,8 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import { Button } from "@/components/ui/button";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { useRouter } from "next/navigation";
+import useServiceStore from "@/lib/store/useServiceStore";
 
 interface JwtPayload {
   role?: string;
@@ -23,6 +24,8 @@ const MasterService = () => {
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<any>(0);
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
+  const router = useRouter();
+  const setSelectedId = useServiceStore((state) => state.setSelectedId);
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -56,7 +59,7 @@ const MasterService = () => {
 
   if (role === "Admin Instansi") {
     url += `/${instansiId}?limit=10000000`;
-  } else if ("Superadmin") {
+  } else if ("Super Admin") {
     url += `/${instanceId}?limit=10000000`;
   }
 
@@ -72,7 +75,15 @@ const MasterService = () => {
 
   const result = data?.data;
   const serviceAll = services?.data;
-  console.log(serviceAll);
+
+  const handlePassInstanceId = () => {
+    if (role === "Admin Instansi" || role === "Staff Instansi") {
+      setSelectedId(instansiId);
+    } else {
+      setSelectedId(instanceId);
+    }
+    router.push("/master/master-service/create");
+  };
 
   return (
     <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
@@ -97,9 +108,12 @@ const MasterService = () => {
             )}
           </div>
           {instance || role === "Admin Instansi" ? (
-            <AlertDialogCreateService
-              id={role === "Admin Instansi" ? instansiId : instanceId}
-            />
+            <Button
+              onClick={handlePassInstanceId}
+              className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
+            >
+              Tambah
+            </Button>
           ) : (
             <Button
               disabled={true}

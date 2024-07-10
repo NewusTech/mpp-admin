@@ -153,10 +153,8 @@ const DetailRequestOnline = ({
           {filteredDataFile?.map((v: any) => (
             <div className="space-y-2 mt-3" key={v.id}>
               <p>{v.layananform_name}</p>
-              <Button
-                onClick={() =>
-                  handleDownload(v.data, getFileNameFromUrl(v.data))
-                }
+              <Link
+                href={v.data}
                 className="mt-2 w-[25vh] rounded-[20px] bg-neutral-50 hover:bg-neutral-100 shadow p-3 flex justify-around items-center"
               >
                 <Image
@@ -166,7 +164,7 @@ const DetailRequestOnline = ({
                   height={24}
                 />
                 <p className="text-neutral-900">{v.layananform_name}</p>
-              </Button>
+              </Link>
             </div>
           ))}
           <div className="text-center mt-8 mb-[46px] space-x-3">

@@ -3,7 +3,6 @@
 import InputComponent from "@/components/InputComponent";
 import { dataServiceColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
-import AlertDialogCreateService from "@/app/(root)/master/master-service/DialogForm";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
@@ -47,7 +46,7 @@ const GuestBook = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher,
+    fetcher
   );
 
   const instanceId = Number(instance);
@@ -96,7 +95,7 @@ const GuestBook = () => {
               />
             )}
           </div>
-          {instance || role === "Admin Instansi" ? (
+          {/* {instance || role === "Admin Instansi" ? (
             <AlertDialogCreateService
               id={role === "Admin Instansi" ? instansiId : instanceId}
             />
@@ -107,7 +106,7 @@ const GuestBook = () => {
             >
               Tambah
             </Button>
-          )}
+          )} */}
         </div>
         {serviceAll && (
           <DataTables

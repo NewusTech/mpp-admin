@@ -8,6 +8,10 @@ import Image from "next/image";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
+import { useState } from "react";
+import { Loader } from "lucide-react";
 
 // async function getData(id: number): Promise<DetailSurveyResult[]> {
 //   const res = await fetch(
@@ -32,12 +36,44 @@ const SurveyPrint = ({
     id: number;
   };
 }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/${params.id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/${params.id}?limit=1000000`,
     fetcher,
   );
 
   const result = data?.data;
+
+  const handleDownload = async () => {
+    setIsLoading(true);
+    let urlDownload = `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/${params.id}/pdf`;
+
+    try {
+      const response = await fetch(urlDownload, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
+      });
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "report layanan skm.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      if (response.ok) {
+        toast("Berhasil download laporan");
+      }
+    } catch (e: any) {
+      console.log(e.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
@@ -71,14 +107,24 @@ const SurveyPrint = ({
         <div className="w-full h-full py-8 px-[64px] bg-neutral-50 shadow rounded-[20px]">
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-semibold">Jenis Layanan</h1>
-            <Button className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[140px] rounded-full">
-              <Image
-                src="/icons/printer.svg"
-                alt="print"
-                width={24}
-                height={24}
-              />
-              Print
+            <Button
+              disabled={isLoading}
+              onClick={handleDownload}
+              className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[140px] rounded-full"
+            >
+              {isLoading ? (
+                <Loader className="animate-spin" />
+              ) : (
+                <>
+                  <Image
+                    src="/icons/printer.svg"
+                    alt="print"
+                    width={24}
+                    height={24}
+                  />
+                  Print
+                </>
+              )}
             </Button>
           </div>
           {result && (
