@@ -58,7 +58,7 @@ const Articles = () => {
 
   if (role === "Admin Instansi") {
     url += `&instansi_id=${instansiId}`;
-  } else if ("Superadmin") {
+  } else if ("Super Admin" && instance !== "") {
     url += `&instansi_id=${instanceId}`;
   }
 
@@ -114,12 +114,14 @@ const Articles = () => {
               </Button>
             </Link>
           ) : (
-            <Button
-              disabled={true}
-              className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
-            >
-              Tambah
-            </Button>
+            <Link href="/articles/create">
+              <Button
+                onClick={() => handlePassIdInstnace(instansiId)}
+                className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
+              >
+                Tambah
+              </Button>
+            </Link>
           )}
         </div>
         {news && (

@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useEffect, useState } from "react";
 import { CardTypeFile } from "@/types/interface";
-import useCreateRequirement from "@/lib/store/useCreateRequirement";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -16,6 +15,7 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Loader } from "lucide-react";
+import useUpdateRequirementStore from "@/lib/store/useUpdateRequirementStore";
 
 const steps = [
   { id: 1, title: "1" },
@@ -25,7 +25,7 @@ const steps = [
 const currentStep = 3;
 
 const CreateManageRequirementPageStep3 = () => {
-  const { serviceId } = useCreateRequirement();
+  const { serviceId } = useUpdateRequirementStore();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const router = useRouter();
@@ -56,8 +56,34 @@ const CreateManageRequirementPageStep3 = () => {
     );
   };
 
-  const handleRemoveCard = (id: number) => {
-    setCards(cards.filter((card) => card.id !== id));
+  const handleRemoveCard = async (id: number) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/layananform/delete/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        },
+      );
+
+      const data = await response.json();
+
+      const updatedCards = cards.filter((card) => card.id !== id);
+      if (response.ok) {
+        toast(data.message);
+        setCards(updatedCards);
+      }
+
+      if (!response.ok) {
+        toast("Tidak bisa dihapus, karena sudah ada yang mengisi");
+      }
+    } catch (error: any) {
+      console.error("Error deleting card:", error);
+      toast(error.message);
+    }
   };
 
   const handleInputChange = (id: number, field: string, value: any) => {
@@ -92,6 +118,7 @@ const CreateManageRequirementPageStep3 = () => {
       if (response.ok) {
         toast(data.message);
         router.push("/manage-requirement");
+        setCards([]);
         localStorage.removeItem("requirement-update");
       }
     } catch (error) {
@@ -105,7 +132,7 @@ const CreateManageRequirementPageStep3 = () => {
     <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Staff Instansi"]}>
       <section className="mr-16">
         <div className="-ml-14 mb-10">
-          <Link href="/manage-requirement/create/step-2">
+          <Link href={`/manage-requirement/${serviceId}/step-2`}>
             <Image
               src="/icons/back-arrow.svg"
               alt="back-arrow"
