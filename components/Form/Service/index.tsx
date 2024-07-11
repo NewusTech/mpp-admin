@@ -56,9 +56,9 @@ const ServiceForm = ({
       instansi_id: id,
       dasarhukum: content2,
       syarat: content3,
-      status: Number(status),
-      active_offline: Number(offline),
-      active_online: Number(online),
+      status: status,
+      active_offline: offline,
+      active_online: online,
     };
 
     if (type === "create") {
