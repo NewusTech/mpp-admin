@@ -173,6 +173,7 @@ const CreateManageRequirementPageStep2 = () => {
 
       if (response.ok) {
         toast(responseData.message);
+        setCards([]);
         router.push("/manage-requirement/create/step-3");
       }
     } catch (error) {

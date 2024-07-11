@@ -21,6 +21,8 @@ const UpdateServive = ({
   );
   const result = getServiceOne?.data;
 
+  console.log(result);
+
   return (
     <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
       <section className="mr-16">

@@ -31,12 +31,14 @@ interface FormData {
   id: string;
   field: string;
   tipedata: string;
+  isrequired: boolean;
   datajson?: { id: string; key: string }[];
 }
 
 interface DocData {
   id: string;
   field: string;
+  isrequired: boolean;
 }
 
 const CreateOffline = () => {
@@ -122,6 +124,9 @@ const CreateOffline = () => {
   const resultDesa = desa?.data;
   const resultForm: FormData[] = data?.data?.Layananforms || [];
   const resultDocs: DocData[] = inputFile?.data?.Layananforms || [];
+
+  console.log(resultForm);
+  console.log(resultDocs);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -491,7 +496,13 @@ const CreateOffline = () => {
               <h1 className="text-xl font-semibold mb-4">Formulir</h1>
               {resultForm.map((v) => (
                 <div className="space-y-2" key={v.id}>
-                  <p>{v.field}</p>
+                  <p>
+                    {v.field}
+                    <span className="text-error-700">
+                      {v.isrequired ? "*" : ""}
+                    </span>
+                  </p>
+
                   {v.tipedata === "radio" ? (
                     <RadioGroup
                       className="flex space-x-4"
