@@ -37,6 +37,7 @@ const News = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
   const selectedId = useNewsStore((state) => state.selectedId);
   const editor1Ref = useRef<{ getContent: () => string }>(null);
   const [image, setImage] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const titleRef = useRef<HTMLInputElement>(null); // Ref untuk title input
   const handleFileChange = (files: File[]) => {
     setImage(files[0]);
@@ -45,6 +46,7 @@ const News = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
   // 2. Define a submit handler.
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setIsLoading(true);
 
     const content1: any = editor1Ref.current?.getContent();
     const title: any = titleRef.current?.value;
@@ -79,6 +81,8 @@ const News = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
       } catch (error: any) {
         toast(error.message);
         console.log(error.message);
+      } finally {
+        setIsLoading(false);
       }
     } else {
       try {
@@ -101,6 +105,8 @@ const News = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
         }
       } catch (error: any) {
         toast(error.message);
+      } finally {
+        setIsLoading(false);
       }
     }
   }
@@ -135,8 +141,9 @@ const News = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
         <Button
           type="submit"
           className="w-full rounded-full bg-primary-700 hover:bg-primary-800 text-neutral-50"
+          disabled={isLoading}
         >
-          Tambah
+          {isLoading ? <Loader className="animate-spin" /> : "Tambah"}
         </Button>
       </form>
     </div>

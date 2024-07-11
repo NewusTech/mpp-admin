@@ -190,6 +190,7 @@ const UpdateManageRequirementPageStep2 = () => {
       if (response.ok) {
         toast(responseData.message);
         router.push(`/manage-requirement/${serviceId}/step-3`);
+        setCards([]);
       }
     } catch (error) {
       console.error("Error:", error);
