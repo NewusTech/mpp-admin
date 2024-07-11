@@ -94,8 +94,11 @@ const News = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
         );
 
         const result = await response.json();
-        toast(result.message);
-        if (response.ok) router.push("/articles");
+
+        if (response.ok) {
+          toast(result.message);
+          router.push("/articles");
+        }
       } catch (error: any) {
         toast(error.message);
       }

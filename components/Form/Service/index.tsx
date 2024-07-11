@@ -23,7 +23,7 @@ const ServiceForm = ({
   id?: number;
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [namaLayanan, setNamaLayanan] = useState(data?.name || "");
+  const [namaLayanan, setNamaLayanan] = useState("");
   const [status, setStatus] = useState("");
   const [online, setOnline] = useState("");
   const [offline, setOffline] = useState("");
@@ -35,6 +35,7 @@ const ServiceForm = ({
 
   useEffect(() => {
     if (data) {
+      setNamaLayanan(data?.name);
       setOnline(data?.active_online ? "1" : "0");
       setOffline(data?.active_offline ? "1" : "0");
       setStatus(data?.status ? "1" : "0");
@@ -88,7 +89,7 @@ const ServiceForm = ({
     } else {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/update/${id}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/update/${data?.id}`,
           {
             method: "PUT",
             headers: {
@@ -177,12 +178,12 @@ const ServiceForm = ({
             onValueChange={(value) => setOnline(value)}
           >
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="1" id="aktif" />
-              <Label htmlFor="aktif">Aktif</Label>
+              <RadioGroupItem value="1" id="aktifOnline" />
+              <Label htmlFor="aktifOnline">Aktif</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="0" id="tidak" />
-              <Label htmlFor="tidak">Tidak Aktif</Label>
+              <RadioGroupItem value="0" id="tidakAktifOnline" />
+              <Label htmlFor="tidakAktifOnline">Tidak Aktif</Label>
             </div>
           </RadioGroup>
         </div>
@@ -194,12 +195,12 @@ const ServiceForm = ({
             onValueChange={(value) => setOffline(value)}
           >
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="1" id="aktif" />
-              <Label htmlFor="aktif">Aktif</Label>
+              <RadioGroupItem value="1" id="aktifOffline" />
+              <Label htmlFor="aktifOffline">Aktif</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="0" id="tidak" />
-              <Label htmlFor="tidak">Tidak Aktif</Label>
+              <RadioGroupItem value="0" id="tidakAktifOffline" />
+              <Label htmlFor="tidakAktifOffline">Tidak Aktif</Label>
             </div>
           </RadioGroup>
         </div>

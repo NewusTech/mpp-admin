@@ -97,6 +97,7 @@ const CreateManageRequirementPageStep3 = () => {
       if (response.ok) {
         toast(data.message);
         localStorage.removeItem("requirement");
+        setCards([]);
         router.push("/manage-requirement");
       }
     } catch (error) {

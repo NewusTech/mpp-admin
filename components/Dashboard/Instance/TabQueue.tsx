@@ -33,11 +33,9 @@ const CardDashboardQueue = ({
   background,
 }: CardDashboardQueueProps) => {
   return (
-    <div
-      className={`w-full h-[152px] ${background} rounded-[20px] flex flex-col items-center justify-center gap-4`}
-    >
-      <h3 className="text-[16px] text-neutral-50 font-semibold">{title}</h3>
-      <h1 className="text-[40px] text-neutral-50 font-bold">{number}</h1>
+    <div className="w-full h-[152px] bg-primary-50 rounded-[20px] flex flex-col items-center justify-center gap-4">
+      <h3 className="text-[16px] text-neutral-800 font-semibold">{title}</h3>
+      <h1 className={`text-[40px] ${background} font-bold`}>{number}</h1>
     </div>
   );
 };
@@ -86,22 +84,32 @@ const TabQueue = () => {
 
   return (
     <>
-      <section className="grid grid-cols-3 gap-x-5">
-        <CardDashboardQueue
-          title="Total Antrian Hari Ini"
-          number={20}
-          background="bg-secondary-700"
-        />
-        <CardDashboardQueue
-          title="Antrian Ke -"
-          number={10}
-          background="bg-primary-800"
-        />
-        <CardDashboardQueue
-          title="Permohonan Online Hari Ini"
-          number={20}
-          background="bg-primary-700"
-        />
+      <section className="bg-primary-200 px-8 py-9 rounded-[20px] shadow space-y-3">
+        <div className="grid grid-cols-3 gap-x-5">
+          <CardDashboardQueue
+            title="Total Antrian Hari Ini"
+            number={20}
+            background="text-primary-700"
+          />
+          <CardDashboardQueue
+            title="Antrian Ke -"
+            number={10}
+            background="text-secondary-700"
+          />
+          <CardDashboardQueue
+            title="Permohonan Online Hari Ini"
+            number={20}
+            background="text-primary-800"
+          />
+        </div>
+        <div className="flex w-full justify-end space-x-2">
+          <Button className="bg-success-700 hover:bg-success-800 w-20">
+            Call
+          </Button>
+          <Button className="bg-error-700 hover:bg-error-800 w-20">
+            Recall
+          </Button>
+        </div>
       </section>
       <div className="flex gap-x-2 my-4">
         <div className="w-8/12 rounded-[20px] p-6 shadow">
