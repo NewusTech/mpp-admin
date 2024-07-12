@@ -44,6 +44,7 @@ interface InputProps {
   items?: SelectItem[];
   date?: Date | undefined;
   setDate?: (date: Date | undefined) => void;
+  required?: boolean;
 }
 
 const InputComponent = ({
@@ -60,6 +61,7 @@ const InputComponent = ({
   disable,
   valueInput,
   onChangeInputSearch,
+  required,
 }: InputProps) => {
   // const [date, setDate] = useState<Date>();
   if (typeInput === "selectSearch")
@@ -187,6 +189,7 @@ const InputComponent = ({
           id="file"
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-50"
           onChange={onChange}
+          required={required}
         />
         <label
           htmlFor="file"

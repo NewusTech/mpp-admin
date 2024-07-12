@@ -171,11 +171,10 @@ const DetailApproval = ({
           {filteredDataFile?.map((v: any) => (
             <div className="space-y-2 mt-3" key={v.id}>
               <p>{v.layananform_name}</p>
-              <Button
-                // onClick={() =>
-                //   handleDownload(v.data, getFileNameFromUrl(v.data))
-                // }
-                className="mt-2 w-[25vh] rounded-[20px] bg-neutral-50 hover:bg-neutral-100 shadow p-3 flex justify-around items-center"
+              <Link
+                href={v.data}
+                target="_blank"
+                className="mt-2 w-[15%] rounded-[20px] bg-neutral-50 hover:bg-neutral-100 shadow p-3 flex justify-around items-center"
               >
                 <Image
                   src="/icons/download.svg"
@@ -183,8 +182,10 @@ const DetailApproval = ({
                   width={24}
                   height={24}
                 />
-                <p className="text-neutral-900">{v.layananform_name}</p>
-              </Button>
+                <p className="text-neutral-900 truncate">
+                  {v.layananform_name}
+                </p>
+              </Link>
             </div>
           ))}
           <h2 className="text-lg font-semibold my-5">

@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CardTypeFile } from "@/types/interface";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
@@ -16,6 +16,7 @@ import { fetcher } from "@/lib/fetch";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Loader } from "lucide-react";
 import useUpdateRequirementStore from "@/lib/store/useUpdateRequirementStore";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const steps = [
   { id: 1, title: "1" },
@@ -44,6 +45,7 @@ const CreateManageRequirementPageStep3 = () => {
       id: item.id,
       field: item.field,
       tipedata: item.tipedata,
+      isrequired: item.isrequired ? "1" : "0",
     }));
     setCards(initialCards);
   }, [docs]);
@@ -99,6 +101,7 @@ const CreateManageRequirementPageStep3 = () => {
     const requestData = cards.map((card) => ({
       id: card.id,
       field: card.field,
+      isrequired: card.isrequired,
     }));
 
     try {
@@ -167,23 +170,42 @@ const CreateManageRequirementPageStep3 = () => {
                   handleInputChange(card.id, "field", e.target.value)
                 }
               />
-              <div className="mt-8">
-                <div className="flex items-center gap-x-4">
-                  <p className="text-sm text-neutral-900">
-                    Hanya izinkan dengan file tertentu
-                  </p>
-                  <Switch
-                    onClick={() => handleSwitch(card.id)}
-                    className="data-[state=checked]:bg-neutral-800 data-[state=unchecked]:bg-transparent data-[state=unchecked]:border data-[state=unchecked]:border-neutral-800"
-                    thumbClassName="data-[state=unchecked]:border data-[state=unchecked]:border-neutral-800 data-[state=unchecked]:ml-[2px]"
-                  />
-                </div>
-                {card.toggle && (
-                  <div className="w-[321px] flex mt-6">
-                    <InputComponent typeInput="radio" />
+              <div className="space-y-2 text-sm text-neutral-900">
+                <p>Apakah wajib diisi?</p>
+                <RadioGroup
+                  onValueChange={(e) =>
+                    handleInputChange(card.id, "isrequired", parseInt(e))
+                  }
+                  defaultValue={card?.isrequired}
+                  className="flex space-x-1"
+                >
+                  <div className="flex items-center space-x-2 space-y-0">
+                    <RadioGroupItem value="1" />
+                    <p className="font-normal">Ya</p>
                   </div>
-                )}
+                  <div className="flex items-center space-x-2 space-y-0">
+                    <RadioGroupItem value="0" />
+                    <p className="font-normal">Tidak</p>
+                  </div>
+                </RadioGroup>
               </div>
+              {/*<div className="mt-8">*/}
+              {/*  <div className="flex items-center gap-x-4">*/}
+              {/*    <p className="text-sm text-neutral-900">*/}
+              {/*      Hanya izinkan dengan file tertentu*/}
+              {/*    </p>*/}
+              {/*    <Switch*/}
+              {/*      onClick={() => handleSwitch(card.id)}*/}
+              {/*      className="data-[state=checked]:bg-neutral-800 data-[state=unchecked]:bg-transparent data-[state=unchecked]:border data-[state=unchecked]:border-neutral-800"*/}
+              {/*      thumbClassName="data-[state=unchecked]:border data-[state=unchecked]:border-neutral-800 data-[state=unchecked]:ml-[2px]"*/}
+              {/*    />*/}
+              {/*  </div>*/}
+              {/*  {card.toggle && (*/}
+              {/*    <div className="w-[321px] flex mt-6">*/}
+              {/*      <InputComponent typeInput="radio" />*/}
+              {/*    </div>*/}
+              {/*  )}*/}
+              {/*</div>*/}
               <div className="flex justify-end mt-3">
                 <div
                   className="cursor-pointer"

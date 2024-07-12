@@ -4,7 +4,7 @@ import { Slider } from "@/types/type";
 import AlertDialogCreateMasterFlow from "@/app/(root)/master/flow-mpp/DialogForm";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
-async function getData(): Promise<Slider> {
+async function getData(): Promise<Slider[]> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/user/alurmpp/get`,
     {
@@ -17,14 +17,11 @@ async function getData(): Promise<Slider> {
 
 const MasterFlow = async () => {
   const data = await getData();
-  const result: Slider[] = [data];
+  const result = data;
 
   return (
     <ProtectedRoute roles={["Super Admin"]}>
       <section className="mr-16">
-        <div className="flex justify-end mb-8">
-          <AlertDialogCreateMasterFlow />
-        </div>
         <DataTables columns={flowColumns} data={result} filterBy="image" />
       </section>
     </ProtectedRoute>

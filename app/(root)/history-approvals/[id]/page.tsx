@@ -59,21 +59,6 @@ const DetailHistoryApproval = ({
     (item: any) => item.layananform_tipedata === "file",
   );
 
-  const handleDownload = (url: string, filename: string) => {
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", filename);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-  };
-
-  // Extract filename and extension from URL
-  const getFileNameFromUrl = (url: string) => {
-    const urlParts = url.split("/");
-    return urlParts[urlParts.length - 1];
-  };
-
   const handleValidationStatus = async () => {
     try {
       const response = await fetch(
@@ -147,11 +132,10 @@ const DetailHistoryApproval = ({
           {filteredDataFile?.map((v: any) => (
             <div className="space-y-2 mt-3" key={v.id}>
               <p>{v.layananform_name}</p>
-              <Button
-                onClick={() =>
-                  handleDownload(v.data, getFileNameFromUrl(v.data))
-                }
-                className="mt-2 w-[25vh] space-x-3 rounded-[20px] bg-neutral-50 hover:bg-neutral-100 shadow p-3 flex justify-around items-center"
+              <Link
+                href={v.data}
+                target="_blank"
+                className="mt-2 w-[15%] rounded-[20px] bg-neutral-50 hover:bg-neutral-100 shadow p-3 flex space-x-3 justify-around items-center"
               >
                 <Image
                   src="/icons/download.svg"
@@ -159,23 +143,32 @@ const DetailHistoryApproval = ({
                   width={24}
                   height={24}
                 />
-                <p className="text-neutral-900">{v.layananform_name}</p>
-              </Button>
+                <p className="text-neutral-900 truncate">
+                  {v.layananform_name}
+                </p>
+              </Link>
             </div>
           ))}
           <h2 className="text-lg font-semibold my-5">
             Dokumen Hasil Permohonan
           </h2>
-          <Button className="w-[25vh] rounded-[20px] bg-neutral-50 hover:bg-neutral-100 shadow p-3 flex justify-around items-center">
-            <Image
-              src="/icons/download.svg"
-              alt="download"
-              width={24}
-              height={24}
-            />
-            <p className="text-neutral-900">Dokumen</p>
-          </Button>
-          {serviceForm?.status !== 0 && serviceForm?.status !== 2 ? (
+          {result?.fileoutput ? (
+            <Link
+              href={result?.fileoutput}
+              className="w-[25vh] rounded-[20px] bg-neutral-50 hover:bg-neutral-100 shadow p-3 flex justify-around items-center"
+            >
+              <Image
+                src="/icons/download.svg"
+                alt="download"
+                width={24}
+                height={24}
+              />
+              <p className="text-neutral-900">Dokumen</p>
+            </Link>
+          ) : (
+            "Tidak ada"
+          )}
+          {result?.status === 4 || result?.status === 2 ? (
             <Button
               onClick={handleValidationStatus}
               className="mt-7 w-full rounded-full bg-success-700 hover:bg-success-800"
@@ -183,12 +176,22 @@ const DetailHistoryApproval = ({
               Selesai
             </Button>
           ) : (
-            <Button
-              className="mt-7 w-full rounded-full bg-success-700 hover:bg-success-800"
-              disabled={true}
-            >
-              Selesai
-            </Button>
+            <div>
+              <Button
+                className="mt-7 w-full rounded-full bg-success-700 hover:bg-success-800"
+                disabled={true}
+              >
+                Selesai
+              </Button>
+              <p className="italic text-xs">
+                Status permohonan
+                {result?.status === 0
+                  ? " masih menunggu"
+                  : result?.status === 1
+                    ? " sudah divalidasi"
+                    : " sudah selesai"}
+              </p>
+            </div>
           )}
         </div>
       </section>

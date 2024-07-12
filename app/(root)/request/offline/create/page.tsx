@@ -498,7 +498,7 @@ const CreateOffline = () => {
                 <div className="space-y-2" key={v.id}>
                   <p>
                     {v.field}
-                    <span className="text-error-700">
+                    <span className="text-error-700 ml-1">
                       {v.isrequired ? "*" : ""}
                     </span>
                   </p>
@@ -581,7 +581,10 @@ const CreateOffline = () => {
             >
               <div className="w-11/12 space-y-2">
                 <h3 className="font-semibold text-[16px] text-primary-800">
-                  {v.field}
+                  {v.field}{" "}
+                  <span className="text-error-700 ml-1">
+                    {v.isrequired ? "*" : ""}
+                  </span>
                 </h3>
               </div>
               <div>
@@ -594,6 +597,7 @@ const CreateOffline = () => {
                       e.target.files ? e.target.files[0] : null,
                     )
                   }
+                  required={v.isrequired}
                 />
               </div>
             </div>

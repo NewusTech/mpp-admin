@@ -104,6 +104,7 @@ export const carouselValidation = z.object({
 });
 
 export const FlowValidation = z.object({
+  title: z.string({ message: "Wajib Diisi" }),
   image: z.custom<File[]>(),
 });
 

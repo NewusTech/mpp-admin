@@ -47,6 +47,7 @@ import AlertDialogUpdateSurvey from "@/app/(root)/survey/question/DialogFormUpda
 import SwitchActive from "@/components/SwitchActive";
 import AlertDialogUpdateMasterFlowBooking from "@/app/(root)/master/flow-booking/DialogFormUpdate";
 import AlertDialogUpdateMasterFlowPermohonan from "@/app/(root)/master/flow-request/DialogFormUpdate";
+import AlertDialogCreateMasterFlow from "@/app/(root)/master/flow-mpp/DialogForm";
 
 function formatDate(dateString: any) {
   const date = new Date(dateString);
@@ -493,9 +494,9 @@ export const dataAppsColumns: ColumnDef<DataApps>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href={`/master/master-apps/${instance.slug}`}>Edit</Link>
-            </DropdownMenuItem>
+            <Link href={`/master/master-apps/${instance.slug}`}>
+              <DropdownMenuItem>Edit</DropdownMenuItem>
+            </Link>
             <ModalDelete endpoint={`aplikasietc/delete/${instance.slug}`} />
           </DropdownMenuContent>
         </DropdownMenu>
@@ -532,11 +533,11 @@ export const dataInstanceColumns: ColumnDef<DataInstance>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer">
-              <Link href={`/master/master-instance/${instance.slug}`}>
+            <Link href={`/master/master-instance/${instance.slug}`}>
+              <DropdownMenuItem className="cursor-pointer">
                 Edit
-              </Link>
-            </DropdownMenuItem>
+              </DropdownMenuItem>
+            </Link>
             <ModalDelete endpoint={`instansi/delete/${instance.slug}`} />
           </DropdownMenuContent>
         </DropdownMenu>
@@ -577,9 +578,9 @@ export const dataServiceColumns: ColumnDef<DataServices>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href={`/master/master-service/${service.id}`}>Edit</Link>
-            </DropdownMenuItem>
+            <Link href={`/master/master-service/${service.id}`}>
+              <DropdownMenuItem>Edit</DropdownMenuItem>
+            </Link>
             <ModalDelete endpoint={`layanan/delete/${service.id}`} />
           </DropdownMenuContent>
         </DropdownMenu>
@@ -613,9 +614,11 @@ export const manageRequirementColumns: ColumnDef<ManageRequirements>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer">
-              <Link href={`/manage-requirement/${requirement.id}`}>Edit</Link>
-            </DropdownMenuItem>
+            <Link href={`/manage-requirement/${requirement.id}`}>
+              <DropdownMenuItem className="cursor-pointer">
+                Edit
+              </DropdownMenuItem>
+            </Link>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -753,9 +756,11 @@ export const newsColumns: ColumnDef<News>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer">
-              <Link href={`/articles/${article.slug}`}>Edit</Link>
-            </DropdownMenuItem>
+            <Link href={`/articles/${article.slug}`}>
+              <DropdownMenuItem className="cursor-pointer">
+                Edit
+              </DropdownMenuItem>
+            </Link>
             <ModalDelete endpoint={`artikel/delete/${article.slug}`} />
           </DropdownMenuContent>
         </DropdownMenu>
@@ -806,9 +811,9 @@ export const manageUserColumns: ColumnDef<ManageUser>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href={`/manage-user/${user.slug}`}>Edit</Link>
-            </DropdownMenuItem>
+            <Link href={`/manage-user/${user.slug}`}>
+              <DropdownMenuItem>Edit</DropdownMenuItem>
+            </Link>
             <ModalDelete endpoint={`alluserinfo/delete/${user.slug}`} />
           </DropdownMenuContent>
         </DropdownMenu>
@@ -952,6 +957,10 @@ export const carouselColumns: ColumnDef<Facility>[] = [
 
 export const flowColumns: ColumnDef<Slider>[] = [
   {
+    accessorKey: "title",
+    header: "Judul",
+  },
+  {
     accessorKey: "image",
     header: "Gambar",
     cell: ({ row }) => {
@@ -960,6 +969,28 @@ export const flowColumns: ColumnDef<Slider>[] = [
         <div>
           <Image src={flow.image} alt="image" width={200} height={200} />
         </div>
+      );
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const flow = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <AlertDialogCreateMasterFlow id={flow.id} />
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
   },

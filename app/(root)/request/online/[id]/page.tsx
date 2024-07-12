@@ -62,21 +62,6 @@ const DetailRequestOnline = ({
     (item: any) => item.layananform_tipedata === "file",
   );
 
-  const handleDownload = (url: string, filename: string) => {
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", filename);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-  };
-
-  // Extract filename and extension from URL
-  const getFileNameFromUrl = (url: string) => {
-    const urlParts = url.split("/");
-    return urlParts[urlParts.length - 1];
-  };
-
   const handleValidationStatus = async () => {
     setIsLoading(true);
     try {
@@ -140,6 +125,7 @@ const DetailRequestOnline = ({
               />
             </div>
           </div>
+
           <h2 className="text-lg font-semibold my-5">Formulir</h2>
           {filteredData?.map((v: any) => (
             <div className="space-y-2 mt-3" key={v.id}>
@@ -155,7 +141,8 @@ const DetailRequestOnline = ({
               <p>{v.layananform_name}</p>
               <Link
                 href={v.data}
-                className="mt-2 w-[25vh] rounded-[20px] bg-neutral-50 hover:bg-neutral-100 shadow p-3 flex justify-around items-center"
+                target="_blank"
+                className="mt-2 w-[15%] rounded-[20px] bg-neutral-50 hover:bg-neutral-100 shadow p-3 flex justify-around items-center"
               >
                 <Image
                   src="/icons/download.svg"
@@ -163,7 +150,9 @@ const DetailRequestOnline = ({
                   width={24}
                   height={24}
                 />
-                <p className="text-neutral-900">{v.layananform_name}</p>
+                <p className="text-neutral-900 truncate">
+                  {v.layananform_name}
+                </p>
               </Link>
             </div>
           ))}

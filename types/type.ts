@@ -116,6 +116,7 @@ export type Facility = {
 
 export type Slider = {
   id: number;
+  title: string;
   image: string;
 };
 
