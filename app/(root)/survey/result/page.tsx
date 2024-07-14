@@ -26,6 +26,8 @@ const SurveyResult = () => {
   const [instansiId, setInstansiId] = useState<number | null>(null);
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -116,7 +118,7 @@ const SurveyResult = () => {
   return (
     <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
       <section className="mr-16">
-        <div className="flex justify-between mb-8">
+        <div className="flex justify-between mb-8 space-x-3">
           <div className="w-1/2">
             {role !== "Admin Instansi" && (
               <InputComponent
@@ -132,6 +134,19 @@ const SurveyResult = () => {
                 onChange={(e: any) => setInstance(e)}
               />
             )}
+          </div>
+          <div className="flex w-5/12 items-center gap-x-2">
+            <InputComponent
+              typeInput="datepicker"
+              date={startDate}
+              setDate={(e) => setStartDate(e)}
+            />
+            <p>to</p>
+            <InputComponent
+              typeInput="datepicker"
+              date={endDate}
+              setDate={(e) => setEndDate(e)}
+            />
           </div>
           {instance || role === "Admin Instansi" || role === "Staff Admin" ? (
             <Button
