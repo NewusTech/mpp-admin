@@ -10,16 +10,12 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import ManageApproval from "@/components/ManageApproval";
 
 interface JwtPayload {
   role?: string;
   instansi_id: number;
 }
-
-const buttons: any = [
-  { label: "Offline", value: 0 },
-  { label: "Online", value: 1 },
-];
 
 const ManageApprovals = () => {
   const [activeButton, setActiveButton] = useState("");
@@ -95,24 +91,6 @@ const ManageApprovals = () => {
     instanceId2 = instanceId;
   }
 
-  const params = {
-    instansi_id: instanceId2,
-    layanan_id: serviceId,
-    limit: 10000000,
-    isOnline: activeButton, // atau false
-    start_date: startDate, // atau undefined
-    end_date: endDate, // atau undefined
-    status: 1,
-  };
-
-  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;
-
-  // Bangun URL berdasarkan role dan instanceId
-  const fixUrl = buildUrl(baseUrl, params);
-
-  // Gunakan URL yang dibangun dengan useSWR
-  const { data: histories } = useSWR<any>(fixUrl, fetcher);
-
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       setSearchTermInstance(searchInputInstance);
@@ -124,11 +102,6 @@ const ManageApprovals = () => {
 
   const result = data?.data;
   const serviceAll = services?.data;
-  const historyAll = histories?.data;
-
-  const handleClick = (value: any) => {
-    setActiveButton(value);
-  };
 
   return (
     <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Staff Instansi"]}>
@@ -161,44 +134,7 @@ const ManageApprovals = () => {
             />
           </div>
         </div>
-        <div className="flex justify-between ">
-          <div className="flex gap-x-3">
-            {buttons.map((button: any) => (
-              <Button
-                key={button.value}
-                className={`border border-primary-700 hover:bg-primary-700 hover:text-neutral-50 w-[140px] rounded-full ${
-                  activeButton === button.value
-                    ? "bg-primary-700 text-neutral-50"
-                    : "bg-transparent text-primary-700"
-                }`}
-                onClick={() => handleClick(button.value)}
-              >
-                {button.label}
-              </Button>
-            ))}
-          </div>
-          <div className="flex w-6/12 items-center gap-x-2 justify-end">
-            <InputComponent
-              typeInput="datepicker"
-              date={startDate}
-              setDate={(e) => setStartDate(e)}
-            />
-            <p>to</p>
-            <InputComponent
-              typeInput="datepicker"
-              date={endDate}
-              setDate={(e) => setEndDate(e)}
-            />
-          </div>
-        </div>
-        {histories && (
-          <DataTables
-            columns={manageApprovalColumns}
-            data={historyAll}
-            filterBy="name"
-            type="requirement"
-          />
-        )}
+        <ManageApproval serviceId={serviceId} instanceId={instanceId2} />
       </section>
     </ProtectedRoute>
   );

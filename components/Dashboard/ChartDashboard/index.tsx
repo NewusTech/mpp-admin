@@ -4,7 +4,15 @@ import dynamic from "next/dynamic";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import { ApexOptions } from "apexcharts"; // Import the ApexOptions type
 
-const ChartDashboard = () => {
+interface ChartDashboardProps {
+  monthlyAntrianCounts: { [key: string]: number };
+  permohonanan_bulan: { [key: string]: number };
+}
+
+const ChartDashboard = ({
+  monthlyAntrianCounts,
+  permohonanan_bulan,
+}: ChartDashboardProps) => {
   const option: ApexOptions = {
     chart: {
       id: "apexchart-example",
@@ -39,11 +47,11 @@ const ChartDashboard = () => {
   const series = [
     {
       name: "Booking Antrian",
-      data: [100, 5, 40, 23, 100, 58, 35, 150, 70, 100, 70],
+      data: Object.values(monthlyAntrianCounts),
     },
     {
       name: "Permohonan Layanan Online",
-      data: [76, 85, 101, 98, 87, 105, 91, 114, 94, 14, 200],
+      data: Object.values(permohonanan_bulan),
     },
   ];
 

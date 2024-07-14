@@ -159,3 +159,12 @@ export type Complaint = {
   };
   judul: string;
 };
+
+export type GuestBook = {
+  id: number;
+  name: string;
+  createdAt: string;
+  pekerjaan: string;
+  alamat: string;
+  tujuan?: string | undefined | null;
+};
