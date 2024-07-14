@@ -38,10 +38,12 @@ const ChartDashboard = () => {
 
   const series = [
     {
-      data: [44, 55, 57, 56, 61, 58, 63, 60, 66],
+      name: "Booking Antrian",
+      data: [100, 5, 40, 23, 100, 58, 35, 150, 70, 100, 70],
     },
     {
-      data: [76, 85, 101, 98, 87, 105, 91, 114, 94],
+      name: "Permohonan Layanan Online",
+      data: [76, 85, 101, 98, 87, 105, 91, 114, 94, 14, 200],
     },
   ];
 

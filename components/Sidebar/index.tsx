@@ -187,6 +187,13 @@ const Sidebar = () => {
             />
           )}
           <Nav
+            route="/guest-book"
+            path="/guest-book"
+            icons="/icons/book-open.svg"
+            iconsActive="/icons/book-open-active.svg"
+            title="Buku Tamu"
+          />
+          <Nav
             route="#"
             path="/master"
             icons="/icons/Master.svg"

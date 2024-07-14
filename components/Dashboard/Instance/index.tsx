@@ -9,31 +9,7 @@ import TabSurvey from "@/components/Dashboard/Instance/TabSurvey";
 const InstanceDashboard = () => {
   return (
     <>
-      <div className="flex items-center justify-end">
-        <div className="flex gap-x-6 items-center">
-          <div className="flex items-center space-x-2">
-            <Label htmlFor="airplane-mode" className="text-secondary-700">
-              Offline
-            </Label>
-            <Switch
-              id="airplane-mode"
-              className="data-[state=checked]:bg-secondary-700 data-[state=unchecked]:bg-transparent data-[state=unchecked]:border data-[state=unchecked]:border-secondary-700"
-              thumbClassName="data-[state=unchecked]:border data-[state=unchecked]:border-secondary-700 data-[state=unchecked]:ml-[2px]"
-            />
-          </div>
-          <div className="flex items-center space-x-2">
-            <Label htmlFor="airplane-mode" className="text-primary-700">
-              Online
-            </Label>
-            <Switch
-              id="airplane-mode"
-              className="data-[state=checked]:bg-primary-700 data-[state=unchecked]:bg-transparent data-[state=unchecked]:border data-[state=unchecked]:border-primary-700"
-              thumbClassName="data-[state=unchecked]:border data-[state=unchecked]:border-primary-700 data-[state=unchecked]:ml-[2px]"
-            />
-          </div>
-        </div>
-      </div>
-      <div className="mt-14 rounded-[16px] bg-primary-200 p-8 flex gap-x-[73px] items-center">
+      <div className="rounded-[16px] bg-primary-200 p-8 flex gap-x-[73px] items-center">
         <div className="w-[60px] h-[80px]">
           <Image
             src="/images/logo1.png"

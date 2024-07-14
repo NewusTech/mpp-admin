@@ -3,27 +3,39 @@
 import dynamic from "next/dynamic";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const LineChart = () => {
+const LineChart = ({ data }: { data: [] }) => {
+  const totals = data ? data.map((v: any) => v.total) : [];
+
   const option = {
     chart: {
       id: "line",
     },
     xaxis: {
-      categories: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun"],
+      categories: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "Mei",
+        "Jun",
+        "Jul",
+        "Agus",
+        "Sep",
+        "Okt",
+        "Nov",
+        "Des",
+      ],
     },
-    // stroke: {
-    //   curve: "smooth",
-    // },
     dataLabels: {
       enabled: false,
     },
-    colors: ["#1D3A6C", "#3568C0", "#FF9742"],
+    colors: ["#3568C0"],
   };
 
   const series = [
     {
-      name: "Survey",
-      data: [10, 50, 30, 100, 80, 30],
+      name: "Total Nilai Survey",
+      data: totals,
     },
   ];
 
