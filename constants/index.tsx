@@ -681,6 +681,10 @@ export const surveyResultColumns: ColumnDef<SurveyResult>[] = [
   {
     accessorKey: "Surveyformnums_nilai",
     header: "Jumlah Nilai",
+    cell: ({ row }) => {
+      const value = row.original.Surveyformnums_nilai;
+      return <p>{value !== 0 ? value.toFixed(2) : 0}</p>;
+    },
   },
 ];
 

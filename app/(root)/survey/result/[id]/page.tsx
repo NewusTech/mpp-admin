@@ -12,6 +12,7 @@ import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { useState } from "react";
 import { Loader } from "lucide-react";
+import InputComponent from "@/components/InputComponent";
 
 // async function getData(id: number): Promise<DetailSurveyResult[]> {
 //   const res = await fetch(
@@ -37,6 +38,9 @@ const SurveyPrint = ({
   };
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/${params.id}?limit=1000000`,
     fetcher,
@@ -104,9 +108,22 @@ const SurveyPrint = ({
             />
           </Link>
         </div>
-        <div className="w-full h-full py-8 px-[64px] bg-neutral-50 shadow rounded-[20px]">
+        <div className="w-full h-full py-8 space-y-3 px-[64px] bg-neutral-50 shadow rounded-[20px]">
+          <h1 className="text-xl font-semibold">Jenis Layanan</h1>
           <div className="flex items-center justify-between">
-            <h1 className="text-xl font-semibold">Jenis Layanan</h1>
+            <div className="flex items-center gap-x-2">
+              <InputComponent
+                typeInput="datepicker"
+                date={startDate}
+                setDate={(e) => setStartDate(e)}
+              />
+              <p>to</p>
+              <InputComponent
+                typeInput="datepicker"
+                date={endDate}
+                setDate={(e) => setEndDate(e)}
+              />
+            </div>
             <Button
               disabled={isLoading}
               onClick={handleDownload}
