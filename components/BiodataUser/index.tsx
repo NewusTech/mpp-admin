@@ -62,31 +62,30 @@ export const UserInfoLeft = ({ userInfo, religion, gender }: UserInfoProps) => {
       <UserInfoItem label="Tempat Lahir" value={userInfo?.tempat_lahir} />
       <UserInfoItem label="Agama" value={religion} />
       <UserInfoItem label="Jenis Kelamin" value={gender} />
+      <h3 className="text-lg font-semibold">Dokumen Pendukung</h3>
       <div className="space-y-3">
-        <div className="space-y-3">
-          <h3 className="font-medium">Foto</h3>
-          {userInfo?.foto ? (
-            <DownloadButtonFile label="Foto" value={userInfo?.foto} />
-          ) : (
-            <p>Tidak ada</p>
-          )}
-        </div>
-        <div className="space-y-3">
-          <h3 className="font-medium mt-3">KTP</h3>
-          {userInfo?.filektp ? (
-            <DownloadButtonFile label="ktp" value={userInfo?.filektp} />
-          ) : (
-            <p>Tidak ada</p>
-          )}
-        </div>
-        <div className="space-y-3">
-          <h3 className="font-medium">KK</h3>
-          {userInfo?.filekk ? (
-            <DownloadButtonFile label="Foto" value={userInfo?.filekk} />
-          ) : (
-            <p>Tidak ada</p>
-          )}
-        </div>
+        <h3 className="font-medium">Foto</h3>
+        {userInfo?.foto ? (
+          <DownloadButtonFile label="Foto" value={userInfo?.foto} />
+        ) : (
+          <p>Tidak ada</p>
+        )}
+      </div>
+      <div className="space-y-3">
+        <h3 className="font-medium mt-3">KTP</h3>
+        {userInfo?.filektp ? (
+          <DownloadButtonFile label="ktp" value={userInfo?.filektp} />
+        ) : (
+          <p>Tidak ada</p>
+        )}
+      </div>
+      <div className="space-y-3">
+        <h3 className="font-medium">KK</h3>
+        {userInfo?.filekk ? (
+          <DownloadButtonFile label="Foto" value={userInfo?.filekk} />
+        ) : (
+          <p>Tidak ada</p>
+        )}
       </div>
     </div>
   );
@@ -109,6 +108,7 @@ export const UserInfoRight = ({
       <UserInfoItem label="RT" value={userInfo?.rt} />
       <UserInfoItem label="RW" value={userInfo?.rw} />
       <UserInfoItem label="Alamat" value={userInfo?.alamat} />
+      <br />
       <div className="space-y-3">
         <h3 className="font-medium">Akta Lahir</h3>
         {userInfo?.aktalahir ? (
@@ -133,11 +133,11 @@ const DownloadButtonFile = ({ label, value }: UserFileItemProps) => {
   return (
     <Dialog>
       <DialogTrigger>
-        <div className="w-40 h-20 mb-3">
+        <div className="w-full h-full mb-3">
           <Image src={value} alt={label} width={160} height={160} />
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-[50%]">
+      <DialogContent className="max-w-[50%] h-full overflow-auto">
         <div className="w-full h-full p-4">
           <Image src={value} alt={label} width={1000} height={1000} />
         </div>

@@ -1,14 +1,13 @@
 "use client";
 
 import InputComponent from "@/components/InputComponent";
-import { dataServiceColumns } from "@/constants";
+import { guestBookColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import useSWR from "swr";
-import { fetcher } from "@/lib/fetch";
-import { Button } from "@/components/ui/button";
+import { dataGuestBook, fetcher } from "@/lib/fetch";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 interface JwtPayload {
@@ -22,6 +21,8 @@ const GuestBook = () => {
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<any>(0);
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -46,20 +47,45 @@ const GuestBook = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher
+    fetcher,
   );
 
   const instanceId = Number(instance);
 
-  let url = `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get`;
+  const buildUrl = (baseUrl: string, params: Record<string, any>) => {
+    const url = new URL(baseUrl);
+    // Tambahkan parameter lainnya
+    Object.keys(params).forEach((key) => {
+      if (params[key] !== undefined) {
+        url.searchParams.append(key, params[key]);
+      }
+    });
+
+    return url.toString();
+  };
+
+  let instanceId2;
 
   if (role === "Admin Instansi") {
-    url += `/${instansiId}?limit=10000000`;
-  } else if ("Superadmin") {
-    url += `/${instanceId}?limit=10000000`;
+    instanceId2 = instansiId;
+  } else {
+    instanceId2 = instanceId;
   }
 
-  const { data: services } = useSWR<any>(url, fetcher);
+  const params = {
+    instansi_id: instanceId2,
+    limit: 10000000, // atau false
+    start_date: startDate, // atau undefined
+    end_date: endDate, // atau undefined
+  };
+
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL_KIOSKA}/bukutamu/get`;
+
+  // Bangun URL berdasarkan role dan instanceId
+  const fixUrl = buildUrl(baseUrl, params);
+
+  // Gunakan URL yang dibangun dengan useSWR
+  const { data: guestBook } = useSWR<any>(fixUrl, fetcher);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -70,8 +96,7 @@ const GuestBook = () => {
   }, [searchInputInstance]);
 
   const result = data?.data;
-  const serviceAll = services?.data;
-  console.log(serviceAll);
+  const resultGuestBook = dataGuestBook.data;
 
   return (
     <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Staff Instansi"]}>
@@ -95,24 +120,26 @@ const GuestBook = () => {
               />
             )}
           </div>
-          {/* {instance || role === "Admin Instansi" ? (
-            <AlertDialogCreateService
-              id={role === "Admin Instansi" ? instansiId : instanceId}
+          <div className="flex w-4/12 items-center gap-x-2">
+            <InputComponent
+              typeInput="datepicker"
+              date={startDate}
+              setDate={(e) => setStartDate(e)}
             />
-          ) : (
-            <Button
-              disabled={true}
-              className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
-            >
-              Tambah
-            </Button>
-          )} */}
+            <p>to</p>
+            <InputComponent
+              typeInput="datepicker"
+              date={endDate}
+              setDate={(e) => setEndDate(e)}
+            />
+          </div>
         </div>
-        {serviceAll && (
+        {resultGuestBook && (
           <DataTables
-            columns={dataServiceColumns}
-            data={serviceAll}
+            columns={guestBookColumns}
+            data={resultGuestBook}
             filterBy="name"
+            type="requirement"
           />
         )}
       </section>

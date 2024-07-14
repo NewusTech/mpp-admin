@@ -250,20 +250,22 @@ const TabService = () => {
         </div>
       </div>
       <div className="rounded-[16px] w-full bg-neutral-50 shadow p-12">
-        <div className="rounded-full p-2 border bg-transparent w-[78%] flex space-x-2">
-          {buttons.map((button: any) => (
-            <Button
-              key={button.value}
-              className={`rounded-[20px] ${
-                activeButton === button.value
-                  ? "bg-primary-700 text-neutral-50"
-                  : "bg-transparent text-neutral-800"
-              } hover:text-neutral-50 hover:bg-primary-700`}
-              onClick={() => handleClick(button.value)}
-            >
-              {button.label}
-            </Button>
-          ))}
+        <div className="rounded-full p-2 border bg-transparent w-[600px]">
+          <div className="w-full  flex space-x-2 justify-between">
+            {buttons.map((button: any) => (
+              <Button
+                key={button.value}
+                className={`rounded-[20px] ${
+                  activeButton === button.value
+                    ? "bg-primary-700 text-neutral-50"
+                    : "bg-transparent text-neutral-800"
+                } hover:text-neutral-50 hover:bg-primary-700`}
+                onClick={() => handleClick(button.value)}
+              >
+                {button.label}
+              </Button>
+            ))}
+          </div>
         </div>
         <div className="flex justify-end mt-10">
           <div className="flex items-center w-5/12 space-x-2 ">

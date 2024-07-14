@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { CardDashboardQueueProps } from "@/types/interface";
 import useSWR from "swr";
-import { fetcher } from "@/lib/fetch";
+import { dataKiosk, fetcher, fetcherWithoutAuth } from "@/lib/fetch";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
@@ -84,23 +84,31 @@ const TabQueue = () => {
 
   const result = data?.data;
 
+  // const { data: kioska } = useSWR<any>(
+  //   `${process.env.NEXT_PUBLIC_API_URL_KIOSKA}/dashboard_antrian/${instansiId}`,
+  //   fetcherWithoutAuth,
+  // );
+
+  console.log(dataKiosk);
+  const resultQueue = dataKiosk.data;
+
   return (
     <>
       <section className="bg-primary-200 px-8 py-9 rounded-[20px] shadow space-y-3">
         <div className="grid grid-cols-3 gap-x-5">
           <CardDashboardQueue
             title="Total Antrian Hari Ini"
-            number={20}
+            number={resultQueue.AntrianCount}
             background="text-primary-700"
           />
           <CardDashboardQueue
-            title="Antrian Ke -"
-            number={10}
+            title="Antrian Diproses"
+            number={resultQueue.AntrianProsesCount}
             background="text-secondary-700"
           />
           <CardDashboardQueue
-            title="Permohonan Online Hari Ini"
-            number={20}
+            title="Antrian Selanjutnya"
+            number={resultQueue.AntrianNextCount}
             background="text-primary-800"
           />
         </div>
@@ -134,7 +142,10 @@ const TabQueue = () => {
             </p>
           </div>
         </div>
-        <ChartDashboard />
+        <ChartDashboard
+          monthlyAntrianCounts={resultQueue.monthlyAntrianCounts}
+          permohonanan_bulan={resultQueue.permohonanan_bulan}
+        />
       </div>
       <h4 className="text-neutral-900 text-[16px] font-semibold">
         Aktif/nonaktifkan seluruh layanan

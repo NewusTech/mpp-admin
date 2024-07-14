@@ -21,6 +21,7 @@ import {
   Facility,
   FAQ,
   FlowBooking,
+  GuestBook,
   ManageApprovals,
   ManageRequirements,
   ManageUser,
@@ -1203,6 +1204,40 @@ export const complaintColumns: ColumnDef<Complaint>[] = [
         </div>
       );
     },
+  },
+];
+
+export const guestBookColumns: ColumnDef<GuestBook>[] = [
+  {
+    accessorKey: "createdAt",
+    header: "Tanggal",
+    cell: ({ row }) => {
+      return <p>{formatDate(row.original.createdAt)}</p>;
+    },
+  },
+  {
+    accessorKey: "name",
+    header: "Nama",
+    cell: ({ row }) => {
+      const name = row.original;
+      return (
+        <Link href={`/guest-book/${name.id}`} className="underline">
+          {name.name}
+        </Link>
+      );
+    },
+  },
+  {
+    accessorKey: "pekerjaan",
+    header: "Pekerjaan",
+  },
+  {
+    accessorKey: "alamat",
+    header: "Alamat",
+  },
+  {
+    accessorKey: "tujuan",
+    header: "Tujuan",
   },
 ];
 
