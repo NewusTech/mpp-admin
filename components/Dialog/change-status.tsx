@@ -10,6 +10,9 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import Image from "next/image";
 import useQueueStore from "@/lib/store/useQueueStore";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
+import { Loader } from "lucide-react";
 
 export function AlertDialogChangeStatus() {
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -25,7 +28,29 @@ export function AlertDialogChangeStatus() {
   };
 
   const handleSubmit = async () => {
-    console.log(switchValues);
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/updatestatus`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+          body: JSON.stringify(switchValues),
+        },
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        toast(data.message);
+        handleAddModalClose();
+      }
+    } catch (e) {
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -47,8 +72,9 @@ export function AlertDialogChangeStatus() {
           <AlertDialogAction
             onClick={handleSubmit}
             className="bg-success-700 hover:bg-success-800 text-neutral-50 rounded-full px-[37px]"
+            disabled={isLoading}
           >
-            YA
+            {isLoading ? <Loader className="animate-spin" /> : "YA"}
           </AlertDialogAction>
           <AlertDialogCancel
             type="button"
