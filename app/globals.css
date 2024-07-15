@@ -94,4 +94,14 @@
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: #8aa9df;
   }
+
+  .prose ol {
+    list-style-type: decimal;
+    margin-left: 3em;
+  }
+
+  .prose ul {
+    list-style-type: disc;
+    margin-left: 3em;
+  }
 }

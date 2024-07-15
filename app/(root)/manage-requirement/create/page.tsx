@@ -10,6 +10,7 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import { useEffect, useState } from "react";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { RichTextDisplay } from "@/components/RichTextDisplay";
 
 const steps = [
   { id: 1, title: "1" },
@@ -103,11 +104,9 @@ const CreateManageRequirementPage = () => {
           </div>
           <div className="space-y-2">
             <p>Informasi Layanan</p>
-            <InputComponent
-              typeInput="textarea"
-              disable={true}
-              value={informationService}
-            />
+            <div className="rounded-[20px] w-full h-full bg-neutral-100 border p-3 text-slate-500">
+              <RichTextDisplay content={informationService || "Pilih dulu"} />
+            </div>
           </div>
           <div className="flex justify-center items-center pt-8">
             <Link href="/manage-requirement/create/step-2">

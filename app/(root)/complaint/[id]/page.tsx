@@ -12,6 +12,29 @@ import { Loader } from "lucide-react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+
+interface UserFileItemProps {
+  label: string;
+  value: string;
+}
+
+const PopupImage = ({ label, value }: UserFileItemProps) => {
+  return (
+    <Dialog>
+      <DialogTrigger>
+        <div className="w-full h-full mb-3">
+          <Image src={value} alt={label} width={160} height={160} />
+        </div>
+      </DialogTrigger>
+      <DialogContent className="max-w-[50%] overflow-auto">
+        <div className="w-full h-full p-4">
+          <Image src={value} alt={label} width={1000} height={1000} />
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 const Instance = ({ title, name }: { title: string; name: string }) => {
   return (
@@ -83,13 +106,17 @@ export default function DetailComplaint({
           </Link>
         </div>
         <div className="rounded-[20px] w-full bg-neutral-200 p-8">
-          <h1 className="font-medium">Nama</h1>
-          <p className="text-sm">NIK</p>
+          <h1 className="font-medium">{result?.Userinfo?.name}</h1>
+          <p className="text-sm">{result?.Userinfo?.nik}</p>
           <div className="space-y-3 mt-8">
             <Instance title="Instansi" name={result?.Instansi?.name} />
             <Instance title="Layanan" name={result?.Layanan?.name} />
             <Instance title="Judul Pengaduan" name={result?.judul} />
             <Instance title="Aduan" name={result?.aduan} />
+            <div className="space-y-3 my-3">
+              <h3 className="font-medium">Foto</h3>
+              <PopupImage label="image" value={result?.image} />
+            </div>
           </div>
           <div className="mt-8 space-y-2">
             <h3 className="font-medium">Balasan</h3>
