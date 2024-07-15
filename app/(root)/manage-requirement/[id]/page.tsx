@@ -10,6 +10,7 @@ import { fetcher } from "@/lib/fetch";
 import useUpdateRequirementStore from "@/lib/store/useUpdateRequirementStore";
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { RichTextDisplay } from "@/components/RichTextDisplay";
 
 const steps = [
   { id: 1, title: "1" },
@@ -80,11 +81,9 @@ const UpdateManageRequirementPage = ({
           </div>
           <div className="space-y-2">
             <p>Informasi Layanan</p>
-            <InputComponent
-              typeInput="textarea"
-              disable={true}
-              value={serviceOne?.desc}
-            />
+            <div className="rounded-[20px] w-full h-full bg-neutral-100 border p-3 text-slate-500">
+              <RichTextDisplay content={serviceOne?.desc} />
+            </div>
           </div>
           <div className="flex justify-center items-center pt-8">
             <Button

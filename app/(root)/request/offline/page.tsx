@@ -99,6 +99,7 @@ const RequestOffline = () => {
     start_date: startDate, // atau undefined
     end_date: endDate, // atau undefined
     isonline: 0,
+    status: 1,
   };
 
   const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;

@@ -1,14 +1,5 @@
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import Link from "next/link";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 interface UserInfoProps {
   userInfo: {
@@ -51,7 +42,6 @@ interface UserFileItemProps {
 }
 
 export const UserInfoLeft = ({ userInfo, religion, gender }: UserInfoProps) => {
-  console.log(userInfo);
   return (
     <div className="space-y-3">
       <UserInfoItem label="NIK" value={userInfo?.nik} />
@@ -137,7 +127,7 @@ const DownloadButtonFile = ({ label, value }: UserFileItemProps) => {
           <Image src={value} alt={label} width={160} height={160} />
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-[50%] h-full overflow-auto">
+      <DialogContent className="max-w-[50%] overflow-auto">
         <div className="w-full h-full p-4">
           <Image src={value} alt={label} width={1000} height={1000} />
         </div>

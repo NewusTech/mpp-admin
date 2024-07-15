@@ -49,6 +49,7 @@ import SwitchActive from "@/components/SwitchActive";
 import AlertDialogUpdateMasterFlowBooking from "@/app/(root)/master/flow-booking/DialogFormUpdate";
 import AlertDialogUpdateMasterFlowPermohonan from "@/app/(root)/master/flow-request/DialogFormUpdate";
 import AlertDialogCreateMasterFlow from "@/app/(root)/master/flow-mpp/DialogForm";
+import { RichTextDisplay } from "@/components/RichTextDisplay";
 
 function formatDate(dateString: any) {
   const date = new Date(dateString);
@@ -58,31 +59,6 @@ function formatDate(dateString: any) {
   const year = date.getFullYear();
 
   return `${day}-${month}-${year}`;
-}
-
-function stripHtmlTags(html: string): string {
-  // Replace <br> and <li> with newlines to preserve structure
-  html = html.replace(/<br\s*\/?>/gi, "\n");
-  html = html.replace(/<\/li>\s*<li>/gi, "\n");
-
-  // Handle ordered and unordered lists
-  html = html.replace(/<\/?(ul|ol|li)>/gi, "");
-
-  // Replace other HTML tags with empty string
-  html = html.replace(/<\/?[^>]+(>|$)/g, "");
-
-  // Replace HTML entities with corresponding characters
-  html = html.replace(/&nbsp;/g, " ");
-  html = html.replace(/&amp;/g, "&");
-  html = html.replace(/&quot;/g, '"');
-  html = html.replace(/&lt;/g, "<");
-  html = html.replace(/&gt;/g, ">");
-
-  // Remove extra newlines and spaces
-  html = html.replace(/\n\s*\n/g, "\n"); // Replace multiple newlines with single newline
-  html = html.replace(/^\s+|\s+$/g, ""); // Trim leading and trailing spaces
-
-  return html;
 }
 
 export const queueColumns: ColumnDef<QueueTab>[] = [
@@ -1143,7 +1119,7 @@ export const VisionMissionColumns: ColumnDef<VisionMission>[] = [
     header: "Visi",
     cell: ({ row }) => {
       const visi = row.original.visi;
-      return <p>{stripHtmlTags(visi)}</p>;
+      return <RichTextDisplay content={visi} />;
     },
   },
   {
@@ -1151,7 +1127,7 @@ export const VisionMissionColumns: ColumnDef<VisionMission>[] = [
     header: "Misi",
     cell: ({ row }) => {
       const misi = row.original.misi;
-      return <p>{stripHtmlTags(misi)}</p>;
+      return <RichTextDisplay content={misi} />;
     },
   },
 ];
@@ -1162,7 +1138,7 @@ export const termAndConditionColumns: ColumnDef<TermAndCondition>[] = [
     header: "Deskripsi Syarat & Ketentuan",
     cell: ({ row }) => {
       const desc = row.original.desc;
-      return <>{stripHtmlTags(desc)}</>;
+      return <RichTextDisplay content={desc} />;
     },
   },
 ];

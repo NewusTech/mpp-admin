@@ -23,6 +23,8 @@ import { Button } from "@/components/ui/button";
 import { AlertDialogChangeStatus } from "@/components/Dialog/change-status";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { AlertDialogChangeStatusRequest } from "@/components/Dialog/change-active-request";
+import { AlertDialogChangeStatusRequestNonactive } from "@/components/Dialog/change-nonactive-request";
 
 interface JwtPayload {
   role?: string;
@@ -47,6 +49,8 @@ const TabQueue = () => {
   const [showButton, setShowButton] = useState(false);
   const [instansiId, setInstansiId] = useState<any>(0);
   const { switchValues } = useQueueStore();
+  const [checkedRequest, setCheckedRequest] = useState(false);
+  const [checkedBooking, setCheckedBooking] = useState(false);
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -89,7 +93,6 @@ const TabQueue = () => {
   //   fetcherWithoutAuth,
   // );
 
-  console.log(dataKiosk);
   const resultQueue = dataKiosk.data;
 
   return (
@@ -147,50 +150,32 @@ const TabQueue = () => {
           permohonanan_bulan={resultQueue.permohonanan_bulan}
         />
       </div>
-      <h4 className="text-neutral-900 text-[16px] font-semibold">
+      <h4 className="text-neutral-900 text-[16px] font-semibold text-right">
         Aktif/nonaktifkan seluruh layanan
       </h4>
-      <div className="bg-neutral-50 shadow px-4 py-5 rounded-[20px] my-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Label
-              htmlFor="airplane-mode"
-              className="text-primary-800 font-semibold"
-            >
-              Booking Online
-            </Label>
-            <Switch
-              id="airplane-mode"
-              className="data-[state=checked]:bg-primary-800 data-[state=unchecked]:bg-transparent data-[state=unchecked]:border data-[state=unchecked]:border-primary-800"
-              thumbClassName="data-[state=unchecked]:border data-[state=unchecked]:border-primary-800 data-[state=unchecked]:ml-[2px]"
-            />
-          </div>
-          <div className="flex items-center space-x-2">
-            <Label
-              htmlFor="airplane-mode"
-              className="text-primary-700 font-semibold"
-            >
-              Booking Offline
-            </Label>
-            <Switch
-              id="airplane-mode"
-              className="data-[state=checked]:bg-primary-700 data-[state=unchecked]:bg-transparent data-[state=unchecked]:border data-[state=unchecked]:border-primary-700"
-              thumbClassName="data-[state=unchecked]:border data-[state=unchecked]:border-primary-700 data-[state=unchecked]:ml-[2px]"
-            />
-          </div>
-          <div className="flex items-center space-x-2">
-            <Label
-              htmlFor="airplane-mode"
-              className="text-secondary-700 font-semibold"
-            >
-              Permohonan Online
-            </Label>
-            <Switch
-              id="airplane-mode"
-              className="data-[state=checked]:bg-secondary-700 data-[state=unchecked]:bg-transparent data-[state=unchecked]:border data-[state=unchecked]:border-secondary-700"
-              thumbClassName="data-[state=unchecked]:border data-[state=unchecked]:border-secondary-700 data-[state=unchecked]:ml-[2px]"
-            />
-          </div>
+      <div className="flex items-center justify-end space-x-5 my-6 bg-neutral-50 shadow rounded-full p-4">
+        {/*<div className="flex items-center space-x-2">*/}
+        {/*  <Label*/}
+        {/*    htmlFor="airplane-mode"*/}
+        {/*    className="text-primary-700 font-semibold"*/}
+        {/*  >*/}
+        {/*    Booking Offline*/}
+        {/*  </Label>*/}
+        {/*  <Switch*/}
+        {/*    id="airplane-mode"*/}
+        {/*    className="data-[state=checked]:bg-primary-700 data-[state=unchecked]:bg-transparent data-[state=unchecked]:border data-[state=unchecked]:border-primary-700"*/}
+        {/*    thumbClassName="data-[state=unchecked]:border data-[state=unchecked]:border-primary-700 data-[state=unchecked]:ml-[2px]"*/}
+        {/*  />*/}
+        {/*</div>*/}
+        <div className="flex items-center space-x-2">
+          <Label
+            htmlFor="airplane-mode"
+            className="text-secondary-700 font-semibold"
+          >
+            Permohonan Online
+          </Label>
+          <AlertDialogChangeStatusRequest id={instansiId} />
+          <AlertDialogChangeStatusRequestNonactive id={instansiId} />
         </div>
       </div>
       <h4 className="text-neutral-900 text-[16px] font-semibold">
