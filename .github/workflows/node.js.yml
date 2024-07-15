@@ -23,20 +23,14 @@ jobs:
     - name : git pull
       run : git pull
     - name : Run NPM
-      working-directory: ./mpp-admin
       run: npm install
     - name : Run build
-      working-directory: ./mpp-admin
       run: npm run build --if-present
     - name : Install PM2
-      working-directory: ./mpp-admin
       run : npm install pm2@latest -g 
     - name : check pm2 version
-      working-directory: ./mpp-admin
       run : pm2 -V
     - name : check pm2 list
-      working-directory: ./mpp-admin
       run : pm2 list
     - name : Start Apps
-      working-directory: ./mpp-admin
       run: pm2 start npm --name mpp-admin.newus.id -- start -- --port 3008
