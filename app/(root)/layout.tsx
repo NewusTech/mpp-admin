@@ -4,15 +4,20 @@ import Sidebar from "@/components/Sidebar";
 import { useEffect, useState } from "react";
 import useAuthStore from "@/lib/store/useAuthStore";
 import { Loader } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const initialize = useAuthStore((state) => state.initialize);
-  const isInitialized = useAuthStore((state) => state.isInitialized);
+  const { initialize, isInitialized, user } = useAuthStore((state) => ({
+    initialize: state.initialize,
+    isInitialized: state.isInitialized,
+    user: state.user,
+  }));
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     initialize();
@@ -20,9 +25,13 @@ export default function RootLayout({
 
   useEffect(() => {
     if (isInitialized) {
-      setIsLoading(false);
+      if (!user) {
+        router.push("/login");
+      } else {
+        setIsLoading(false);
+      }
     }
-  }, [isInitialized]);
+  }, [isInitialized, user, router]);
 
   if (isLoading) {
     return (
@@ -31,8 +40,6 @@ export default function RootLayout({
       </div>
     );
   }
-
-  console.log(isInitialized);
 
   return (
     <div className="flex h-screen flex-col">

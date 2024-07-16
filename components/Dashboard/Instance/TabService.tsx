@@ -20,6 +20,7 @@ import { dashboardApprovalColumns } from "@/constants";
 import InputComponent from "@/components/InputComponent";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import { formatDate } from "@/lib/utils";
 
 interface JwtPayload {
   role?: string;
@@ -30,9 +31,10 @@ const buttons: any = [
   { label: "Semua", value: "" },
   { label: "Menunggu", value: 0 },
   { label: "Divalidasi", value: 1 },
-  { label: "Disetujui", value: 3 },
-  { label: "Selesai", value: 4 },
-  { label: "Gagal", value: 5 },
+  { label: "Disetujui", value: 2 },
+  { label: "Selesai", value: 3 },
+  { label: "Gagal", value: 4 },
+  { label: "Tidak Sesuai", value: 5 },
 ];
 
 const months = [
@@ -97,12 +99,18 @@ const TabService = () => {
     return url.toString();
   };
 
+  // Pastikan startDate dan endDate dalam format yang benar
+  const startDateFormatted = startDate
+    ? formatDate(new Date(startDate))
+    : undefined;
+  const endDateFormatted = endDate ? formatDate(new Date(endDate)) : undefined;
+
   const params = {
     instansi_id: instansiId,
     limit: 10000000,
     status: activeButton,
-    start_date: startDate,
-    end_date: endDate,
+    start_date: startDateFormatted,
+    end_date: endDateFormatted,
   };
 
   const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;
@@ -250,8 +258,8 @@ const TabService = () => {
         </div>
       </div>
       <div className="rounded-[16px] w-full bg-neutral-50 shadow p-12">
-        <div className="rounded-full p-2 border bg-transparent w-[600px]">
-          <div className="w-full  flex space-x-2 justify-between">
+        <div className="rounded-full p-2 border bg-transparent w-[800px]">
+          <div className="w-full flex space-x-2 justify-between">
             {buttons.map((button: any) => (
               <Button
                 key={button.value}

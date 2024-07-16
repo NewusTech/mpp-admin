@@ -41,7 +41,6 @@ import Link from "next/link";
 import AlertDialogUpdateFaq from "@/app/(root)/master/master-faq/DialogFormUpdate";
 import Image from "next/image";
 import AlertDialogUpdateFacility from "@/app/(root)/master/master-facility/DialogFormUpdate";
-import { cn } from "@/lib/utils";
 import AlertDialogUpdateCarousel from "@/app/(root)/master/carousel/DialogFormUpdate";
 import ModalDelete from "@/components/Dialog/delete";
 import AlertDialogUpdateSurvey from "@/app/(root)/survey/question/DialogFormUpdate";
@@ -60,6 +59,63 @@ function formatDate(dateString: any) {
 
   return `${day}-${month}-${year}`;
 }
+
+const StatusCell = ({ status }: { status: number }) => {
+  const getStatusElement = () => {
+    switch (status) {
+      case 0:
+        return (
+          <div className="bg-secondary-700 rounded-full w-8/12 text-[10px] p-1 text-center">
+            <p className="text-neutral-50">Menunggu</p>
+          </div>
+        );
+      case 1:
+        return (
+          <div className="bg-primary-700 rounded-full w-8/12 text-[10px] p-1 text-center">
+            <p className="text-neutral-50">Divalidasi</p>
+          </div>
+        );
+      case 2:
+        return (
+          <div className="bg-primary-800 rounded-full w-8/12 text-[10px] p-1 text-center">
+            <p className="text-neutral-50">Disetujui</p>
+          </div>
+        );
+      case 3:
+        return (
+          <div className="bg-success-700 rounded-full w-8/12 text-[10px] p-1 text-center">
+            <p className="text-neutral-50">Selesai</p>
+          </div>
+        );
+      case 4:
+        return (
+          <div className="bg-error-700 rounded-full w-8/12 text-[10px] p-1 text-center">
+            <p className="text-neutral-50">Ditolak</p>
+          </div>
+        );
+      default:
+        return (
+          <div className="bg-warning-700 rounded-full w-8/12 text-[10px] p-1 text-center">
+            <p>Tidak Sesuai</p>
+          </div>
+        );
+    }
+  };
+
+  return getStatusElement();
+};
+
+const getDayName = (isoString: string) => {
+  const date = new Date(isoString);
+  return new Intl.DateTimeFormat("id-ID", { weekday: "long" }).format(date);
+};
+
+const getTime = (isoString: string) => {
+  const date = new Date(isoString);
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${hours}:${minutes} WIB`;
+};
 
 export const queueColumns: ColumnDef<QueueTab>[] = [
   {
@@ -119,28 +175,11 @@ export const requestOnlineColumns: ColumnDef<RequestOnline>[] = [
     },
     cell: ({ row }) => {
       const statusRow = row.original;
-      const status = statusRow.status.toString();
+      const status = statusRow.status;
 
       return (
-        <div
-          className={cn("w-full h-full py-1 px-2 rounded-full text-center", {
-            "bg-neutral-500 text-neutral-800": status === "0",
-            "bg-primary-500 text-secondary-800": status === "2",
-            "bg-primary-7A00 text-primary-800": status === "3",
-            "bg-error-500 text-error-800": status === "4",
-          })}
-        >
-          {status === "0" ? (
-            <p className="bg-neutral-500 text-neutral-800">Menunggu</p>
-          ) : status === "1" ? (
-            <p>Sudah divalidasi</p>
-          ) : status === "2" ? (
-            <p>Sudah disetujui</p>
-          ) : status === "3" ? (
-            <p>Selesai</p>
-          ) : (
-            <p>Permohonan ditolak</p>
-          )}
+        <div className="flex justify-center">
+          <StatusCell status={Number(status)} />
         </div>
       );
     },
@@ -176,28 +215,11 @@ export const requestOfflineColumns: ColumnDef<RequestOffline>[] = [
     },
     cell: ({ row }) => {
       const statusRow = row.original;
-      const status = statusRow.status.toString();
+      const status = statusRow.status;
 
       return (
-        <div
-          className={cn("w-full h-full py-1 px-2 rounded-full text-center", {
-            "bg-neutral-500 text-neutral-800": status === "0",
-            "bg-primary-500 text-secondary-800": status === "2",
-            "bg-primary-7A00 text-primary-800": status === "3",
-            "bg-error-500 text-error-800": status === "4",
-          })}
-        >
-          {status === "0" ? (
-            <p>Menunggu</p>
-          ) : status === "1" ? (
-            <p>Sudah divalidasi</p>
-          ) : status === "2" ? (
-            <p>Sudah disetujui</p>
-          ) : status === "3" ? (
-            <p>Selesai</p>
-          ) : (
-            <p>Permohonan ditolak</p>
-          )}
+        <div className="flex justify-center">
+          <StatusCell status={Number(status)} />
         </div>
       );
     },
@@ -228,29 +250,11 @@ export const manageApprovalColumns: ColumnDef<ManageApprovals>[] = [
       );
     },
     cell: ({ row }) => {
-      const statusRow = row.original;
-      const status = statusRow.status.toString();
+      const status = row.original.status;
 
       return (
-        <div
-          className={cn("w-full h-full py-1 px-2 rounded-full text-center", {
-            "bg-neutral-500 text-neutral-800": status === "0",
-            "bg-primary-500 text-secondary-800": status === "2",
-            "bg-primary-7A00 text-primary-800": status === "3",
-            "bg-error-500 text-error-800": status === "4",
-          })}
-        >
-          {status === "0" ? (
-            <p>Menunggu</p>
-          ) : status === "1" ? (
-            <p>Sudah divalidasi</p>
-          ) : status === "2" ? (
-            <p>Sudah disetujui</p>
-          ) : status === "3" ? (
-            <p>Selesai</p>
-          ) : (
-            <p>Permohonan ditolak</p>
-          )}
+        <div className="flex justify-center">
+          <StatusCell status={Number(status)} />
         </div>
       );
     },
@@ -272,8 +276,8 @@ export const manageApprovalColumns: ColumnDef<ManageApprovals>[] = [
           <div className="flex justify-center items-center gap-x-3">
             <Link href={`/manage-approvals/${action.id}`}>
               <Button
-                size="sm"
-                className="text-sm rounded-full py-1 bg-secondary-700 text-neutral-50 hover:bg-secondary-800"
+                size="xs"
+                className="text-xs rounded-full py-1 bg-secondary-700 text-neutral-50 hover:bg-secondary-800"
               >
                 Lihat Detail
               </Button>
@@ -298,6 +302,9 @@ export const historyApprovalColumns: ColumnDef<ManageApprovals>[] = [
   {
     accessorKey: "name",
     header: "Nama",
+    cell: ({ row }) => {
+      return <p className="bg-primary-700">{row.original.name}</p>;
+    },
   },
   {
     accessorKey: "status",
@@ -310,28 +317,11 @@ export const historyApprovalColumns: ColumnDef<ManageApprovals>[] = [
     },
     cell: ({ row }) => {
       const statusRow = row.original;
-      const status = statusRow.status.toString();
+      const status = statusRow.status;
 
       return (
-        <div
-          className={cn("w-full h-full py-1 px-2 rounded-full text-center", {
-            "bg-neutral-500 text-neutral-800": status === "0",
-            "bg-primary-500 text-secondary-800": status === "2",
-            "bg-primary-7A00 text-primary-800": status === "3",
-            "bg-error-500 text-error-800": status === "4",
-          })}
-        >
-          {status === "0" ? (
-            <p>Menunggu</p>
-          ) : status === "1" ? (
-            <p>Sudah divalidasi</p>
-          ) : status === "2" ? (
-            <p>Sudah disetujui</p>
-          ) : status === "3" ? (
-            <p>Selesai</p>
-          ) : (
-            <p>Permohonan ditolak</p>
-          )}
+        <div className="flex justify-center">
+          <StatusCell status={Number(status)} />
         </div>
       );
     },
@@ -353,8 +343,8 @@ export const historyApprovalColumns: ColumnDef<ManageApprovals>[] = [
           <div className="flex justify-center items-center gap-x-3">
             <Link href={`/history-approvals/${status.id}`}>
               <Button
-                size="sm"
-                className="text-sm rounded-full py-1 bg-secondary-700 hover:bg-secondary-800"
+                size="xs"
+                className="text-xs rounded-full py-1 bg-secondary-700 hover:bg-secondary-800"
               >
                 Lihat
               </Button>
@@ -377,6 +367,24 @@ export const dashboardApprovalColumns: ColumnDef<ManageApprovals>[] = [
     },
   },
   {
+    accessorKey: "createdAt",
+    header: "Hari",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{getDayName(date)}</p>;
+    },
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Jam",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{getTime(date)}</p>;
+    },
+  },
+  {
     accessorKey: "name",
     header: "Nama",
   },
@@ -391,28 +399,11 @@ export const dashboardApprovalColumns: ColumnDef<ManageApprovals>[] = [
     },
     cell: ({ row }) => {
       const statusRow = row.original;
-      const status = statusRow.status.toString();
+      const status = statusRow.status;
 
       return (
-        <div
-          className={cn("w-full h-full py-1 px-2 rounded-full text-center", {
-            "bg-neutral-500 text-neutral-800": status === "0",
-            "bg-primary-500 text-secondary-800": status === "2",
-            "bg-primary-7A00 text-primary-800": status === "3",
-            "bg-error-500 text-error-800": status === "4",
-          })}
-        >
-          {status === "0" ? (
-            <p>Menunggu</p>
-          ) : status === "1" ? (
-            <p>Sudah divalidasi</p>
-          ) : status === "2" ? (
-            <p>Sudah disetujui</p>
-          ) : status === "3" ? (
-            <p>Selesai</p>
-          ) : (
-            <p>Permohonan ditolak</p>
-          )}
+        <div className="flex justify-center">
+          <StatusCell status={Number(status)} />
         </div>
       );
     },
@@ -1175,8 +1166,8 @@ export const complaintColumns: ColumnDef<Complaint>[] = [
         <div className="flex gap-x-2">
           <Link href={`/complaint/${complaint.id}`}>
             <Button
-              size="sm"
-              className="text-sm rounded-full bg-secondary-700 hover:bg-secondary-800"
+              size="xs"
+              className="text-xs rounded-full bg-secondary-700 hover:bg-secondary-800"
             >
               Balas
             </Button>

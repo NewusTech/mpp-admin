@@ -10,6 +10,7 @@ import { jwtDecode } from "jwt-decode";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { formatDate } from "@/lib/utils";
 
 interface JwtPayload {
   role?: string;
@@ -89,12 +90,18 @@ const RequestOnline = () => {
     instanceId2 = instanceId;
   }
 
+  // Pastikan startDate dan endDate dalam format yang benar
+  const startDateFormatted = startDate
+    ? formatDate(new Date(startDate))
+    : undefined;
+  const endDateFormatted = endDate ? formatDate(new Date(endDate)) : undefined;
+
   const params = {
     instansi_id: instanceId2,
     layanan_id: serviceId,
-    limit: 10000000, // atau false
-    start_date: startDate, // atau undefined
-    end_date: endDate, // atau undefined
+    limit: 10000000,
+    start_date: startDateFormatted,
+    end_date: endDateFormatted,
     status: 0,
     isonline: 1,
   };

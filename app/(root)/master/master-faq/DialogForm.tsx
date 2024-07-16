@@ -160,12 +160,3 @@ export default function AlertDialogCreateFaq() {
     </AlertDialog>
   );
 }
-
-// useEffect(() => {
-//   if (data) {
-//     form.reset({
-//       question: data.question,
-//       answer: data.answer,
-//     });
-//   }
-// }, [data]);

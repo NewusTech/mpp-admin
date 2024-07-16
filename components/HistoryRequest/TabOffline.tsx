@@ -5,6 +5,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import { Button } from "@/components/ui/button";
+import { formatDate } from "@/lib/utils";
 
 interface TabOfflineProps {
   serviceId: number;
@@ -15,9 +16,10 @@ const buttons: any = [
   { label: "Semua", value: "" },
   { label: "Menunggu", value: 0 },
   { label: "Divalidasi", value: 1 },
-  { label: "Disetujui", value: 3 },
-  { label: "Selesai", value: 4 },
-  { label: "Gagal", value: 5 },
+  { label: "Disetujui", value: 2 },
+  { label: "Selesai", value: 3 },
+  { label: "Gagal", value: 4 },
+  { label: "Tidak Sesuai", value: 5 },
 ];
 
 export default function TabOffline({ serviceId, instanceId }: TabOfflineProps) {
@@ -37,12 +39,18 @@ export default function TabOffline({ serviceId, instanceId }: TabOfflineProps) {
     return url.toString();
   };
 
+  // Pastikan startDate dan endDate dalam format yang benar
+  const startDateFormatted = startDate
+    ? formatDate(new Date(startDate))
+    : undefined;
+  const endDateFormatted = endDate ? formatDate(new Date(endDate)) : undefined;
+
   const params = {
     instansi_id: instanceId,
     layanan_id: serviceId,
     limit: 10000000, // atau false
-    start_date: startDate, // atau undefined
-    end_date: endDate, // atau undefined
+    start_date: startDateFormatted, // atau undefined
+    end_date: endDateFormatted, // atau undefined
     isonline: 0,
     status: activeButton,
   };

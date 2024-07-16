@@ -14,6 +14,7 @@ import { jwtDecode } from "jwt-decode";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { toast } from "sonner";
 import { Loader } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 
 interface JwtPayload {
   role?: string;
@@ -88,9 +89,15 @@ const Report = () => {
     };
   }
 
+  // Pastikan startDate dan endDate dalam format yang benar
+  const startDateFormatted = startDate
+    ? formatDate(new Date(startDate))
+    : undefined;
+  const endDateFormatted = endDate ? formatDate(new Date(endDate)) : undefined;
+
   const params = {
-    start_date: startDate,
-    end_date: endDate,
+    start_date: startDateFormatted,
+    end_date: endDateFormatted,
     ...additionalParams,
   };
 

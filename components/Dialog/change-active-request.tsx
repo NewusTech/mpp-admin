@@ -9,10 +9,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import Image from "next/image";
-import useQueueStore from "@/lib/store/useQueueStore";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { Loader, X } from "lucide-react";
+import { mutate } from "swr";
 
 export function AlertDialogChangeStatusRequest({ id }: { id: number }) {
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -46,6 +46,9 @@ export function AlertDialogChangeStatusRequest({ id }: { id: number }) {
       if (response.ok) {
         toast(data.message);
         handleAddModalClose();
+        await mutate(
+          `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get/${id}?limit=10000000`,
+        );
       }
     } catch (e) {
     } finally {
@@ -72,6 +75,9 @@ export function AlertDialogChangeStatusRequest({ id }: { id: number }) {
       if (response.ok) {
         toast(data.message);
         handleAddModalClose();
+        await mutate(
+          `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get/${id}?limit=10000000`,
+        );
       }
     } catch (e) {
     } finally {
