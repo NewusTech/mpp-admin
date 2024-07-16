@@ -21,9 +21,10 @@ const buttons: any = [
   { label: "Semua", value: "" },
   { label: "Menunggu", value: 0 },
   { label: "Divalidasi", value: 1 },
-  { label: "Disetujui", value: 3 },
-  { label: "Selesai", value: 4 },
-  { label: "Gagal", value: 5 },
+  { label: "Disetujui", value: 2 },
+  { label: "Selesai", value: 3 },
+  { label: "Gagal", value: 4 },
+  { label: "Tidak Sesuai", value: 5 },
 ];
 
 const HistoryApprovals = () => {

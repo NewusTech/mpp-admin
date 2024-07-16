@@ -4,6 +4,7 @@ import { manageApprovalColumns } from "@/constants";
 import { useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
+import { formatDate } from "@/lib/utils";
 
 interface TabOfflineProps {
   serviceId: number;
@@ -26,12 +27,18 @@ export default function TabOffline({ serviceId, instanceId }: TabOfflineProps) {
     return url.toString();
   };
 
+  // Pastikan startDate dan endDate dalam format yang benar
+  const startDateFormatted = startDate
+    ? formatDate(new Date(startDate))
+    : undefined;
+  const endDateFormatted = endDate ? formatDate(new Date(endDate)) : undefined;
+
   const params = {
     instansi_id: instanceId,
     layanan_id: serviceId,
     limit: 10000000, // atau false
-    start_date: startDate, // atau undefined
-    end_date: endDate, // atau undefined
+    start_date: startDateFormatted, // atau undefined
+    end_date: endDateFormatted, // atau undefined
     status: 1,
     isOnline: 0,
   };

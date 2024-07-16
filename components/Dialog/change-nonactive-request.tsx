@@ -91,7 +91,7 @@ export function AlertDialogChangeStatusRequestNonactive({
           onClick={handleOpenAddModal}
           className="py-1 text-[10px] px-4 rounded-full bg-transparent text-secondary-700 border border-secondary-700 hover:bg-secondary-700 hover:text-neutral-50 cursor-pointer"
         >
-          Online
+          Offline
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="flex flex-col items-center w-96 justify-center border-0 rounded-[20px] overflow-auto gap-y-4">

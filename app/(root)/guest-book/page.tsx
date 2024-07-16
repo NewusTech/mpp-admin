@@ -139,7 +139,6 @@ const GuestBook = () => {
             columns={guestBookColumns}
             data={resultGuestBook}
             filterBy="name"
-            type="requirement"
           />
         )}
       </section>

@@ -49,8 +49,6 @@ const TabQueue = () => {
   const [showButton, setShowButton] = useState(false);
   const [instansiId, setInstansiId] = useState<any>(0);
   const { switchValues } = useQueueStore();
-  const [checkedRequest, setCheckedRequest] = useState(false);
-  const [checkedBooking, setCheckedBooking] = useState(false);
 
   useEffect(() => {
     // Ambil token dari cookies

@@ -55,7 +55,7 @@ export default function ComplaintPage() {
     <ProtectedRoute roles={["Admin Instansi", "Staff Instansi"]}>
       <section className="mr-16">
         <div className="flex w-full items-center gap-x-2 justify-end mb-8">
-          <div className="flex items-center gap-x-2 w-6/12">
+          <div className="flex items-center gap-x-2 w-4/12">
             <InputComponent
               typeInput="datepicker"
               date={startDate}
