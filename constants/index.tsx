@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  ActiveQueue,
   Complaint,
   Contact,
   DataApps,
@@ -22,6 +23,7 @@ import {
   FAQ,
   FlowBooking,
   GuestBook,
+  HistoryQueue,
   ManageApprovals,
   ManageRequirements,
   ManageUser,
@@ -97,6 +99,27 @@ const StatusCell = ({ status }: { status: number }) => {
         return (
           <div className="bg-warning-700 rounded-full w-8/12 text-[10px] p-1 text-center">
             <p>Tidak Sesuai</p>
+          </div>
+        );
+    }
+  };
+
+  return getStatusElement();
+};
+
+const StatusQueue = ({ status }: { status: boolean }) => {
+  const getStatusElement = () => {
+    switch (status) {
+      case false:
+        return (
+          <div className="bg-secondary-700 rounded-full w-8/12 text-[10px] p-1 text-center">
+            <p className="text-neutral-50">Menunggu</p>
+          </div>
+        );
+      default:
+        return (
+          <div className="bg-success-700 rounded-full w-8/12 text-[10px] p-1 text-center">
+            <p>Selesai</p>
           </div>
         );
     }
@@ -302,9 +325,6 @@ export const historyApprovalColumns: ColumnDef<ManageApprovals>[] = [
   {
     accessorKey: "name",
     header: "Nama",
-    cell: ({ row }) => {
-      return <p className="bg-primary-700">{row.original.name}</p>;
-    },
   },
   {
     accessorKey: "status",
@@ -344,9 +364,9 @@ export const historyApprovalColumns: ColumnDef<ManageApprovals>[] = [
             <Link href={`/history-approvals/${status.id}`}>
               <Button
                 size="xs"
-                className="text-xs rounded-full py-1 bg-secondary-700 hover:bg-secondary-800"
+                className="text-xs rounded-full py-1 bg-secondary-700 text-neutral-50 hover:bg-secondary-800"
               >
-                Lihat
+                Lihat Detail
               </Button>
             </Link>
           </div>
@@ -1209,6 +1229,84 @@ export const guestBookColumns: ColumnDef<GuestBook>[] = [
   {
     accessorKey: "tujuan",
     header: "Tujuan",
+  },
+];
+
+export const activeQueueColumns: ColumnDef<ActiveQueue>[] = [
+  {
+    accessorKey: "no",
+    header: "No",
+    cell: ({ row }) => {
+      return <p>{row.index + 1}</p>;
+    },
+  },
+  {
+    accessorKey: "queueNumber",
+    header: "Nomor Antrian",
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Waktu Datang",
+    cell: ({ row }) => {
+      const time = row.original.createdAt;
+      return <p>{getTime(time)}</p>;
+    },
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      const status = row.original.status;
+
+      return (
+        <div className="flex justify-center">
+          <StatusQueue status={status} />
+        </div>
+      );
+    },
+  },
+];
+
+export const historyQueueColumns: ColumnDef<HistoryQueue>[] = [
+  {
+    accessorKey: "no",
+    header: "No",
+    cell: ({ row }) => {
+      return <p>{row.index + 1}</p>;
+    },
+  },
+  {
+    accessorKey: "queueNumber",
+    header: "Nomor Antrian",
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Waktu Datang",
+    cell: ({ row }) => {
+      const time = row.original.createdAt;
+      return <p>{getTime(time)}</p>;
+    },
+  },
+  {
+    accessorKey: "updatedAt",
+    header: "Waktu Selesai",
+    cell: ({ row }) => {
+      const time = row.original.updatedAt;
+      return <p>{getTime(time)}</p>;
+    },
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      const status = row.original.status;
+
+      return (
+        <div className="flex justify-center">
+          <StatusQueue status={status} />
+        </div>
+      );
+    },
   },
 ];
 

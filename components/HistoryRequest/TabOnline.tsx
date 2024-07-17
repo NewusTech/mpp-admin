@@ -1,6 +1,6 @@
 import InputComponent from "@/components/InputComponent";
 import { DataTables } from "@/components/Datatables";
-import { manageApprovalColumns } from "@/constants";
+import { historyApprovalColumns } from "@/constants";
 import { useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
@@ -104,7 +104,7 @@ export default function TabOnline({ serviceId, instanceId }: TabOnlineProps) {
       </div>
       {histories && (
         <DataTables
-          columns={manageApprovalColumns}
+          columns={historyApprovalColumns}
           data={historyAll}
           filterBy="name"
           type="requirement"
