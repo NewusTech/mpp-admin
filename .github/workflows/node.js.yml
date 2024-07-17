@@ -36,5 +36,5 @@ jobs:
           npm run build
     - name : change repo
       run : cd /home/newus-mpp-admin/htdocs/mpp-admin.newus.id/mpp-admin/actions-runner/_work/mpp-admin/mpp-admin
-    - run : pm2 restart 74
+    - run : pm2 restart mpp-admin.newus.id
   
