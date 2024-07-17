@@ -51,7 +51,7 @@ export function DataTables<TData, TValue>({
   return (
     <div>
       <div
-        className={`rounded-md ${type === "request" ? "-mt-10 space-y-10" : type === "requirement" ? "mt-10" : "-mt-[72px] space-y-10"}`}
+        className={`rounded-md ${type === "request" ? "-mt-10 space-y-10" : type === "requirement" ? "mt-10" : type === "queue" || type === "history" ? "-mt-10 space-y-7" : "-mt-[72px] space-y-10"}`}
       >
         <div
           className={`flex ${type === "request" ? "justify-end" : type === "requirement" ? "hidden" : ""}`}
@@ -64,7 +64,7 @@ export function DataTables<TData, TValue>({
             onChange={(event) =>
               table.getColumn(filterBy)?.setFilterValue(event.target.value)
             }
-            className={`rounded-full ${type === "news" ? "w-1/2" : "max-w-sm"}`}
+            className={`rounded-full ${type === "news" ? "w-1/2" : type === "history" ? "max-w-xs" : "max-w-sm"}`}
           />
         </div>
         <Table className="border">

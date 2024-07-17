@@ -17,6 +17,8 @@ import {
 } from "@/constants";
 import { UserInfoLeft, UserInfoRight } from "@/components/BiodataUser";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { useState } from "react";
+import { Loader } from "lucide-react";
 
 const DetailHistoryApproval = ({
   params,
@@ -26,7 +28,7 @@ const DetailHistoryApproval = ({
   };
 }) => {
   const router = useRouter();
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/detail/${params.id}`,
     fetcher,
@@ -60,6 +62,7 @@ const DetailHistoryApproval = ({
   );
 
   const handleValidationStatus = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/updatestatus/${params.id}`,
@@ -82,6 +85,8 @@ const DetailHistoryApproval = ({
       }
     } catch (e: any) {
       toast(e.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -168,12 +173,13 @@ const DetailHistoryApproval = ({
           ) : (
             "Tidak ada"
           )}
-          {result?.status === 4 || result?.status === 2 ? (
+          {result?.status === 2 ? (
             <Button
               onClick={handleValidationStatus}
               className="mt-7 w-full rounded-full bg-success-700 hover:bg-success-800"
+              disabled={isLoading}
             >
-              Selesai
+              {isLoading ? <Loader className="animate-spin" /> : "Selesai"}
             </Button>
           ) : (
             <div>

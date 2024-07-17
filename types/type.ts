@@ -168,3 +168,28 @@ export type GuestBook = {
   alamat: string;
   tujuan?: string | undefined | null;
 };
+
+export type ActiveQueue = {
+  no: number;
+  queueNumber: string;
+  createdAt: string;
+  status: string;
+};
+
+export type HistoryQueue = {
+  no: number;
+  queueNumber: string;
+  createdAt: string;
+  updatedAt: string;
+  status: string;
+};
+
+export const dataActive = {
+  data: [
+    {
+      queueNumber: "ASC-001",
+      createdAt: "2021-10-10",
+      status: "Menunggu",
+    },
+  ],
+};
