@@ -41,12 +41,18 @@ export default function Home() {
 
   return (
     <ProtectedRoute
-      roles={["Super Admin", "Admin Instansi", "Bupati", "Staff Instansi"]}
+      roles={[
+        "Super Admin",
+        "Admin Instansi",
+        "Bupati",
+        "Admin Layanan",
+        "Admin Verifikasi",
+      ]}
     >
       <section className="mr-16">
         {role === "Super Admin" ? (
           <DashboardSuperadmin />
-        ) : role === "Admin Instansi" || role === "Staff Instansi" ? (
+        ) : role === "Admin Instansi" || role === "Admin Layanan" ? (
           <InstanceDashboard />
         ) : (
           <DashboardBupati />
