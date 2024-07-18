@@ -53,6 +53,7 @@ const Instance = ({
         active_online: data?.active_online === true ? "1" : "0",
         open: data.jam_buka,
         closed: data.jam_tutup,
+        code: data.code,
       });
     }
   }, [data]);
@@ -75,6 +76,7 @@ const Instance = ({
     formData.append("active_online", values.active_online);
     formData.append("jam_buka", values.open);
     formData.append("jam_tutup", values.closed);
+    formData.append("code", values.code);
 
     if (type === "create") {
       try {
@@ -251,6 +253,24 @@ const Instance = ({
             />
           </div>
           <div className="space-y-3 w-full">
+            <FormField
+              control={form.control}
+              name="code"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>Kode Instansi</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="rounded-full"
+                      type="text"
+                      placeholder="Masukkan kode dinas"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="nip_pj"

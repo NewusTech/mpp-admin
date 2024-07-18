@@ -23,6 +23,8 @@ import { jwtDecode } from "jwt-decode";
 import { formatDate } from "@/lib/utils";
 import { Loader } from "lucide-react";
 import Image from "next/image";
+import RequestToday from "@/components/Dialog/RequestToday";
+import RequestPerMonth from "@/components/Dialog/RequestPerMonth";
 
 interface JwtPayload {
   role?: string;
@@ -64,6 +66,7 @@ const TabService = () => {
   );
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<number | null>(null);
+  const [serviceId, setServiceId] = useState<number | null>(null);
   const currentYear = new Date().getFullYear();
   const [years, setYears] = useState<any[]>([]);
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
@@ -97,10 +100,6 @@ const TabService = () => {
       }
     }
   }, []);
-
-  const selectedMonthLabel = months.find(
-    (month) => month.value === Number(selectedMonth),
-  )?.label;
 
   const buildUrl = (baseUrl: string, params: Record<string, any>) => {
     const url = new URL(baseUrl);
@@ -178,22 +177,18 @@ const TabService = () => {
         <div className="rounded-[16px] w-8/12 bg-neutral-50 shadow p-8 space-y-4">
           <p className="text-right font-semibold">{getFormattedDate()}</p>
           <div className="flex gap-x-4">
-            <div className="rounded-[16px] w-full bg-success-700 flex gap-y-4 flex-col items-center justify-center py-[40px] px-5 text-neutral-50">
-              <p className="text-sm w-10/12 text-center">
-                Permohonan Layanan Selesai Hari Ini
-              </p>
-              <h4 className="font-semibold text-[40px]">
-                {resultStats?.permohonanCountToday}
-              </h4>
-            </div>
-            <div className="rounded-[16px] w-full bg-error-700 flex flex-col gap-y-4 items-center justify-center py-[40px] px-5 text-neutral-50">
-              <p className="text-sm w-10/12 text-center">
-                Permohonan Layanan Gagal Hari Ini
-              </p>
-              <h4 className="font-semibold text-[40px]">
-                {resultStats?.permohonanGagalToday}
-              </h4>
-            </div>
+            <RequestToday
+              title="Permohonan Layanan Selesai Hari Ini"
+              count={resultStats?.permohonanCountToday}
+              background="success"
+              type="success"
+            />
+            <RequestToday
+              title="Permohonan Layanan Gagal Hari Ini"
+              count={resultStats?.permohonanGagalToday}
+              background="error"
+              type="error"
+            />
           </div>
         </div>
         <div className="rounded-[16px] w-4/12 bg-neutral-50 shadow p-4">
@@ -235,26 +230,22 @@ const TabService = () => {
               </SelectContent>
             </Select>
           </div>
-          <div className="h-[62px] w-full rounded-full px-7 py-2 bg-success-700 flex items-center justify-between mt-4">
-            <p className="font-semibold text-neutral-50 text-xs w-8/12">
-              Permohonanan Layanan Selesai
-            </p>
-            <div className="rounded-full bg-neutral-50 items-center justify-center w-10 h-10 flex">
-              <p className="text-success-700 font-semibold text-sm">
-                {resultStats?.permohonanCountMonth || 0}
-              </p>
-            </div>
-          </div>
-          <div className="h-[62px] w-full rounded-full px-7 py-2 bg-error-700 flex items-center justify-between mt-4">
-            <p className="font-semibold text-neutral-50 text-xs w-8/12">
-              Permohonanan Layanan Gagal
-            </p>
-            <div className="rounded-full bg-neutral-50 items-center justify-center w-10 h-10 flex">
-              <p className="text-error-700 font-semibold text-sm">
-                {resultStats?.permohonanGagalMonth || 0}
-              </p>
-            </div>
-          </div>
+          <RequestPerMonth
+            title="Permohonanan Layanan Selesai"
+            background="success"
+            count={resultStats?.permohonanCountMonth || 0}
+            type="success"
+            month={selectedMonth}
+            year={selectedYear}
+          />
+          <RequestPerMonth
+            title="Permohonanan Layanan Gagal"
+            background="error"
+            count={resultStats?.permohonanGagalMonth || 0}
+            type="error"
+            month={selectedMonth}
+            year={selectedYear}
+          />
         </div>
       </div>
       <div className="rounded-[16px] w-full bg-neutral-50 shadow p-12">

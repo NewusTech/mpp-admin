@@ -95,10 +95,16 @@ const StatusCell = ({ status }: { status: number }) => {
             <p className="text-neutral-50">Ditolak</p>
           </div>
         );
-      default:
+      case 5:
         return (
           <div className="bg-warning-700 rounded-full w-8/12 text-[10px] p-1 text-center">
-            <p>Tidak Sesuai</p>
+            <p className="text-neutral-50">Revisi</p>
+          </div>
+        );
+      default:
+        return (
+          <div className="bg-neutral-700 rounded-full w-8/12 text-[10px] p-1 text-center">
+            <p>Diperbaiki</p>
           </div>
         );
     }
@@ -407,6 +413,14 @@ export const dashboardApprovalColumns: ColumnDef<ManageApprovals>[] = [
   {
     accessorKey: "name",
     header: "Nama",
+    cell: ({ row }) => {
+      const name = row.original;
+      return (
+        <Link href={`/history-approvals/${name.id}`} className="underline">
+          {name.name}
+        </Link>
+      );
+    },
   },
   {
     accessorKey: "status",

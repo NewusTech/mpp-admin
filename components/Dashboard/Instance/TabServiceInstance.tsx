@@ -131,6 +131,8 @@ const TabServiceInstance = () => {
   const resultTop3Month = stats?.data.top3LayananMonth;
   const resultTop3Week = stats?.data.top3LayananWeek;
 
+  console.log(resultStats);
+
   const handleClick = (value: any) => {
     setActiveButton(value);
   };

@@ -51,7 +51,7 @@ const TabSurveyService = () => {
 
   const handleDownload = async () => {
     setIsLoading(true);
-    let urlDownload = `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/${params.id}/pdf`;
+    let urlDownload = `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/id/pdf`;
 
     try {
       const response = await fetch(urlDownload, {
@@ -107,7 +107,7 @@ const TabSurveyService = () => {
             value={selectedMonth?.toString()}
             onValueChange={(e) => setSelectedMonth(e)}
           >
-            <SelectTrigger className="w-full border-0 font-semibold">
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Pilih Bulan" />
             </SelectTrigger>
             <SelectContent>

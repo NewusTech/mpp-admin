@@ -173,7 +173,7 @@ export type ActiveQueue = {
   no: number;
   queueNumber: string;
   createdAt: string;
-  status: string;
+  status: boolean;
 };
 
 export type HistoryQueue = {
@@ -181,7 +181,7 @@ export type HistoryQueue = {
   queueNumber: string;
   createdAt: string;
   updatedAt: string;
-  status: string;
+  status: boolean;
 };
 
 export const dataActive = {

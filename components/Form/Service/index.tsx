@@ -24,6 +24,7 @@ const ServiceForm = ({
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [namaLayanan, setNamaLayanan] = useState("");
+  const [code, setCode] = useState("");
   const [status, setStatus] = useState("");
   const [online, setOnline] = useState("");
   const [offline, setOffline] = useState("");
@@ -36,6 +37,7 @@ const ServiceForm = ({
   useEffect(() => {
     if (data) {
       setNamaLayanan(data?.name);
+      setCode(data?.code);
       setOnline(data?.active_online ? "1" : "0");
       setOffline(data?.active_offline ? "1" : "0");
       setStatus(data?.status ? "1" : "0");
@@ -59,6 +61,7 @@ const ServiceForm = ({
       status: status,
       active_offline: offline,
       active_online: online,
+      code: code,
     };
 
     if (type === "create") {
@@ -112,8 +115,6 @@ const ServiceForm = ({
         setIsLoading(false);
       }
     }
-
-    console.log(payload);
   };
 
   return (
@@ -126,6 +127,16 @@ const ServiceForm = ({
           placeholder="Masukkan Layanan"
           value={namaLayanan}
           onChange={(e) => setNamaLayanan(e.target.value)}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label>Kode Instansi</Label>
+        <Input
+          className="rounded-full"
+          type="text"
+          placeholder="Masukkan kode instansi"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
         />
       </div>
       <div className="space-y-4">
