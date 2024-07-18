@@ -55,6 +55,10 @@ export const InstanceValidation = z.object({
   }),
   open: z.string(),
   closed: z.string(),
+  code: z
+    .string()
+    .min(2, { message: "Kode setidaknya harus 3 karakter." })
+    .max(3, { message: "Kode maksimal 3 karakter" }),
 });
 
 export const FAQValidation = z.object({

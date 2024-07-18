@@ -39,12 +39,27 @@ const AreaChart = ({ data }: AreaChartProps) => {
     data: [item.LayananformnumCount],
   }));
 
+  const series = [
+    {
+      name: "series1",
+      data: [31, 40, 28, 51, 42, 109, 100],
+    },
+    {
+      name: "series2",
+      data: [11, 32, 45, 32, 34, 52, 41],
+    },
+    {
+      name: "series3",
+      data: [1, 60, 100, 70, 100, 70, 50],
+    },
+  ];
+
   return (
     <>
       <ApexChart
         type="area"
         options={option}
-        series={seriesData}
+        series={series}
         height="70%"
         width="100%"
       />

@@ -104,8 +104,12 @@ const DetailHistoryApproval = ({
           </Link>
         </div>
         <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-3 p-8">
-          <h1 className="text-xl font-semibold mb-1">Nama</h1>
-          <h4 className="text-[16px] text-neutral-900">Jenis Layanan</h4>
+          <h1 className="text-xl font-semibold mb-1">
+            {result?.layanan?.Instansi?.name}
+          </h1>
+          <h4 className="text-[16px] text-neutral-900">
+            {result?.layanan?.name}
+          </h4>
           <h2 className="text-lg font-semibold my-5">Data Diri</h2>
           <div className="w-full flex">
             <div className="space-y-3 w-1/2">
@@ -189,13 +193,39 @@ const DetailHistoryApproval = ({
               >
                 Selesai
               </Button>
-              <p className="italic text-xs">
+              <p className="text-xs mt-3">
                 Status permohonan
-                {result?.status === 0
-                  ? " masih menunggu"
-                  : result?.status === 1
-                    ? " sudah divalidasi"
-                    : " sudah selesai"}
+                {result?.status === 0 ? (
+                  <span className="bg-secondary-700 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                    {" "}
+                    masih menunggu
+                  </span>
+                ) : result?.status === 1 ? (
+                  <span className="bg-primary-700 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                    {" "}
+                    sudah divalidasi
+                  </span>
+                ) : result?.status === 2 ? (
+                  <span className="bg-primary-800 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                    {" "}
+                    sudah disetujui
+                  </span>
+                ) : result?.status === 3 ? (
+                  <span className="bg-success-700 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                    {" "}
+                    sudah selesai
+                  </span>
+                ) : result?.status === 4 ? (
+                  <span className="bg-error-700 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                    {" "}
+                    ditolak
+                  </span>
+                ) : (
+                  <span className="bg-warning-700 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                    {" "}
+                    tidak sesuai
+                  </span>
+                )}
               </p>
             </div>
           )}
