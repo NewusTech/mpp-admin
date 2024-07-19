@@ -43,7 +43,7 @@ const SurveyPrint = ({
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/${params.id}?limit=1000000`,
-    fetcher,
+    fetcher
   );
 
   const result = data?.data;
@@ -80,7 +80,7 @@ const SurveyPrint = ({
   };
 
   return (
-    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Admin Layanan"]}>
       <section className="mr-16">
         {/*<div className="flex justify-between mb-8">*/}
         {/*  <div className="w-1/2">*/}

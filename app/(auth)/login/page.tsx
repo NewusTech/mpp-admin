@@ -12,30 +12,20 @@ const inter = Inter({
 
 const LoginPage = () => {
   return (
-    <section className="grid grid-cols-2">
-      <div className="relative">
-        <div className="w-full h-full">
-          <Image
-            src="/images/elephant.jpg"
-            alt="gajah"
-            width={4395}
-            height={2930}
-            className="w-full h-screen object-cover blur-[3px]"
-          />
-        </div>
-        <div className="absolute z-20 inset-0 bg-black opacity-50"></div>
-        <div className="absolute z-30 inset-0 flex flex-col items-center justify-center gap-6">
-          <Image src="/images/logo.png" alt="logo" width={150} height={150} />
-          <p
-            className={`${inter.className} text-neutral-50 text-2xl font-bold`}
-          >
-            Mal Pelayanan Publik Lampung Timur
-          </p>
-        </div>
-      </div>
-      <div className="flex flex-col justify-center items-center mt-10 gap-5">
-        <h3 className="font-medium text-xl text-neutral-900">Login</h3>
-        <div className="w-1/2 space-y-3">
+    <section className="bg-gradient-to-b from-primary-700 to-[#99B3E0] w-screen h-screen flex justify-center items-center">
+      <div className="flex rounded-[20px] flex-col justify-center items-center bg-neutral-50 px-20 py-14 min-w-[600px] min-h-[480px]">
+        <Image
+          src="/logo.svg"
+          width={133}
+          height={107}
+          alt="logo"
+          className="mb-3"
+        />
+        <h3 className="font-semibold text-[16px] text-secondary-700">
+          Mal Pelayanan Publik
+        </h3>
+        <h3 className="text-sm text-primary-700">Kabupaten Lampung Timur</h3>
+        <div className="w-full space-y-2">
           <FormSignin />
         </div>
       </div>

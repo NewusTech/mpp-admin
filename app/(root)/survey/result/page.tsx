@@ -52,7 +52,7 @@ const SurveyResult = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher,
+    fetcher
   );
 
   const instanceId = Number(instance);
@@ -116,7 +116,7 @@ const SurveyResult = () => {
   const surveys = resultSurvey?.data;
 
   return (
-    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Admin Layanan"]}>
       <section className="mr-16">
         <div className="flex justify-between mb-8 space-x-3">
           <div className="w-1/2">

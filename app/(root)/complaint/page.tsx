@@ -44,7 +44,7 @@ export default function ComplaintPage() {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/pengaduan/get?limit=1000000&instansi_id=${instansiId}`,
-    fetcher,
+    fetcher
   );
 
   const result = data?.data;
@@ -52,7 +52,7 @@ export default function ComplaintPage() {
   console.log(result);
 
   return (
-    <ProtectedRoute roles={["Admin Instansi", "Staff Instansi"]}>
+    <ProtectedRoute roles={["Admin Instansi", "Admin Layanan"]}>
       <section className="mr-16">
         <div className="flex w-full items-center gap-x-2 justify-end mb-8">
           <div className="flex items-center gap-x-2 w-4/12">

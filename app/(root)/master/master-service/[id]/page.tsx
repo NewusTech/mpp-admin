@@ -17,14 +17,14 @@ const UpdateServive = ({
 }) => {
   const { data: getServiceOne } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/get/${params.id}`,
-    fetcher,
+    fetcher
   );
   const result = getServiceOne?.data;
 
   console.log(result);
 
   return (
-    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Admin Layanan"]}>
       <section className="mr-16">
         <div className="-ml-14 mb-10 w-12 h-12">
           <Link href="/master/master-service">

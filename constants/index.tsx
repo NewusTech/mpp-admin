@@ -1255,7 +1255,7 @@ export const activeQueueColumns: ColumnDef<ActiveQueue>[] = [
     },
   },
   {
-    accessorKey: "queueNumber",
+    accessorKey: "code",
     header: "Nomor Antrian",
   },
   {
@@ -1290,7 +1290,7 @@ export const historyQueueColumns: ColumnDef<HistoryQueue>[] = [
     },
   },
   {
-    accessorKey: "queueNumber",
+    accessorKey: "code",
     header: "Nomor Antrian",
   },
   {

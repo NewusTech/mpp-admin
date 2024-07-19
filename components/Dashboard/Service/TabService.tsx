@@ -135,13 +135,14 @@ const TabService = () => {
   const { data } = useSWR<any>(fixUrl, fetcher);
 
   const url =
-    selectedMonth &&
-    `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/admindinas?month=${selectedMonth}`;
+    (selectedMonth || selectedYear) &&
+    `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/admlayanan-layanan?month=${selectedMonth}&year=${selectedYear}`;
 
   const { data: stats } = useSWR<any>(url, fetcher);
 
   const result = data?.data;
   const resultStats = stats?.data;
+  console.log(resultStats);
 
   const handleClick = (value: any) => {
     setActiveButton(value);

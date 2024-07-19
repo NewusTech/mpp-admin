@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { DataTables } from "@/components/Datatables";
-import { queueColumns } from "@/constants";
+import { historyQueueColumns, activeQueueColumns } from "@/constants";
 import useQueueStore from "@/lib/store/useQueueStore";
 import { Button } from "@/components/ui/button";
 import { AlertDialogChangeStatus } from "@/components/Dialog/change-status";
@@ -29,6 +29,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader } from "lucide-react";
 import Image from "next/image";
 import InputComponent from "@/components/InputComponent";
+import { formatDate } from "@/lib/utils";
 
 interface JwtPayload {
   role?: string;
@@ -55,47 +56,65 @@ const CardDashboardQueue = ({
 };
 
 const TabQueueService = () => {
-  const [role, setRole] = useState<string | null>(null);
   const [activeButton, setActiveButton] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [instansiId, setInstansiId] = useState<any>(0);
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
-  useEffect(() => {
-    // Ambil token dari cookies
-    const token = Cookies.get("token");
-
-    // Periksa apakah token ada dan decode token jika ada
-    if (token) {
-      try {
-        // Decode token untuk mendapatkan payload
-        const decoded = jwtDecode<JwtPayload>(token);
-
-        // Pastikan token terdecode dan mengandung informasi role dan instansi_id
-        if (decoded && decoded.role && decoded.instansi_id !== undefined) {
-          setRole(decoded.role);
-          setInstansiId(decoded.instansi_id);
-        }
-      } catch (error) {
-        console.error("Error decoding token:", error);
+  const buildUrl = (baseUrl: string, params: Record<string, any>) => {
+    const url = new URL(baseUrl);
+    // Tambahkan parameter lainnya
+    Object.keys(params).forEach((key) => {
+      if (params[key] !== undefined) {
+        url.searchParams.append(key, params[key]);
       }
-    }
-  }, []);
+    });
 
-  const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get/${instansiId}?limit=10000000`,
-    fetcher,
-  );
+    return url.toString();
+  };
+
+  const buildUrlToday = (baseUrl: string, params: Record<string, any>) => {
+    const url = new URL(baseUrl);
+    // Tambahkan parameter lainnya
+    Object.keys(params).forEach((key) => {
+      if (params[key] !== undefined) {
+        url.searchParams.append(key, params[key]);
+      }
+    });
+
+    return url.toString();
+  };
+
+  const startDateFormatted = startDate
+    ? formatDate(new Date(startDate))
+    : undefined;
+  const endDateFormatted = endDate ? formatDate(new Date(endDate)) : undefined;
+
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/admlayanan-antrian`;
+
+  const params = {
+    limit: 10000000,
+    start_date: startDateFormatted,
+    end_date: endDateFormatted,
+  };
+  // Bangun URL berdasarkan role dan instanceId
+  const fixUrl = buildUrl(baseUrl, params);
+
+  const { data } = useSWR<any>(fixUrl, fetcher);
+
+  const paramsToday = {
+    limit: 10000000,
+    status: activeButton,
+    range: "today",
+  };
+  // Bangun URL berdasarkan role dan instanceId
+  const fixUrlToday = buildUrlToday(baseUrl, paramsToday);
+
+  const { data: today } = useSWR<any>(fixUrlToday, fetcher);
 
   const result = data?.data;
-
-  // const { data: kioska } = useSWR<any>(
-  //   `${process.env.NEXT_PUBLIC_API_URL_KIOSKA}/dashboard_antrian/${instansiId}`,
-  //   fetcherWithoutAuth,
-  // );
-
-  const resultQueue = dataKiosk.data;
+  const riwayat = result?.riwayatAntrian;
+  const riwayatToday = today?.data?.riwayatAntrian;
 
   const handleClick = (value: any) => {
     setActiveButton(value);
@@ -107,22 +126,22 @@ const TabQueueService = () => {
         <div className="grid grid-cols-4 gap-x-5">
           <CardDashboardQueue
             title="Antrian Selesai"
-            number={resultQueue.AntrianCount}
+            number={result?.AntrianCount || 0}
             background="text-success-700"
           />
           <CardDashboardQueue
             title="Antrian Sebelumnya"
-            number={resultQueue.AntrianProsesCount}
+            number={result?.AntrianSebelumnya || 0}
             background="text-secondary-700"
           />
           <CardDashboardQueue
             title="Antrian Diproses"
-            number={resultQueue.AntrianNextCount}
+            number={result?.AntrianProses || 0}
             background="text-primary-700"
           />
           <CardDashboardQueue
             title="Antrian Selanjutnya"
-            number={resultQueue.AntrianProsesCount}
+            number={result?.AntrianNext || 0}
             background="text-error-700"
           />
         </div>
@@ -197,11 +216,11 @@ const TabQueueService = () => {
                   )}
                 </Button>
               </div>
-              {result && (
+              {riwayatToday && (
                 <DataTables
-                  columns={queueColumns}
-                  data={result}
-                  filterBy="name"
+                  columns={activeQueueColumns}
+                  data={riwayatToday}
+                  filterBy="code"
                   type="queue"
                 />
               )}
@@ -243,11 +262,11 @@ const TabQueueService = () => {
                   )}
                 </Button>
               </div>
-              {result && (
+              {riwayat && (
                 <DataTables
-                  columns={queueColumns}
-                  data={result}
-                  filterBy="name"
+                  columns={historyQueueColumns}
+                  data={riwayat}
+                  filterBy="code"
                   type="history"
                 />
               )}

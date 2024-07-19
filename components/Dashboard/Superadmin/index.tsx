@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
 const Card = ({
   color,
@@ -44,14 +45,21 @@ const Card = ({
 export const ProgressBar = ({
   name,
   value,
+  id,
 }: {
   name: string;
   value: number;
+  id: number;
 }) => {
   return (
     <div className="space-y-1">
       <div className="flex justify-between text-sm text-neutral-800">
-        <h4>{name}</h4>
+        <Link
+          href={`/survey/result/${id}`}
+          className="hover:text-primary-700 hover:underline transition-colors duration-300"
+        >
+          <h4>{name}</h4>
+        </Link>
         <p>{value}</p>
       </div>
       <Progress value={value} />
@@ -247,6 +255,7 @@ const DashboardSuperadmin = () => {
               .map((v: any) => (
                 <ProgressBar
                   key={v.id}
+                  id={v.id}
                   name={v.name}
                   value={v.layananformnum_count}
                 />

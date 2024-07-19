@@ -4,12 +4,19 @@ import dynamic from "next/dynamic";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import { ApexOptions } from "apexcharts"; // Import the ApexOptions type
 
+interface Top3Data {
+  LayananId: number;
+  LayananName: string;
+  LayananformnumCount: number;
+}
+
+interface ChartData {
+  date: string;
+  top3: Top3Data[];
+}
+
 interface AreaChartProps {
-  data?: {
-    LayananId: number;
-    LayananName: string;
-    LayananformnumCount: number;
-  }[];
+  data: ChartData[];
 }
 
 const AreaChart = ({ data }: AreaChartProps) => {
@@ -17,11 +24,30 @@ const AreaChart = ({ data }: AreaChartProps) => {
     return <p className="text-center text-neutral-800">Data tidak tersedia</p>;
   }
 
+  const seriesNames = data[0]?.top3.map((item) => item.LayananName);
+  const dates = data.map((item) =>
+    new Date(item.date).toLocaleDateString("id-ID", { weekday: "long" }),
+  );
+
+  const seriesData = seriesNames.map((name) => {
+    return {
+      name,
+      data: data.map((item) => {
+        const layanan = item.top3.find(
+          (layanan) => layanan.LayananName === name,
+        );
+        return layanan ? layanan.LayananformnumCount : 0;
+      }),
+    };
+  });
+
   const option: ApexOptions = {
     chart: {
       id: "area",
     },
-    labels: data?.map((item) => item.LayananName),
+    xaxis: {
+      categories: dates,
+    },
     dataLabels: {
       enabled: false,
     },
@@ -34,32 +60,12 @@ const AreaChart = ({ data }: AreaChartProps) => {
     colors: ["#1D3A6C", "#3568C0", "#FF9742"],
   };
 
-  const seriesData = data?.map((item) => ({
-    name: item.LayananName,
-    data: [item.LayananformnumCount],
-  }));
-
-  const series = [
-    {
-      name: "series1",
-      data: [31, 40, 28, 51, 42, 109, 100],
-    },
-    {
-      name: "series2",
-      data: [11, 32, 45, 32, 34, 52, 41],
-    },
-    {
-      name: "series3",
-      data: [1, 60, 100, 70, 100, 70, 50],
-    },
-  ];
-
   return (
     <>
       <ApexChart
         type="area"
         options={option}
-        series={series}
+        series={seriesData}
         height="70%"
         width="100%"
       />

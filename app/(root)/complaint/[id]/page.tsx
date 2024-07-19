@@ -60,7 +60,7 @@ export default function DetailComplaint({
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/pengaduan/get/${params.id}`,
-    fetcher,
+    fetcher
   );
 
   const result = data?.data;
@@ -77,7 +77,7 @@ export default function DetailComplaint({
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
           body: JSON.stringify({ jawaban: reply, status: 4 }),
-        },
+        }
       );
 
       const data = await response.json();
@@ -93,7 +93,7 @@ export default function DetailComplaint({
   };
 
   return (
-    <ProtectedRoute roles={["Admin Instansi", "Staff Instansi"]}>
+    <ProtectedRoute roles={["Admin Instansi", "Admin Layanan"]}>
       <section className="mr-16">
         <div className="-ml-14 mb-5">
           <Link href="/complaint">

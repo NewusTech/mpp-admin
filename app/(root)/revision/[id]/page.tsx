@@ -32,7 +32,7 @@ const DetailRequestOnline = ({
   const router = useRouter();
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/detail/${params.id}`,
-    fetcher,
+    fetcher
   );
   const [isLoading, setIsLoading] = useState(false);
 
@@ -56,11 +56,11 @@ const DetailRequestOnline = ({
       ?.key || "Tidak Diketahui";
 
   const filteredData = serviceForm?.filter(
-    (item: any) => item.layananform_tipedata !== "file",
+    (item: any) => item.layananform_tipedata !== "file"
   );
 
   const filteredDataFile = serviceForm?.filter(
-    (item: any) => item.layananform_tipedata === "file",
+    (item: any) => item.layananform_tipedata === "file"
   );
 
   const handleValidationStatus = async () => {
@@ -77,7 +77,7 @@ const DetailRequestOnline = ({
           body: JSON.stringify({
             status: 1,
           }),
-        },
+        }
       );
 
       const data = await response.json();
@@ -93,7 +93,7 @@ const DetailRequestOnline = ({
   };
 
   return (
-    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Admin Layanan"]}>
       <section className="mr-16">
         <div className="-ml-14 mb-10">
           <Link href="/request/online">

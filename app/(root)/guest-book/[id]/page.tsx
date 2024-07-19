@@ -26,13 +26,13 @@ const DetailGuestBook = ({
 }) => {
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL_KIOSKA}/bukutamu/get/${params.id}`,
-    fetcher,
+    fetcher
   );
   const result = data?.data;
   const resultGeustBook = detailGuestBook.data;
 
   return (
-    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Admin Layanan"]}>
       <section className="mr-16">
         <div className="-ml-14 mb-10">
           <Link href="/guest-book">
