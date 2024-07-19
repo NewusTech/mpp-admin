@@ -86,42 +86,15 @@ const TabQueue = () => {
 
   const result = data?.data;
 
-  // const { data: kioska } = useSWR<any>(
-  //   `${process.env.NEXT_PUBLIC_API_URL_KIOSKA}/dashboard_antrian/${instansiId}`,
-  //   fetcherWithoutAuth,
-  // );
+  const { data: kioska } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/admindinas-antrian`,
+    fetcher,
+  );
 
-  const resultQueue = dataKiosk.data;
+  const resultQueue = kioska?.data;
 
   return (
     <>
-      <section className="bg-primary-200 px-8 py-9 rounded-[20px] shadow space-y-3">
-        <div className="grid grid-cols-3 gap-x-5">
-          <CardDashboardQueue
-            title="Total Antrian Hari Ini"
-            number={resultQueue.AntrianCount}
-            background="text-primary-700"
-          />
-          <CardDashboardQueue
-            title="Antrian Diproses"
-            number={resultQueue.AntrianProsesCount}
-            background="text-secondary-700"
-          />
-          <CardDashboardQueue
-            title="Antrian Selanjutnya"
-            number={resultQueue.AntrianNextCount}
-            background="text-primary-800"
-          />
-        </div>
-        <div className="flex w-full justify-end space-x-2">
-          <Button className="bg-success-700 hover:bg-success-800 w-20">
-            Call
-          </Button>
-          <Button className="bg-error-700 hover:bg-error-800 w-20">
-            Recall
-          </Button>
-        </div>
-      </section>
       <div className="w-full rounded-[20px] p-6 shadow my-6">
         <div className="flex items-center gap-x-6">
           <h4 className="text-[16px] text-neutral-900 font-semibold">
@@ -144,8 +117,8 @@ const TabQueue = () => {
           </div>
         </div>
         <ChartDashboard
-          monthlyAntrianCounts={resultQueue.monthlyAntrianCounts}
-          permohonanan_bulan={resultQueue.permohonanan_bulan}
+          monthlyAntrianCounts={resultQueue?.antrianperBulan}
+          permohonanan_bulan={resultQueue?.permohonanperBulan}
         />
       </div>
       <h4 className="text-neutral-900 text-[16px] font-semibold text-right">

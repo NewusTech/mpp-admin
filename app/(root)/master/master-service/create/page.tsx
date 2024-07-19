@@ -9,7 +9,7 @@ import useServiceStore from "@/lib/store/useServiceStore";
 const CreateServive = () => {
   const selectedId = useServiceStore((state) => state.selectedId);
   return (
-    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Admin Layanan"]}>
       <section className="mr-16">
         <div className="-ml-14 mb-10 w-12 h-12">
           <Link href="/master/master-service">

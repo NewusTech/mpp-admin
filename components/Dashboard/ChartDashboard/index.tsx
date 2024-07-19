@@ -13,6 +13,9 @@ const ChartDashboard = ({
   monthlyAntrianCounts,
   permohonanan_bulan,
 }: ChartDashboardProps) => {
+  if (monthlyAntrianCounts == null || permohonanan_bulan === null) {
+    return <p className="text-center text-neutral-800">Data tidak tersedia</p>;
+  }
   const option: ApexOptions = {
     chart: {
       id: "apexchart-example",
@@ -23,11 +26,12 @@ const ChartDashboard = ({
         "Feb",
         "Mar",
         "Apr",
+        "Mei",
         "Jun",
         "Jul",
-        "Aug",
+        "Agst",
         "Sep",
-        "Oct",
+        "Okt",
         "Nov",
         "Des",
       ],

@@ -38,7 +38,7 @@ const months = [
   { label: "Desember", value: 12 },
 ];
 
-const TabSurveyService = () => {
+const TabSurveyService = ({ id }: { id: number }) => {
   const currentYear = new Date().getFullYear();
   const [years, setYears] = useState<any[]>([]);
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
@@ -90,14 +90,20 @@ const TabSurveyService = () => {
   }, [currentYear]);
 
   const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/admindinas-survey?year=${selectedYear}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/admlayanan-survey?year=${selectedYear}&month=${selectedMonth}`,
     fetcher,
     {
       revalidateOnFocus: false,
     },
   );
 
+  const { data: survey } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/${id}?limit=1000000`,
+    fetcher,
+  );
+
   const result = data?.data;
+  const resultSurvey = survey?.data;
 
   return (
     <section className="space-y-4 mt-8">
@@ -190,10 +196,10 @@ const TabSurveyService = () => {
             )}
           </Button>
         </div>
-        {result && (
+        {resultSurvey && (
           <DataTables
             columns={detailSurveyResultColumns}
-            data={result}
+            data={resultSurvey}
             filterBy="name"
             type="history"
           />

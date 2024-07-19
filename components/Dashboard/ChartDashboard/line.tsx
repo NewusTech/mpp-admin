@@ -4,6 +4,10 @@ import dynamic from "next/dynamic";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const LineChart = ({ data }: { data: [] }) => {
+  if (!data || data.length === 0) {
+    return <p className="text-center text-neutral-800">Data tidak tersedia</p>;
+  }
+
   const totals = data ? data.map((v: any) => v.total) : [];
 
   const option = {

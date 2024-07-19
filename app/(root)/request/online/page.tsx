@@ -53,7 +53,7 @@ const RequestOnline = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher,
+    fetcher
   );
 
   const instanceId = Number(instance);
@@ -124,7 +124,7 @@ const RequestOnline = () => {
   }, [searchInputInstance, searchInputService]);
 
   return (
-    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Staff Instansi"]}>
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Admin Layanan"]}>
       <section className="mr-16">
         <div className="flex justify-between gap-x-5 mb-14">
           <div className="flex w-8/12 gap-x-5">

@@ -30,14 +30,14 @@ const UpdateManageRequirementPage = ({
     (state) => ({
       setLayananforms: state.setLayananforms,
       setServiceId: state.setServiceId,
-    }),
+    })
   );
 
   const router = useRouter();
 
   const { data: service } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/form/${params.id}`,
-    fetcher,
+    fetcher
   );
 
   const serviceOne = service?.data;
@@ -49,7 +49,7 @@ const UpdateManageRequirementPage = ({
   };
 
   return (
-    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Staff Instansi"]}>
+    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Admin Layanan"]}>
       <section className="mr-16">
         <div className="-ml-14 mb-10">
           <Link href="/manage-requirement">

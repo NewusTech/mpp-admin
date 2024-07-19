@@ -109,13 +109,15 @@ const FormSignin = () => {
             </FormItem>
           )}
         />
-        <Button
-          className="w-full rounded-full bg-primary-700 hover:bg-primary-800 text-neutral-50"
-          type="submit"
-          disabled={isLoading ? true : false}
-        >
-          {isLoading ? <Loader className="animate-spin" /> : "Masuk"}
-        </Button>
+        <div className="flex justify-center">
+          <Button
+            className="w-1/2 rounded-full bg-primary-700 hover:bg-primary-800 text-neutral-50"
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? <Loader className="animate-spin" /> : "Masuk"}
+          </Button>
+        </div>
       </form>
     </Form>
   );

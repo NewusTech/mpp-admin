@@ -15,11 +15,23 @@ import TabService from "@/components/Dashboard/Service/TabService";
 interface JwtPayload {
   role?: string;
   instansi_id: number;
+  layanan_code: string;
+  layanan: string;
+  instansi_image: string;
+  instansi: string;
+  layanan_id: number;
 }
 
 const InstanceDashboard = () => {
-  const [role, setRole] = useState<string | null>(null);
-  const [instansiId, setInstansiId] = useState<any>(0);
+  const [state, setState] = useState({
+    role: "",
+    instansiId: 0,
+    serviceCode: "",
+    serviceName: "",
+    image: "",
+    instanceName: "",
+    serviceId: 0,
+  });
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -35,8 +47,15 @@ const InstanceDashboard = () => {
 
         // Pastikan token terdecode dan mengandung informasi role dan instansi_id
         if (decoded && decoded.role && decoded.instansi_id !== undefined) {
-          setRole(decoded.role);
-          setInstansiId(decoded.instansi_id);
+          setState({
+            role: decoded.role,
+            instansiId: decoded.instansi_id,
+            serviceCode: decoded.layanan_code,
+            serviceName: decoded.layanan,
+            image: decoded.instansi_image,
+            instanceName: decoded.instansi,
+            serviceId: decoded.layanan_id,
+          });
         }
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -48,24 +67,24 @@ const InstanceDashboard = () => {
     <>
       <div className="rounded-[16px] bg-primary-200 p-8 flex gap-x-[73px] items-center">
         <div className="w-[60px] h-[80px]">
-          <Image
-            src="/images/logo1.png"
-            alt="Logo"
-            className="w-full h-full object-contain"
-            width={60}
-            height={80}
-          />
+          {state.image && (
+            <Image
+              src={state.image}
+              alt="Logo"
+              className="w-full h-full object-contain"
+              width={60}
+              height={80}
+            />
+          )}
         </div>
         <div className="space-y-2">
           <h1 className="text-[26px] font-semibold text-primary-800">
-            Dinas Kependudukan dan Catatan Sipil
+            {state.instanceName}
           </h1>
-          {role === "Staff Instansi" && (
+          {state.role === "Admin Layanan" && (
             <>
-              <h4 className="text-sm text-primary-800">
-                Pembuatan Kartu Keluarga (KK)
-              </h4>
-              <h4 className="text-sm text-primary-800">Loket 1</h4>
+              <h4 className="text-sm text-primary-800">{state.serviceName}</h4>
+              <h4 className="text-sm text-primary-800">{state.serviceCode}</h4>
             </>
           )}
         </div>
@@ -92,13 +111,21 @@ const InstanceDashboard = () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="queue" className="mt-8">
-          {role === "Admin Instansi" ? <TabQueue /> : <TabQueueService />}
+          {state.role === "Admin Instansi" ? <TabQueue /> : <TabQueueService />}
         </TabsContent>
         <TabsContent value="service">
-          {role === "Admin Instansi" ? <TabServiceInstance /> : <TabService />}
+          {state.role === "Admin Instansi" ? (
+            <TabServiceInstance />
+          ) : (
+            <TabService />
+          )}
         </TabsContent>
         <TabsContent value="survey">
-          {role === "Admin Instansi" ? <TabSurvey /> : <TabSurveyService />}
+          {state.role === "Admin Instansi" ? (
+            <TabSurvey />
+          ) : (
+            <TabSurveyService id={state.serviceId} />
+          )}
         </TabsContent>
       </Tabs>
     </>

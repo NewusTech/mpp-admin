@@ -171,14 +171,14 @@ export type GuestBook = {
 
 export type ActiveQueue = {
   no: number;
-  queueNumber: string;
+  code: string;
   createdAt: string;
   status: boolean;
 };
 
 export type HistoryQueue = {
   no: number;
-  queueNumber: string;
+  code: string;
   createdAt: string;
   updatedAt: string;
   status: boolean;

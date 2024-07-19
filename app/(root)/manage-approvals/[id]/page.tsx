@@ -30,7 +30,7 @@ const DetailApproval = ({
 }) => {
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/detail/${params.id}`,
-    fetcher,
+    fetcher
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -56,11 +56,11 @@ const DetailApproval = ({
       ?.key || "Tidak Diketahui";
 
   const filteredData = serviceForm?.filter(
-    (item: any) => item.layananform_tipedata !== "file",
+    (item: any) => item.layananform_tipedata !== "file"
   );
 
   const filteredDataFile = serviceForm?.filter(
-    (item: any) => item.layananform_tipedata === "file",
+    (item: any) => item.layananform_tipedata === "file"
   );
 
   const handleDownload = async () => {
@@ -73,7 +73,7 @@ const DetailApproval = ({
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-        },
+        }
       );
 
       const blob = await response.blob();
@@ -109,7 +109,7 @@ const DetailApproval = ({
           body: JSON.stringify({
             status: 2,
           }),
-        },
+        }
       );
 
       const data = await response.json();
@@ -125,7 +125,7 @@ const DetailApproval = ({
   };
 
   return (
-    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Staff Instansi"]}>
+    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Admin Layanan"]}>
       <section className="mr-16">
         <div className="-ml-14 mb-10">
           <Link href="/manage-approvals">

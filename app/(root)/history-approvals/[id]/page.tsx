@@ -31,7 +31,7 @@ const DetailHistoryApproval = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/detail/${params.id}`,
-    fetcher,
+    fetcher
   );
 
   const result = data?.data;
@@ -54,11 +54,11 @@ const DetailHistoryApproval = ({
       ?.key || "Tidak Diketahui";
 
   const filteredData = serviceForm?.filter(
-    (item: any) => item.layananform_tipedata !== "file",
+    (item: any) => item.layananform_tipedata !== "file"
   );
 
   const filteredDataFile = serviceForm?.filter(
-    (item: any) => item.layananform_tipedata === "file",
+    (item: any) => item.layananform_tipedata === "file"
   );
 
   const handleValidationStatus = async () => {
@@ -75,7 +75,7 @@ const DetailHistoryApproval = ({
           body: JSON.stringify({
             status: 3,
           }),
-        },
+        }
       );
 
       const data = await response.json();
@@ -91,7 +91,7 @@ const DetailHistoryApproval = ({
   };
 
   return (
-    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Staff Instansi"]}>
+    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Admin Layanan"]}>
       <section className="mr-16">
         <div className="-ml-14 mb-10 w-12 h-12">
           <Link href="/history-approvals">

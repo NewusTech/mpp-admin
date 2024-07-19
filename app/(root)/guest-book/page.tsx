@@ -47,7 +47,7 @@ const GuestBook = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher,
+    fetcher
   );
 
   const instanceId = Number(instance);
@@ -99,7 +99,7 @@ const GuestBook = () => {
   const resultGuestBook = dataGuestBook.data;
 
   return (
-    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Staff Instansi"]}>
+    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Admin Layanan"]}>
       <section className="mr-16">
         <div
           className={`flex gap-x-6 ${role === "Admin Instansi" ? "justify-end mb-8" : "justify-between mb-[86px]"}`}

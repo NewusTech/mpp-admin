@@ -15,10 +15,28 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 
+const months = [
+  { label: "Januari", value: 1 },
+  { label: "Februari", value: 2 },
+  { label: "Maret", value: 3 },
+  { label: "April", value: 4 },
+  { label: "Mei", value: 5 },
+  { label: "Juni", value: 6 },
+  { label: "Juli", value: 7 },
+  { label: "Agustus", value: 8 },
+  { label: "September", value: 9 },
+  { label: "Oktober", value: 10 },
+  { label: "November", value: 11 },
+  { label: "Desember", value: 12 },
+];
+
 const TabSurvey = () => {
   const currentYear = new Date().getFullYear();
   const [years, setYears] = useState<any[]>([]);
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
+  const [selectedMonth, setSelectedMonth] = useState<any>(
+    new Date().getMonth() + 1,
+  );
 
   useEffect(() => {
     const startYear = 2023; // Tahun mulai yang diinginkan
@@ -30,7 +48,7 @@ const TabSurvey = () => {
   }, [currentYear]);
 
   const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/admindinas-survey?year=${selectedYear}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/admindinas-survey?year=${selectedYear}&month=${selectedMonth}`,
     fetcher,
     {
       revalidateOnFocus: false,
@@ -42,7 +60,25 @@ const TabSurvey = () => {
   return (
     <section className="space-y-4 mt-8">
       <div className="flex justify-end space-x-4 items-center">
-        <div className="w-2/12">
+        <div className="w-2/12 flex space-x-2">
+          <Select
+            value={selectedMonth?.toString()}
+            onValueChange={(e) => setSelectedMonth(e)}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Pilih Bulan" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Bulan</SelectLabel>
+                {months.map((v) => (
+                  <SelectItem key={v.value} value={v.value.toString()}>
+                    {v.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
           <Select
             value={selectedYear.toString()}
             onValueChange={(e: any) => setSelectedYear(e)}
@@ -72,7 +108,7 @@ const TabSurvey = () => {
             Total Nilai SKM Keseluruhan
           </p>
           <h4 className="font-semibold text-[40px] text-neutral-50">
-            {result?.rataRataNilaiSKM?.toFixed(2)}
+            {result?.rataRataNilaiSKM?.toFixed(2) || 0}
           </h4>
           <p className="text-secondary-700">Sangat Baik</p>
         </div>
@@ -86,17 +122,22 @@ const TabSurvey = () => {
             {selectedYear}
           </p>
         </div>
-        {result?.nilaiSKM_perlayanan?.map((v: any) => (
-          <ProgressBar
-            key={v.id}
-            name={v.layanan_name}
-            value={
-              v.Surveyformnums_nilai === 0
-                ? 0
-                : v.Surveyformnums_nilai?.toFixed(2)
-            }
-          />
-        ))}
+        {result?.nilaiSKM_perlayanan?.length === 0 ? (
+          <p>Data tidak tersedia</p>
+        ) : (
+          result?.nilaiSKM_perlayanan?.map((v: any) => (
+            <ProgressBar
+              id={v.id}
+              key={v.id}
+              name={v.layanan_name}
+              value={
+                v.Surveyformnums_nilai === 0
+                  ? 0
+                  : v.Surveyformnums_nilai?.toFixed(2)
+              }
+            />
+          ))
+        )}
       </div>
     </section>
   );
