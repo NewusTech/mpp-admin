@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import ManageApproval from "@/components/ManageApproval";
+import ManageRevision from "@/components/ManageRevision";
 
 interface JwtPayload {
   role?: string;
@@ -18,7 +19,7 @@ interface JwtPayload {
   layanan_id: number;
 }
 
-const ManageApprovals = () => {
+const ManageRevisionPage = () => {
   const [activeButton, setActiveButton] = useState("");
   const [instance, setInstance] = useState<string>("");
   const [service, setService] = useState<string>("");
@@ -26,7 +27,6 @@ const ManageApprovals = () => {
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<number | null>(null);
   const [layananId, setLayananId] = useState<number | null>(null);
-
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
   const [searchTermService, setSearchTermService] = useState("");
   const [searchInputService, setSearchInputService] = useState(""); // State for search input
@@ -71,18 +71,6 @@ const ManageApprovals = () => {
   const { data: services } = useSWR(url, fetcher);
 
   const serviceId = Number(service);
-
-  const buildUrl = (baseUrl: string, params: Record<string, any>) => {
-    const url = new URL(baseUrl);
-    // Tambahkan parameter lainnya
-    Object.keys(params).forEach((key) => {
-      if (params[key] !== undefined) {
-        url.searchParams.append(key, params[key]);
-      }
-    });
-
-    return url.toString();
-  };
 
   let instanceId2;
   let serviceId2;
@@ -143,10 +131,10 @@ const ManageApprovals = () => {
             )}
           </div>
         </div>
-        <ManageApproval serviceId={serviceId2} instanceId={instanceId2} />
+        <ManageRevision serviceId={serviceId2} instanceId={instanceId2} />
       </section>
     </ProtectedRoute>
   );
 };
 
-export default ManageApprovals;
+export default ManageRevisionPage;

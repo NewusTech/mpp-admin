@@ -7,7 +7,7 @@ import { fetcher } from "@/lib/fetch";
 import { formatDate } from "@/lib/utils";
 
 interface TabOnlineProps {
-  serviceId: number;
+  serviceId: number | null;
   instanceId: number | null;
 }
 

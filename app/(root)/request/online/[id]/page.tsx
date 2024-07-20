@@ -32,7 +32,7 @@ const DetailRequestOnline = ({
   const router = useRouter();
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/detail/${params.id}`,
-    fetcher
+    fetcher,
   );
   const [isLoading, setIsLoading] = useState(false);
 
@@ -56,11 +56,11 @@ const DetailRequestOnline = ({
       ?.key || "Tidak Diketahui";
 
   const filteredData = serviceForm?.filter(
-    (item: any) => item.layananform_tipedata !== "file"
+    (item: any) => item.layananform_tipedata !== "file",
   );
 
   const filteredDataFile = serviceForm?.filter(
-    (item: any) => item.layananform_tipedata === "file"
+    (item: any) => item.layananform_tipedata === "file",
   );
 
   const handleValidationStatus = async () => {
@@ -77,7 +77,7 @@ const DetailRequestOnline = ({
           body: JSON.stringify({
             status: 1,
           }),
-        }
+        },
       );
 
       const data = await response.json();
@@ -106,8 +106,12 @@ const DetailRequestOnline = ({
           </Link>
         </div>
         <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-3 p-8">
-          <h1 className="text-xl font-semibold mb-1">Nama</h1>
-          <h4 className="text-[16px] text-neutral-900">Jenis Layanan</h4>
+          <h1 className="text-xl font-semibold mb-1">
+            {result?.layanan?.Instansi?.name}
+          </h1>
+          <h4 className="text-[16px] text-neutral-900">
+            {result?.layanan?.name}
+          </h4>
           <h2 className="text-lg font-semibold my-5">Data Diri</h2>
           <div className="w-full flex">
             <div className="space-y-3 w-1/2">

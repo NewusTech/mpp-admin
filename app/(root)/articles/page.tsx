@@ -49,22 +49,20 @@ const Articles = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher
+    fetcher,
   );
 
   const instanceId = Number(instance);
 
   let url = `${process.env.NEXT_PUBLIC_API_URL}/user/artikel/get?limit=10000000`;
 
-  if (role === "Admin Instansi") {
+  if (role === "Admin Instansi" || role === "Admin Layanan") {
     url += `&instansi_id=${instansiId}`;
-  } else if ("Super Admin" && instance !== "") {
+  } else if ("Super Admin") {
     url += `&instansi_id=${instanceId}`;
   }
 
   const { data: news } = useSWR<any>(url, fetcher);
-
-  console.log(news);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -84,9 +82,9 @@ const Articles = () => {
     <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Admin Layanan"]}>
       <section className="mr-16">
         <div
-          className={`flex gap-x-6 ${role === "Admin Instansi" ? "justify-end mb-8" : "justify-between mb-[86px]"}`}
+          className={`flex gap-x-6 ${role === "Admin Instansi" || role === "Admin Layanan" ? "justify-end mb-8" : "justify-between mb-[86px]"}`}
         >
-          {role !== "Admin Instansi" && (
+          {role === "Super Admin" && (
             <InputComponent
               typeInput="selectSearch"
               valueInput={searchInputInstance}
@@ -100,7 +98,7 @@ const Articles = () => {
               onChange={(e: any) => setInstance(e)}
             />
           )}
-          {instance || role === "Admin Instansi" ? (
+          {instance || role === "Admin Instansi" || role === "Admin Layanan" ? (
             <Link href="/articles/create">
               <Button
                 onClick={() =>

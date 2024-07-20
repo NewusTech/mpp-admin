@@ -15,6 +15,7 @@ import HistoryRequest from "@/components/HistoryRequest";
 interface JwtPayload {
   role?: string;
   instansi_id: number;
+  layanan_id: number;
 }
 
 const buttons: any = [
@@ -33,6 +34,7 @@ const HistoryApprovals = () => {
   const [searchTermInstance, setSearchTermInstance] = useState("");
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<number | null>(null);
+  const [layananId, setLayananId] = useState<number | null>(null);
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
   const [searchTermService, setSearchTermService] = useState("");
   const [searchInputService, setSearchInputService] = useState(""); // State for search input
@@ -54,6 +56,7 @@ const HistoryApprovals = () => {
         if (decoded && decoded.role && decoded.instansi_id !== undefined) {
           setRole(decoded.role);
           setInstansiId(decoded.instansi_id);
+          setLayananId(decoded.layanan_id);
         }
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -63,16 +66,16 @@ const HistoryApprovals = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher
+    fetcher,
   );
 
   const instanceId = Number(instance);
 
   let url = `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get`;
 
-  if (role === "Admin Instansi") {
+  if (role === "Admin Instansi" || role === "Admin Layanan") {
     url += `/${instansiId}?search=${searchTermService}`;
-  } else if ("Superadmin") {
+  } else if ("Super Admin") {
     url += `/${instanceId}?search=${searchTermService}`;
   }
 
@@ -93,11 +96,18 @@ const HistoryApprovals = () => {
   };
 
   let instanceId2;
+  let serviceId2;
 
-  if (role === "Admin Instansi") {
+  if (role === "Admin Instansi" || role === "Admin Layanan") {
     instanceId2 = instansiId;
   } else {
     instanceId2 = instanceId;
+  }
+
+  if (role === "Admin Layanan") {
+    serviceId2 = layananId;
+  } else {
+    serviceId2 = serviceId;
   }
 
   useEffect(() => {
@@ -109,45 +119,42 @@ const HistoryApprovals = () => {
     return () => clearTimeout(delayDebounceFn);
   }, [searchInputInstance, searchInputService]);
 
-  const result = data?.data;
-  const serviceAll = services?.data;
-
-  const handleClick = (value: any) => {
-    setActiveButton(value);
-  };
-
   return (
     <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Admin Layanan"]}>
       <section className="mr-16">
         <div className="flex justify-between gap-x-5 mb-8">
           <div className="flex w-full gap-x-5">
-            {role !== "Admin Instansi" && (
+            {role !== "Admin Isntansi" && role !== "Admin Layanan" && (
               <InputComponent
                 typeInput="selectSearch"
                 valueInput={searchInputInstance}
                 onChangeInputSearch={(e) =>
                   setSearchInputInstance(e.target.value)
                 }
-                items={result}
+                items={data?.data}
                 label="Instansi"
                 placeholder="Pilih Instansi"
                 value={instance}
                 onChange={(e: any) => setInstance(e)}
               />
             )}
-            <InputComponent
-              typeInput="selectSearch"
-              items={serviceAll}
-              valueInput={searchInputService}
-              onChangeInputSearch={(e) => setSearchInputService(e.target.value)}
-              label="Layanan"
-              placeholder="Pilih Layanan"
-              value={service}
-              onChange={(e: any) => setService(e)}
-            />
+            {role !== "Admin Layanan" && (
+              <InputComponent
+                typeInput="selectSearch"
+                items={services?.data}
+                valueInput={searchInputService}
+                onChangeInputSearch={(e) =>
+                  setSearchInputService(e.target.value)
+                }
+                label="Layanan"
+                placeholder="Pilih Layanan"
+                value={service}
+                onChange={(e: any) => setService(e)}
+              />
+            )}
           </div>
         </div>
-        <HistoryRequest serviceId={serviceId} instanceId={instanceId2} />
+        <HistoryRequest serviceId={serviceId2} instanceId={instanceId2} />
       </section>
     </ProtectedRoute>
   );

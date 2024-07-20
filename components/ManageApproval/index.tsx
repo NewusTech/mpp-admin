@@ -3,7 +3,7 @@ import TabOffline from "@/components/ManageApproval/TabOffline";
 import TabOnline from "@/components/ManageApproval/TabOnline";
 
 interface ManageApprovalProps {
-  serviceId: number;
+  serviceId: number | null;
   instanceId: number | null;
 }
 

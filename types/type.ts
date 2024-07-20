@@ -125,6 +125,12 @@ export type FlowBooking = {
   desc: string;
 };
 
+export type ManualBook = {
+  id: number;
+  dokumen: string;
+  video: string;
+};
+
 export type Video = {
   id: number;
   video: string;

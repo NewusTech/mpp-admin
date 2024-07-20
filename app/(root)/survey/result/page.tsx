@@ -17,6 +17,7 @@ import { Loader } from "lucide-react";
 interface JwtPayload {
   role?: string;
   instansi_id: number;
+  layanan_id: number;
 }
 
 const SurveyResult = () => {
@@ -24,6 +25,7 @@ const SurveyResult = () => {
   const [searchTermInstance, setSearchTermInstance] = useState("");
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<number | null>(null);
+  const [layananId, setLayananId] = useState<number | null>(null);
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
@@ -43,6 +45,7 @@ const SurveyResult = () => {
         if (decoded && decoded.role && decoded.instansi_id !== undefined) {
           setRole(decoded.role);
           setInstansiId(decoded.instansi_id);
+          setLayananId(decoded.layanan_id);
         }
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -52,28 +55,22 @@ const SurveyResult = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher
+    fetcher,
   );
 
   const instanceId = Number(instance);
 
   let url = `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey`;
 
-  if (role === "Admin Instansi") {
-    url += `?instansi_id=${instansiId}&limit=1000000`;
-  } else if ("Superadmin") {
-    url += `?instansi_id=${instanceId}&limit=1000000`;
+  if (role === "Admin Instansi" || role === "Admin Layanan") {
+    url += `?instansi_id=${instansiId}&limit=10000000`;
+  } else if ("Super Admin") {
+    url += `?instansi_id=${instanceId}&limit=10000000`;
   }
 
   const handleDownload = async () => {
     setIsLoading(true);
     let urlDownload = `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/pdf`;
-
-    if (role === "Admin Instansi") {
-      urlDownload += `?instansi_id=${instansiId}`;
-    } else if ("Superadmin") {
-      urlDownload += `?instansi_id=${instanceId}`;
-    }
 
     try {
       const response = await fetch(urlDownload, {
@@ -120,7 +117,7 @@ const SurveyResult = () => {
       <section className="mr-16">
         <div className="flex justify-between mb-8 space-x-3">
           <div className="w-1/2">
-            {role !== "Admin Instansi" && (
+            {role === "Super Admin" && (
               <InputComponent
                 typeInput="selectSearch"
                 valueInput={searchInputInstance}
@@ -148,7 +145,7 @@ const SurveyResult = () => {
               setDate={(e) => setEndDate(e)}
             />
           </div>
-          {instance || role === "Admin Instansi" || role === "Staff Admin" ? (
+          {instance || role === "Admin Instansi" || role === "Admin Layanan" ? (
             <Button
               disabled={isLoading}
               onClick={handleDownload}

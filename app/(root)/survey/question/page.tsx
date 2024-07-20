@@ -49,17 +49,17 @@ const SurveyQuestion = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher
+    fetcher,
   );
 
   const instanceId = Number(instance);
 
   let url = `${process.env.NEXT_PUBLIC_API_URL}/user/survey/form`;
 
-  if (role === "Admin Instansi") {
-    url += `/${instansiId}`;
-  } else if ("Superadmin") {
-    url += `/${instanceId}`;
+  if (role === "Admin Instansi" || role === "Admin Layanan") {
+    url += `/${instansiId}?limit=10000000`;
+  } else if ("Super Admin") {
+    url += `/${instanceId}?limit=10000000`;
   }
 
   const { data: surveys } = useSWR<any>(url, fetcher);
@@ -84,7 +84,7 @@ const SurveyQuestion = () => {
       <section className="mr-16">
         <div className="flex justify-between mb-8">
           <div className="w-1/2">
-            {role !== "Admin Instansi" && (
+            {role === "Super Admin" && (
               <InputComponent
                 typeInput="selectSearch"
                 valueInput={searchInputInstance}
@@ -99,13 +99,13 @@ const SurveyQuestion = () => {
               />
             )}
           </div>
-          {instance || role === "Admin Instansi" ? (
-            <Link href="/survey/question/create">
+          {instance || role === "Admin Instansi" || role === "Admin Layanan" ? (
+            <Link href="/manage-requirement/create">
               <Button
-                onClick={
-                  role === "Admin Instansi"
-                    ? () => handlePassIdInstnace(instansiId)
-                    : () => handlePassIdInstnace(instanceId)
+                onClick={() =>
+                  role === "Admin Instansi" || role === "Admin Layanan"
+                    ? handlePassIdInstnace(instansiId)
+                    : handlePassIdInstnace(instanceId)
                 }
                 className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
               >

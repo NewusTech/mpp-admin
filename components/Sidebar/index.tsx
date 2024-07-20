@@ -19,6 +19,8 @@ interface JwtPayload {
   role?: string;
   instansi_id: number;
   instansi: string;
+  layanan_id: number;
+  layanan: string;
 }
 
 const Sidebar = () => {
@@ -26,7 +28,9 @@ const Sidebar = () => {
   const pathname = usePathname();
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<number | null>(null);
+  const [layananId, setLayananId] = useState<number | null>(null);
   const [instanceName, setInstanceName] = useState<string | null>(null);
+  const [layanan, setLayanan] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState<string | null>(null);
   const logout = useAuthStore((state) => state.logout);
 
@@ -50,6 +54,8 @@ const Sidebar = () => {
           setRole(decoded.role);
           setInstansiId(decoded.instansi_id);
           setInstanceName(decoded.instansi);
+          setLayananId(decoded.layanan_id);
+          setLayanan(decoded.layanan);
         } else if (decoded && decoded.role) {
           setRole(decoded.role);
         }
@@ -124,6 +130,13 @@ const Sidebar = () => {
             handleDropdownOpen={() => handleDropdownOpen("/request")}
           />
           <Nav
+            route="/request/revision"
+            path="/request/revision"
+            icons="/icons/revision.svg"
+            iconsActive="/icons/revision-active.svg"
+            title="Revisi Permohonan"
+          />
+          <Nav
             route="/manage-approvals"
             path="/manage-approvals"
             icons="/icons/stamp.svg"
@@ -162,7 +175,15 @@ const Sidebar = () => {
                   <li
                     className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/survey/result") || pathname.startsWith("/survey/result") ? "text-primary-700" : ""}`}
                   >
-                    <Link href="/survey/result">Hasil</Link>
+                    <Link
+                      href={
+                        role !== "Admin Layanan"
+                          ? "/survey/result"
+                          : `/survey/result/${layananId}`
+                      }
+                    >
+                      Hasil
+                    </Link>
                   </li>
                 </ul>
               </>
@@ -177,15 +198,16 @@ const Sidebar = () => {
             iconsActive="/icons/newspaper-active.svg"
             title="Berita"
           />
-          {role === "Admin Instansi" && (
-            <Nav
-              route="/complaint"
-              path="/complaint"
-              icons="/icons/send.svg"
-              iconsActive="/icons/send-active.svg"
-              title="Pengaduan"
-            />
-          )}
+          {role === "Admin Instansi" ||
+            (role === "Admin Layanan" && (
+              <Nav
+                route="/complaint"
+                path="/complaint"
+                icons="/icons/send.svg"
+                iconsActive="/icons/send-active.svg"
+                title="Pengaduan"
+              />
+            ))}
           <Nav
             route="/guest-book"
             path="/guest-book"
@@ -193,102 +215,111 @@ const Sidebar = () => {
             iconsActive="/icons/book-open-active.svg"
             title="Buku Tamu"
           />
-          <Nav
-            route="#"
-            path="/master"
-            icons="/icons/Master.svg"
-            iconsActive="/icons/Master-active.svg"
-            title="Data Master"
-            type="dropdown"
-            content={
-              <>
-                <ul className="space-y-4">
-                  {role !== "Admin Instansi" ? (
-                    <>
-                      <li
-                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/master-instance") || pathname.startsWith("/master/master-instance") ? "text-primary-700" : ""}`}
-                      >
-                        <Link href="/master/master-instance">Instansi</Link>
-                      </li>
-                      <li
-                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/master-service") || pathname.startsWith("/master/master-service") ? "text-primary-700" : ""}`}
-                      >
-                        <Link href="/master/master-service">Layanan</Link>
-                      </li>
-                      <li
-                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/master-facility") || pathname.startsWith("/master/master-facility") ? "text-primary-700" : ""}`}
-                      >
-                        <Link href="/master/master-facility">Fasilitas</Link>
-                      </li>
-                      <li
-                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/master-faq") || pathname.startsWith("/master/master-faq") ? "text-primary-700" : ""}`}
-                      >
-                        <Link href="/master/master-faq">FAQ</Link>
-                      </li>
-                      <li
-                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/vision-mission") || pathname.startsWith("/master/vision-mission") ? "text-primary-700" : ""}`}
-                      >
-                        <Link href="/master/vision-mission">Visi Misi</Link>
-                      </li>
-                      <li
-                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/video") || pathname.startsWith("/master/video") ? "text-primary-700" : ""}`}
-                      >
-                        <Link href="/master/video">Video</Link>
-                      </li>
-                      <li
-                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/flow-mpp") || pathname.startsWith("/master/flow-mpp") ? "text-primary-700" : ""}`}
-                      >
-                        <Link href="/master/flow-mpp">Alur MPP</Link>
-                      </li>
-                      <li
-                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/flow-request") || pathname.startsWith("/master/flow-request") ? "text-primary-700" : ""}`}
-                      >
-                        <Link href="/master/flow-request">Alur Permohonan</Link>
-                      </li>
-                      <li
-                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/flow-booking") || pathname.startsWith("/master/flow-booking") ? "text-primary-700" : ""}`}
-                      >
-                        <Link href="/master/flow-booking">Alur Booking</Link>
-                      </li>
-                      <li
-                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/carousel") || pathname.startsWith("/master/carousel") ? "text-primary-700" : ""}`}
-                      >
-                        <Link href="/master/carousel">Slider</Link>
-                      </li>
-                      <li
-                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/master-apps") || pathname.startsWith("/master/master-apps") ? "text-primary-700" : ""}`}
-                      >
-                        <Link href="/master/master-apps">Aplikasi Dinas</Link>
-                      </li>
-                      <li
-                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/contact") || pathname.startsWith("/master/contact") ? "text-primary-700" : ""}`}
-                      >
-                        <Link href="/master/contact">Kontak</Link>
-                      </li>
-                      <li
-                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/term-and-condition") || pathname.startsWith("/master/term-and-condition") ? "text-primary-700" : ""}`}
-                      >
-                        <Link href="/master/term-and-condition">
-                          Syarat & Ketentuan
-                        </Link>
-                      </li>
-                    </>
-                  ) : (
-                    <>
-                      <li
-                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/master-service") || pathname.startsWith("/master/master-service") ? "text-primary-700" : ""}`}
-                      >
-                        <Link href="/master/master-service">Layanan</Link>
-                      </li>
-                    </>
-                  )}
-                </ul>
-              </>
-            }
-            isDropdownOpen={isDropdownOpen === "/master"}
-            handleDropdownOpen={() => handleDropdownOpen("/master")}
-          />
-          {role === "Admin Instansi" ? (
+          {role !== "Admin Layanan" && (
+            <Nav
+              route="#"
+              path="/master"
+              icons="/icons/Master.svg"
+              iconsActive="/icons/Master-active.svg"
+              title="Data Master"
+              type="dropdown"
+              content={
+                <>
+                  <ul className="space-y-4">
+                    {role !== "Admin Instansi" ? (
+                      <>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/master-instance") || pathname.startsWith("/master/master-instance") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/master-instance">Instansi</Link>
+                        </li>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/master-service") || pathname.startsWith("/master/master-service") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/master-service">Layanan</Link>
+                        </li>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/master-facility") || pathname.startsWith("/master/master-facility") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/master-facility">Fasilitas</Link>
+                        </li>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/master-faq") || pathname.startsWith("/master/master-faq") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/master-faq">FAQ</Link>
+                        </li>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/vision-mission") || pathname.startsWith("/master/vision-mission") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/vision-mission">Visi Misi</Link>
+                        </li>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/video") || pathname.startsWith("/master/video") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/video">Video</Link>
+                        </li>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/flow-mpp") || pathname.startsWith("/master/flow-mpp") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/flow-mpp">Alur MPP</Link>
+                        </li>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/manual-book") || pathname.startsWith("/master/manual-book") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/manual-book">Manual Book</Link>
+                        </li>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/flow-request") || pathname.startsWith("/master/flow-request") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/flow-request">
+                            Alur Permohonan
+                          </Link>
+                        </li>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/flow-booking") || pathname.startsWith("/master/flow-booking") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/flow-booking">Alur Booking</Link>
+                        </li>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/carousel") || pathname.startsWith("/master/carousel") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/carousel">Slider</Link>
+                        </li>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/master-apps") || pathname.startsWith("/master/master-apps") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/master-apps">Aplikasi Dinas</Link>
+                        </li>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/contact") || pathname.startsWith("/master/contact") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/contact">Kontak</Link>
+                        </li>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/term-and-condition") || pathname.startsWith("/master/term-and-condition") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/term-and-condition">
+                            Syarat & Ketentuan
+                          </Link>
+                        </li>
+                      </>
+                    ) : (
+                      <>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/master-service") || pathname.startsWith("/master/master-service") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/master-service">Layanan</Link>
+                        </li>
+                      </>
+                    )}
+                  </ul>
+                </>
+              }
+              isDropdownOpen={isDropdownOpen === "/master"}
+              handleDropdownOpen={() => handleDropdownOpen("/master")}
+            />
+          )}
+          {role === "Admin Instansi" || role === "Admin Layanan" ? (
             ""
           ) : (
             <Nav
@@ -320,7 +351,11 @@ const Sidebar = () => {
           </div>
           <div className="flex flex-col text-xs">
             <p className="text-[#324054]">{role}</p>
-            <p className="text-[#71839B]">{instanceName}</p>
+            {role === "Admin Layanan" ? (
+              <p className="text-[#71839B]">{layanan}</p>
+            ) : (
+              <p className="text-[#71839B]">{instanceName}</p>
+            )}
           </div>
         </div>
         {isDropdownOpen === "/logout" && (

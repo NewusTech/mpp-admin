@@ -53,16 +53,16 @@ const ManageRequirements = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher
+    fetcher,
   );
 
   const instanceId = Number(instance);
 
   let url = `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get`;
 
-  if (role === "Admin Instansi") {
+  if (role === "Admin Instansi" || role === "Admin Layanan") {
     url += `/${instansiId}?limit=10000000`;
-  } else if ("Superadmin") {
+  } else if ("Super Admin") {
     url += `/${instanceId}?limit=10000000`;
   }
 
@@ -86,7 +86,7 @@ const ManageRequirements = () => {
           <h1 className="text-lg font-semibold">Kelola Persyaratan</h1>
           <div className="flex justify-between mt-4">
             <div className="w-1/2">
-              {role !== "Admin Instansi" && (
+              {role !== "Admin Isntansi" && role !== "Admin Layanan" && (
                 <InputComponent
                   typeInput="selectSearch"
                   valueInput={searchInputInstance}
@@ -101,11 +101,13 @@ const ManageRequirements = () => {
                 />
               )}
             </div>
-            {instance || role === "Admin Instansi" ? (
+            {instance ||
+            role === "Admin Instansi" ||
+            role === "Admin Layanan" ? (
               <Link href="/manage-requirement/create">
                 <Button
                   onClick={() =>
-                    role === "Admin Instansi"
+                    role === "Admin Instansi" || role === "Admin Layanan"
                       ? handlePassIdInstnace(instansiId)
                       : handlePassIdInstnace(instanceId)
                   }

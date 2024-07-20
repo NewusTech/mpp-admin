@@ -18,6 +18,7 @@ import { formatDate } from "@/lib/utils";
 interface JwtPayload {
   role?: string;
   instansi_id: number;
+  layanan_id: number;
 }
 
 const RequestOffline = () => {
@@ -26,6 +27,7 @@ const RequestOffline = () => {
   const setServiceId = useCreateRequestOffline((state) => state.setServiceId);
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<number | null>(null);
+  const [layananId, setLayananId] = useState<number | null>(null);
   const [searchTermInstance, setSearchTermInstance] = useState("");
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
   const [searchTermService, setSearchTermService] = useState("");
@@ -47,6 +49,7 @@ const RequestOffline = () => {
         if (decoded && decoded.role && decoded.instansi_id !== undefined) {
           setRole(decoded.role);
           setInstansiId(decoded.instansi_id);
+          setLayananId(decoded.layanan_id);
         }
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -56,14 +59,14 @@ const RequestOffline = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher
+    fetcher,
   );
 
   const instanceId = Number(instance);
 
   let url = `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get`;
 
-  if (role === "Admin Instansi") {
+  if (role === "Admin Instansi" || role === "Admin Layanan") {
     url += `/${instansiId}?search=${searchTermService}`;
   } else if ("Super Admin") {
     url += `/${instanceId}?search=${searchTermService}`;
@@ -86,11 +89,18 @@ const RequestOffline = () => {
   };
 
   let instanceId2;
+  let serviceId2;
 
-  if (role === "Admin Instansi") {
+  if (role === "Admin Instansi" || role === "Admin Layanan") {
     instanceId2 = instansiId;
   } else {
     instanceId2 = instanceId;
+  }
+
+  if (role === "Admin Layanan") {
+    serviceId2 = layananId;
+  } else {
+    serviceId2 = serviceId;
   }
 
   // Pastikan startDate dan endDate dalam format yang benar
@@ -101,7 +111,7 @@ const RequestOffline = () => {
 
   const params = {
     instansi_id: instanceId2,
-    layanan_id: serviceId,
+    layanan_id: serviceId2,
     limit: 10000000, // atau false
     start_date: startDateFormatted, // atau undefined
     end_date: endDateFormatted, // atau undefined
@@ -135,7 +145,7 @@ const RequestOffline = () => {
       <section className="mr-16">
         <div className="flex justify-between gap-x-5 mb-8">
           <div className="flex w-7/12 gap-x-5">
-            {role !== "Admin Instansi" && (
+            {role === "Super Admin" && (
               <InputComponent
                 typeInput="selectSearch"
                 valueInput={searchInputInstance}
@@ -149,16 +159,20 @@ const RequestOffline = () => {
                 onChange={(e: any) => setInstance(e)}
               />
             )}
-            <InputComponent
-              typeInput="selectSearch"
-              items={services?.data}
-              valueInput={searchInputService}
-              onChangeInputSearch={(e) => setSearchInputService(e.target.value)}
-              label="Layanan"
-              placeholder="Pilih Layanan"
-              value={service}
-              onChange={(e: any) => setService(e)}
-            />
+            {role !== "Admin Layanan" && (
+              <InputComponent
+                typeInput="selectSearch"
+                items={services?.data}
+                valueInput={searchInputService}
+                onChangeInputSearch={(e) =>
+                  setSearchInputService(e.target.value)
+                }
+                label="Layanan"
+                placeholder="Pilih Layanan"
+                value={service}
+                onChange={(e: any) => setService(e)}
+              />
+            )}
           </div>
           <div className="flex w-5/12 items-center gap-x-2">
             <InputComponent
@@ -175,7 +189,7 @@ const RequestOffline = () => {
           </div>
         </div>
         <div className="flex justify-start ">
-          {role === "Superadmin" ? (
+          {role === "Super Admin" ? (
             <div>
               {instansiId && serviceId ? (
                 <Link href="/request/offline/create">
@@ -197,10 +211,10 @@ const RequestOffline = () => {
             </div>
           ) : (
             <div>
-              {serviceId ? (
+              {serviceId2 ? (
                 <Link href="/request/offline/create">
                   <Button
-                    onClick={() => handlePassId(serviceId)}
+                    onClick={() => handlePassId(serviceId2)}
                     className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
                   >
                     Tambah

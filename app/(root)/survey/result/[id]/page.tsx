@@ -43,7 +43,7 @@ const SurveyPrint = ({
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/${params.id}?limit=1000000`,
-    fetcher
+    fetcher,
   );
 
   const result = data?.data;
