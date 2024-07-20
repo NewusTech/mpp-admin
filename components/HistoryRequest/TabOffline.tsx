@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
 
 interface TabOfflineProps {
-  serviceId: number;
+  serviceId: number | null;
   instanceId: number | null;
 }
 

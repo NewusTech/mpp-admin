@@ -50,7 +50,7 @@ const CardDashboardQueue = ({
   return (
     <div className="w-full h-[152px] bg-primary-50 rounded-[20px] flex flex-col items-center justify-center gap-4">
       <h3 className="text-[16px] text-neutral-800 font-semibold">{title}</h3>
-      <h1 className={`text-[40px] ${background} font-bold`}>{number}</h1>
+      <h1 className={`text-[30px] ${background} font-bold`}>{number}</h1>
     </div>
   );
 };
@@ -60,6 +60,31 @@ const TabQueueService = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [audioUrl, setAudioUrl] = useState(null);
+  const [shouldFetch, setShouldFetch] = useState(false);
+
+  const {
+    data: queue,
+    error,
+    mutate,
+  } = useSWR(
+    shouldFetch
+      ? `${process.env.NEXT_PUBLIC_API_URL}/panggilantrian/get/:sluglayanan`
+      : null,
+    fetcher,
+  );
+
+  const fetchAudio = async () => {
+    setShouldFetch(true);
+    const response = await mutate();
+    if (response) {
+      setAudioUrl(response.audioUrl);
+      const audioElement = new Audio(response.audioUrl);
+      audioElement.play().catch((error) => {
+        console.error("Error playing audio:", error);
+      });
+    }
+  };
 
   const buildUrl = (baseUrl: string, params: Record<string, any>) => {
     const url = new URL(baseUrl);
@@ -123,10 +148,15 @@ const TabQueueService = () => {
   return (
     <>
       <section className="bg-primary-200 px-8 py-9 rounded-[20px] shadow space-y-3">
-        <div className="grid grid-cols-4 gap-x-5">
+        <div className="grid grid-cols-5 gap-x-5">
+          <CardDashboardQueue
+            title="Total Antrian"
+            number={result?.AntrianCount || 0}
+            background="text-neutral-700"
+          />
           <CardDashboardQueue
             title="Antrian Selesai"
-            number={result?.AntrianCount || 0}
+            number={result?.AntrianSelesaiCount || 0}
             background="text-success-700"
           />
           <CardDashboardQueue
@@ -146,9 +176,6 @@ const TabQueueService = () => {
           />
         </div>
         <div className="flex w-full justify-end space-x-2">
-          <Button className="bg-error-700 hover:bg-error-800 w-20 rounded-full">
-            Call
-          </Button>
           <Button className="bg-secondary-700 hover:bg-secondary-800 w-20 rounded-full">
             Recall
           </Button>

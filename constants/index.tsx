@@ -27,6 +27,7 @@ import {
   ManageApprovals,
   ManageRequirements,
   ManageUser,
+  ManualBook,
   News,
   QueueTab,
   Report,
@@ -98,12 +99,12 @@ const StatusCell = ({ status }: { status: number }) => {
       case 5:
         return (
           <div className="bg-warning-700 rounded-full w-8/12 text-[10px] p-1 text-center">
-            <p className="text-neutral-50">Revisi</p>
+            <p className="text-neutral-50">Perbaikan</p>
           </div>
         );
       default:
         return (
-          <div className="bg-neutral-700 rounded-full w-8/12 text-[10px] p-1 text-center">
+          <div className="bg-neutral-700 rounded-full w-8/12 text-[10px] text-neutral-50 p-1 text-center">
             <p>Diperbaiki</p>
           </div>
         );
@@ -125,7 +126,7 @@ const StatusQueue = ({ status }: { status: boolean }) => {
       default:
         return (
           <div className="bg-success-700 rounded-full w-8/12 text-[10px] p-1 text-center">
-            <p>Selesai</p>
+            <p className="text-neutral-50">Selesai</p>
           </div>
         );
     }
@@ -210,6 +211,69 @@ export const requestOnlineColumns: ColumnDef<RequestOnline>[] = [
         <div className="flex justify-center">
           <StatusCell status={Number(status)} />
         </div>
+      );
+    },
+  },
+];
+
+export const revisionColumns: ColumnDef<RequestOnline>[] = [
+  {
+    accessorKey: "createdAt",
+    header: "Tanggal",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{formatDate(date)}</p>;
+    },
+  },
+  {
+    accessorKey: "name",
+    header: "Nama",
+  },
+  {
+    accessorKey: "status",
+    header: () => {
+      return (
+        <div className="flex justify-center">
+          <p>Status</p>
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      const status = row.original.status;
+
+      return (
+        <div className="flex justify-center">
+          <StatusCell status={Number(status)} />
+        </div>
+      );
+    },
+  },
+  {
+    id: "action",
+    header: () => {
+      return (
+        <div className="flex justify-center">
+          <p>Aksi</p>
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      const action = row.original;
+
+      return (
+        <>
+          <div className="flex justify-center items-center gap-x-3">
+            <Link href={`/request/revision/${action.id}`}>
+              <Button
+                size="xs"
+                className="text-xs rounded-full py-1 bg-secondary-700 text-neutral-50 hover:bg-secondary-800"
+              >
+                Lihat Detail
+              </Button>
+            </Link>
+          </div>
+        </>
       );
     },
   },
@@ -1036,6 +1100,40 @@ export const flowRequestColumns: ColumnDef<FlowBooking>[] = [
   {
     accessorKey: "desc",
     header: "Deskripsi",
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const flow = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <AlertDialogUpdateMasterFlowPermohonan id={flow.id} />
+            <ModalDelete endpoint={`alurpermohonan/delete/${flow.id}`} />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
+
+export const manualBookColumns: ColumnDef<ManualBook>[] = [
+  {
+    accessorKey: "dokumen",
+    header: "Dokumen",
+  },
+  {
+    accessorKey: "video",
+    header: "Video",
   },
   {
     id: "actions",

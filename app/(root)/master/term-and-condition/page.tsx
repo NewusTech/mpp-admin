@@ -28,7 +28,7 @@ const MasterTermAndCondition = async () => {
         <DataTables
           columns={termAndConditionColumns}
           data={result}
-          filterBy="misi"
+          filterBy="desc"
         />
       </section>
     </ProtectedRoute>

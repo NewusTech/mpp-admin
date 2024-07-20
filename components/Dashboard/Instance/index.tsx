@@ -84,7 +84,9 @@ const InstanceDashboard = () => {
           {state.role === "Admin Layanan" && (
             <>
               <h4 className="text-sm text-primary-800">{state.serviceName}</h4>
-              <h4 className="text-sm text-primary-800">{state.serviceCode}</h4>
+              <h4 className="text-sm text-primary-800">
+                Loket {state.serviceCode}
+              </h4>
             </>
           )}
         </div>
