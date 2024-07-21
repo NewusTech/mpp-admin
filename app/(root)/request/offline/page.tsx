@@ -145,7 +145,7 @@ const RequestOffline = () => {
       <section className="mr-16">
         <div className="flex justify-between gap-x-5 mb-8">
           <div className="flex w-7/12 gap-x-5">
-            {role === "Super Admin" && (
+            {role !== "Admin Isntansi" && role !== "Admin Layanan" && (
               <InputComponent
                 typeInput="selectSearch"
                 valueInput={searchInputInstance}

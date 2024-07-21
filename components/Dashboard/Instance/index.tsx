@@ -20,6 +20,7 @@ interface JwtPayload {
   instansi_image: string;
   instansi: string;
   layanan_id: number;
+  layanan_slug: string;
 }
 
 const InstanceDashboard = () => {
@@ -31,6 +32,7 @@ const InstanceDashboard = () => {
     image: "",
     instanceName: "",
     serviceId: 0,
+    slug: "",
   });
 
   useEffect(() => {
@@ -55,6 +57,7 @@ const InstanceDashboard = () => {
             image: decoded.instansi_image,
             instanceName: decoded.instansi,
             serviceId: decoded.layanan_id,
+            slug: decoded.layanan_slug,
           });
         }
       } catch (error) {
@@ -113,7 +116,11 @@ const InstanceDashboard = () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="queue" className="mt-8">
-          {state.role === "Admin Instansi" ? <TabQueue /> : <TabQueueService />}
+          {state.role === "Admin Instansi" ? (
+            <TabQueue />
+          ) : (
+            <TabQueueService id={state.slug} />
+          )}
         </TabsContent>
         <TabsContent value="service">
           {state.role === "Admin Instansi" ? (

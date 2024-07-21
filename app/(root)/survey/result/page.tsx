@@ -117,7 +117,7 @@ const SurveyResult = () => {
       <section className="mr-16">
         <div className="flex justify-between mb-8 space-x-3">
           <div className="w-1/2">
-            {role === "Super Admin" && (
+            {role !== "Admin Isntansi" && role !== "Admin Layanan" && (
               <InputComponent
                 typeInput="selectSearch"
                 valueInput={searchInputInstance}

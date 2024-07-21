@@ -50,12 +50,12 @@ export default function Home() {
       ]}
     >
       <section className="mr-16">
-        {role === "Super Admin" ? (
-          <DashboardSuperadmin />
+        {role === "Bupati" ? (
+          <DashboardBupati />
         ) : role === "Admin Instansi" || role === "Admin Layanan" ? (
           <InstanceDashboard />
         ) : (
-          <DashboardBupati />
+          <DashboardSuperadmin />
         )}
       </section>
     </ProtectedRoute>

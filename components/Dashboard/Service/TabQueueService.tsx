@@ -30,6 +30,7 @@ import { Loader } from "lucide-react";
 import Image from "next/image";
 import InputComponent from "@/components/InputComponent";
 import { formatDate } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface JwtPayload {
   role?: string;
@@ -49,13 +50,15 @@ const CardDashboardQueue = ({
 }: CardDashboardQueueProps) => {
   return (
     <div className="w-full h-[152px] bg-primary-50 rounded-[20px] flex flex-col items-center justify-center gap-4">
-      <h3 className="text-[16px] text-neutral-800 font-semibold">{title}</h3>
-      <h1 className={`text-[30px] ${background} font-bold`}>{number}</h1>
+      <h3 className="text-[15px] text-neutral-800 font-semibold text-center">
+        {title}
+      </h3>
+      <h1 className={`text-lg ${background} font-bold`}>{number}</h1>
     </div>
   );
 };
 
-const TabQueueService = () => {
+const TabQueueService = ({ id }: { id: string }) => {
   const [activeButton, setActiveButton] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
@@ -69,22 +72,33 @@ const TabQueueService = () => {
     mutate,
   } = useSWR(
     shouldFetch
-      ? `${process.env.NEXT_PUBLIC_API_URL}/panggilantrian/get/:sluglayanan`
+      ? `${process.env.NEXT_PUBLIC_API_URL}/panggilantrian/get/${id}`
       : null,
     fetcher,
   );
 
-  const fetchAudio = async () => {
-    setShouldFetch(true);
-    const response = await mutate();
-    if (response) {
-      setAudioUrl(response.audioUrl);
-      const audioElement = new Audio(response.audioUrl);
+  useEffect(() => {
+    if (audioUrl) {
+      const audioElement = new Audio(audioUrl);
       audioElement.play().catch((error) => {
         console.error("Error playing audio:", error);
       });
     }
+  }, [audioUrl]);
+
+  const fetchAudio = async () => {
+    setShouldFetch(true);
+    const response = await mutate();
+    if (response && response.audioUrl) {
+      setAudioUrl(response.audioUrl);
+    }
   };
+
+  useEffect(() => {
+    if (shouldFetch) {
+      fetchAudio();
+    }
+  }, [shouldFetch]);
 
   const buildUrl = (baseUrl: string, params: Record<string, any>) => {
     const url = new URL(baseUrl);
@@ -182,7 +196,10 @@ const TabQueueService = () => {
           <Button className="bg-neutral-800 hover:bg-neutral-900 w-20 rounded-full">
             Transfer
           </Button>
-          <Button className="bg-success-700 hover:bg-success-800 w-20 rounded-full">
+          <Button
+            onClick={fetchAudio}
+            className="bg-success-700 hover:bg-success-800 w-20 rounded-full"
+          >
             Next
           </Button>
         </div>
