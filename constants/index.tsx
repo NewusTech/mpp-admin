@@ -1130,31 +1130,29 @@ export const manualBookColumns: ColumnDef<ManualBook>[] = [
   {
     accessorKey: "dokumen",
     header: "Dokumen",
+    cell: ({ row }) => {
+      const dokumen = row.original.dokumen;
+      return (
+        <Link href={dokumen} target="_blank" className="underline">
+          Manual Book
+        </Link>
+      );
+    },
   },
   {
     accessorKey: "video",
     header: "Video",
-  },
-  {
-    id: "actions",
     cell: ({ row }) => {
       const flow = row.original;
-
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <AlertDialogUpdateMasterFlowPermohonan id={flow.id} />
-            <ModalDelete endpoint={`alurpermohonan/delete/${flow.id}`} />
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div>
+          <video
+            src={flow.video}
+            controls={true}
+            muted={true}
+            className="w-1/2 h-20"
+          />
+        </div>
       );
     },
   },
@@ -1258,9 +1256,21 @@ export const VisionMissionColumns: ColumnDef<VisionMission>[] = [
 export const termAndConditionColumns: ColumnDef<TermAndCondition>[] = [
   {
     accessorKey: "desc",
-    header: "Deskripsi Syarat & Ketentuan",
+    header: "Dokumen",
     cell: ({ row }) => {
       const desc = row.original.desc;
+      return (
+        <Link href={desc} target="_blank" className="underline">
+          Dokumen
+        </Link>
+      );
+    },
+  },
+  {
+    accessorKey: "privasi_text",
+    header: "Syarat & Ketentuan",
+    cell: ({ row }) => {
+      const desc = row.original.privasi_text;
       return <RichTextDisplay content={desc} />;
     },
   },

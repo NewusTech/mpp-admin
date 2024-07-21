@@ -42,6 +42,38 @@ const Card = ({
   );
 };
 
+export function getDescription(value: number): string {
+  if (value >= 0 && value <= 30) {
+    return "Sangat Buruk";
+  } else if (value > 30 && value <= 50) {
+    return "Buruk";
+  } else if (value > 50 && value <= 75) {
+    return "Cukup";
+  } else if (value > 75 && value <= 90) {
+    return "Baik";
+  } else if (value > 90 && value <= 100) {
+    return "Sangat Baik";
+  }
+  return "nilai tidak valid";
+}
+
+function getBackgroundClass(description: string): string {
+  switch (description) {
+    case "Sangat Buruk":
+      return "bg-error-700";
+    case "Buruk":
+      return "bg-error-500";
+    case "Cukup":
+      return "bg-warning-700";
+    case "Baik":
+      return "bg-primary-700";
+    case "Sangat Baik":
+      return "bg-success-700";
+    default:
+      return "";
+  }
+}
+
 export const ProgressBar = ({
   name,
   value,
@@ -51,18 +83,28 @@ export const ProgressBar = ({
   value: number;
   id: number;
 }) => {
+  const description = getDescription(value);
+  const backgroundClass = getBackgroundClass(description);
+
   return (
-    <div className="space-y-1">
-      <div className="flex justify-between text-sm text-neutral-800">
-        <Link
-          href={`/survey/result/${id}`}
-          className="hover:text-primary-700 hover:underline transition-colors duration-300"
-        >
-          <h4>{name}</h4>
-        </Link>
-        <p>{value}</p>
+    <div className="flex space-x-3 items-center">
+      <div className="w-full space-y-1">
+        <div className="flex justify-between text-sm text-neutral-800">
+          <Link
+            href={`/survey/result/${id}`}
+            className="hover:text-primary-700 hover:underline transition-colors duration-300"
+          >
+            <h4>{name}</h4>
+          </Link>
+          <p>{value}</p>
+        </div>
+        <Progress value={value} />
       </div>
-      <Progress value={value} />
+      <div
+        className={`text-[10px] ${backgroundClass} rounded-lg text-neutral-50 px-2 py-1`}
+      >
+        <p className="text-center">{description}</p>
+      </div>
     </div>
   );
 };

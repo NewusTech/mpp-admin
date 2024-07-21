@@ -167,3 +167,8 @@ export const ContactValidation = z.object({
     message: "Garis bujur harus diisi",
   }),
 });
+
+export const ManualBookValidation = z.object({
+  file: z.instanceof(FileList),
+  video: z.custom<File[]>(),
+});

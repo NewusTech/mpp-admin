@@ -152,6 +152,7 @@ export type VisionMission = {
 export type TermAndCondition = {
   id: number;
   desc: any;
+  privasi_text: string;
 };
 
 export type Complaint = {

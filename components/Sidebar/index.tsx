@@ -123,18 +123,16 @@ const Sidebar = () => {
                   >
                     <Link href="/request/offline">Offline</Link>
                   </li>
+                  <li
+                    className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/request/revision") || pathname.startsWith("/request/revision") ? "text-primary-700" : ""}`}
+                  >
+                    <Link href="/request/revision">Revisi</Link>
+                  </li>
                 </ul>
               </>
             }
             isDropdownOpen={isDropdownOpen === "/request"}
             handleDropdownOpen={() => handleDropdownOpen("/request")}
-          />
-          <Nav
-            route="/request/revision"
-            path="/request/revision"
-            icons="/icons/revision.svg"
-            iconsActive="/icons/revision-active.svg"
-            title="Revisi Permohonan"
           />
           <Nav
             route="/manage-approvals"

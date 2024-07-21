@@ -100,7 +100,7 @@ export default function AlertDialogCreateVideo() {
                 name="video"
                 render={({ field }) => (
                   <FormItem className="space-y-3">
-                    <FormLabel>Foto</FormLabel>
+                    <FormLabel>Video</FormLabel>
                     <FormControl>
                       <FileUploader fileChange={field.onChange} type="video" />
                     </FormControl>

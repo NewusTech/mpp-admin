@@ -130,6 +130,7 @@ const TabServiceInstance = () => {
   const resultStats = stats?.data;
   const resultTop3Month = stats?.data.top3LayananMonth;
   const resultTop3Week = stats?.data.totalLayananPerDay;
+  const resultTop3Week2 = stats?.data.totalLayanan7Days;
 
   console.log(resultTop3Week);
 
@@ -171,36 +172,29 @@ const TabServiceInstance = () => {
           </div>
         </div>
         <div className="rounded-[16px] w-1/2 bg-neutral-50 shadow p-4">
-          <p className="text-right text-neutral-800 mb-10">Last 7 Days</p>
+          <p className="text-right text-neutral-800 mb-10">7 Hari Terakhir</p>
           <AreaChart data={resultTop3Week} />
-          {/*<div className="flex gap-x-5 justify-around mt-4">*/}
-          {/*  {resultTop3Week?.map((v: any, index: number) => {*/}
-          {/*    // Tentukan kelas latar belakang berdasarkan nilai index*/}
-          {/*    const bgClass =*/}
-          {/*      index === 0*/}
-          {/*        ? "bg-primary-800"*/}
-          {/*        : index === 1*/}
-          {/*          ? "bg-primary-700"*/}
-          {/*          : "bg-secondary-700";*/}
-
-          {/*    return (*/}
-          {/*      <div*/}
-          {/*        className="flex gap-x-2 items-center"*/}
-          {/*        key={v?.top3?.LayananId}*/}
-          {/*      >*/}
-          {/*        <div className={`w-2 h-2 ${bgClass} rounded-full`}></div>*/}
-          {/*        <div>*/}
-          {/*          <h3 className="text-sm text-neutral-900 font-semibold">*/}
-          {/*            {v?.top3?.LayananformnumCount}*/}
-          {/*          </h3>*/}
-          {/*          <p className="text-xs text-neutral-800">*/}
-          {/*            {v?.top3?.LayananName}*/}
-          {/*          </p>*/}
-          {/*        </div>*/}
-          {/*      </div>*/}
-          {/*    );*/}
-          {/*  })}*/}
-          {/*</div>*/}
+          <div className="flex gap-x-5 justify-around mt-4">
+            {resultTop3Week2?.map((v: any, index: number) => {
+              const bgClass =
+                index === 0
+                  ? "bg-primary-800"
+                  : index === 1
+                    ? "bg-primary-700"
+                    : "bg-secondary-700";
+              return (
+                <div className="flex gap-x-2 items-center" key={v?.LayananId}>
+                  <div className={`w-2 h-2 ${bgClass} rounded-full`}></div>
+                  <div>
+                    <h3 className="text-sm text-neutral-900 font-semibold">
+                      {v?.LayananformnumCount}
+                    </h3>
+                    <p className="text-xs text-neutral-800">{v?.LayananName}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
       <div className="rounded-[16px] w-full bg-neutral-50 shadow p-12">

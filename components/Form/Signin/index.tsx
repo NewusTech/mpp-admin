@@ -50,6 +50,10 @@ const FormSignin = () => {
         },
       );
 
+      if (!response.ok) {
+        toast("NIK atau password salah!");
+      }
+
       const data = await response.json();
       if (response.ok) {
         const tokenAuth = data.data.token;

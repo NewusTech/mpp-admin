@@ -23,12 +23,12 @@ import {
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { FlowBookingValidation } from "@/lib/validation";
+import { ManualBookValidation } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useState } from "react";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import FileUploader from "@/components/FileUploader";
 
 export default function AlertDialogCreateMasterManualBook() {
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -42,23 +42,29 @@ export default function AlertDialogCreateMasterManualBook() {
     setAddModalOpen(false);
   };
 
-  const form = useForm<z.infer<typeof FlowBookingValidation>>({
-    resolver: zodResolver(FlowBookingValidation),
+  const form = useForm<z.infer<typeof ManualBookValidation>>({
+    resolver: zodResolver(ManualBookValidation),
   });
 
+  const fileRef = form.register("file");
+
   // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof FlowBookingValidation>) {
+  async function onSubmit(values: z.infer<typeof ManualBookValidation>) {
     setIsLoading(true);
+    const formData = new FormData();
+
+    formData.append("manualbook", values.file[0]);
+    formData.append("video", values.video[0]);
+
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/alurpermohonan/create`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/manualbook/update`,
         {
-          method: "POST",
+          method: "PUT",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-          body: JSON.stringify(values),
+          body: formData,
         },
       );
 
@@ -83,13 +89,13 @@ export default function AlertDialogCreateMasterManualBook() {
           onClick={handleOpenAddModal}
           className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
         >
-          Tambah Alur
+          Manual Book
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="p-0 border-0 overflow-auto">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
-            Tambah Alur Permohonan
+            Manual Book
           </AlertDialogTitle>
         </AlertDialogHeader>
         <div className="p-6">
@@ -97,16 +103,29 @@ export default function AlertDialogCreateMasterManualBook() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="desc"
+                name="file"
                 render={({ field }) => (
                   <FormItem className="space-y-3">
-                    <FormLabel>Deskripsi</FormLabel>
+                    <FormLabel>Dokumen</FormLabel>
                     <FormControl>
                       <Input
                         type="file"
                         className="rounded-full"
-                        // onChange={handleFileChange}
+                        {...fileRef}
                       />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="video"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel>Video</FormLabel>
+                    <FormControl>
+                      <FileUploader fileChange={field.onChange} type="video" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

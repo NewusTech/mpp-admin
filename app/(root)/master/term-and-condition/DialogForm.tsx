@@ -25,8 +25,13 @@ import MyEditor from "@/components/Editor";
 export default function AlertDialogCreateTermAndCondition() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<any>(null);
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
+  };
+
+  const handleFileChange = (event: any) => {
+    setSelectedFile(event.target.files[0]);
   };
 
   const handleAddModalClose = () => {
@@ -47,10 +52,11 @@ export default function AlertDialogCreateTermAndCondition() {
     e.preventDefault();
 
     const content1 = editor1Ref.current?.getContent();
-
-    const payload = {
-      desc: content1,
-    };
+    const formData = new FormData();
+    if (content1) {
+      formData.append("privasi_text", content1);
+    }
+    formData.append("desc", selectedFile);
 
     try {
       const response = await fetch(
@@ -58,10 +64,9 @@ export default function AlertDialogCreateTermAndCondition() {
         {
           method: "PUT",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-          body: JSON.stringify(payload),
+          body: formData,
         },
       );
 
@@ -87,7 +92,7 @@ export default function AlertDialogCreateTermAndCondition() {
           Syarat & Ketentuan
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="p-0 border-0 overflow-auto max-w-[60%]">
+      <AlertDialogContent className="p-0 border-0 overflow-auto max-w-[60%] h-full">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
             Syarat & Ketentuan
@@ -95,11 +100,19 @@ export default function AlertDialogCreateTermAndCondition() {
         </AlertDialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 px-4">
           <div className="space-y-2">
+            <label>Dokumen</label>
+            <Input
+              type="file"
+              className="rounded-full"
+              onChange={handleFileChange}
+            />
+          </div>
+          <div className="space-y-2">
             <label htmlFor="editor1">Syarat & Ketentuan</label>
             <MyEditor
               ref={editor1Ref}
               name="editor1"
-              initialValue={result?.desc || "<p>Ketik disni</p>"}
+              initialValue={result?.privasi_text || "<p>Ketik disni</p>"}
             />
           </div>
           <AlertDialogFooter className="p-6">

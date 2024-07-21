@@ -1,7 +1,7 @@
 "use client";
 
 import LineChart from "@/components/Dashboard/ChartDashboard/line";
-import { ProgressBar } from "@/components/Dashboard/Superadmin";
+import { getDescription, ProgressBar } from "@/components/Dashboard/Superadmin";
 import {
   Select,
   SelectContent,
@@ -110,7 +110,9 @@ const TabSurvey = () => {
           <h4 className="font-semibold text-[40px] text-neutral-50">
             {result?.rataRataNilaiSKM?.toFixed(2) || 0}
           </h4>
-          <p className="text-secondary-700">Sangat Baik</p>
+          <p className="text-secondary-700">
+            {getDescription(result?.rataRataNilaiSKM?.toFixed(2))}
+          </p>
         </div>
       </div>
       <div className="rounded-[16px] w-full bg-neutral-50 p-8 shadow space-y-8">

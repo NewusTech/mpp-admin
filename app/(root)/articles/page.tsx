@@ -84,7 +84,7 @@ const Articles = () => {
         <div
           className={`flex gap-x-6 ${role === "Admin Instansi" || role === "Admin Layanan" ? "justify-end mb-8" : "justify-between mb-[86px]"}`}
         >
-          {role === "Super Admin" && (
+          {role !== "Admin Isntansi" && role !== "Admin Layanan" && (
             <InputComponent
               typeInput="selectSearch"
               valueInput={searchInputInstance}
