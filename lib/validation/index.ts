@@ -5,7 +5,7 @@ export const SigninValidation = z.object({
     message: "NIK wajib diisi.",
   }),
   password: z.string().min(6, {
-    message: "Password setidaknya harus 8 karakter.",
+    message: "Password wajib.",
   }),
 });
 
@@ -169,6 +169,6 @@ export const ContactValidation = z.object({
 });
 
 export const ManualBookValidation = z.object({
-  file: z.instanceof(FileList),
+  file: z.any(),
   video: z.custom<File[]>(),
 });

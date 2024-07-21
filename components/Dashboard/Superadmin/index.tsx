@@ -43,7 +43,9 @@ const Card = ({
 };
 
 export function getDescription(value: number): string {
-  if (value >= 0 && value <= 30) {
+  if (value === 0) {
+    return "Belum Dinilai";
+  } else if (value > 0 && value <= 30) {
     return "Sangat Buruk";
   } else if (value > 30 && value <= 50) {
     return "Buruk";
@@ -69,6 +71,8 @@ function getBackgroundClass(description: string): string {
       return "bg-primary-700";
     case "Sangat Baik":
       return "bg-success-700";
+    case "Belum Dinilai":
+      return "bg-neutral-700";
     default:
       return "";
   }
@@ -96,7 +100,12 @@ export const ProgressBar = ({
           >
             <h4>{name}</h4>
           </Link>
-          <p>{value}</p>
+          <Link
+            href={`/survey/result/${id}`}
+            className="hover:text-primary-700 hover:underline transition-colors duration-300"
+          >
+            <p>{value}</p>
+          </Link>
         </div>
         <Progress value={value} />
       </div>
@@ -134,7 +143,7 @@ const DashboardSuperadmin = () => {
   );
 
   const { data: history, isLoading } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/superadmin`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/dashboard/superadmin?year=${selectedYear}`,
     fetcher,
     {
       revalidateOnFocus: false,
@@ -168,7 +177,7 @@ const DashboardSuperadmin = () => {
   const fixUrl = buildUrl(baseUrl, params);
 
   const { data: serviceData, isLoading: isLoadingService } = useSWR<any>(
-    instance ? fixUrl : null,
+    fixUrl,
     fetcher,
     {
       revalidateOnFocus: false,
@@ -182,14 +191,6 @@ const DashboardSuperadmin = () => {
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchInputInstance]);
-
-  if (isLoading) {
-    return (
-      <div className="h-screen w-full flex items-center justify-center">
-        <Loader className="animate-spin w-40" />
-      </div>
-    );
-  }
 
   const result = data?.data;
   const histories: any = history?.data;
@@ -230,7 +231,11 @@ const DashboardSuperadmin = () => {
           </div>
         </div>
         <div className="space-x-4 mt-4 flex justify-between">
-          <Card color="bg-secondary-700" text="14,777" title="Antrian Online" />
+          <Card
+            color="bg-secondary-700"
+            text="14,777"
+            title="Antrian Online ee"
+          />
           <Card
             color="bg-primary-700"
             text={histories?.permohonanCount}

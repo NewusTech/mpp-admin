@@ -17,6 +17,10 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader } from "lucide-react";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetch";
+import { DataTables } from "@/components/Datatables";
+import { dashboardApprovalColumns } from "@/constants";
 
 interface RequestTodayProps {
   count: number;
@@ -34,6 +38,12 @@ const RequestToday = ({
 }: RequestTodayProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;
+
+  const { data } = useSWR<any>(baseUrl, fetcher);
+
+  const result = data?.data;
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -44,10 +54,20 @@ const RequestToday = ({
           <h4 className="font-semibold text-[40px]">{count}</h4>
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-fit h-fit">
+      <DialogContent className="max-w-full h-fit overflow-auto">
         <DialogHeader>
           <DialogTitle className="text-primary-700">{title}</DialogTitle>
         </DialogHeader>
+        <div className="mt-10">
+          {result && (
+            <DataTables
+              columns={dashboardApprovalColumns}
+              data={result}
+              filterBy="name"
+              type="history"
+            />
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );
