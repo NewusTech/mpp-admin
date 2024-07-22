@@ -40,7 +40,7 @@ const FormSignin = () => {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/login`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/login?admin=true`,
         {
           method: "POST",
           headers: {
@@ -50,11 +50,11 @@ const FormSignin = () => {
         },
       );
 
+      const data = await response.json();
       if (!response.ok) {
-        toast("NIK atau password salah!");
+        toast("username atau password salah");
       }
 
-      const data = await response.json();
       if (response.ok) {
         const tokenAuth = data.data.token;
         login(tokenAuth);
@@ -82,7 +82,7 @@ const FormSignin = () => {
           name="nik"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>NIK</FormLabel>
+              <FormLabel>Username</FormLabel>
               <FormControl>
                 <Input
                   className="rounded-full"

@@ -1,7 +1,7 @@
 "use client";
 
 import LineChart from "@/components/Dashboard/ChartDashboard/line";
-import { ProgressBar } from "@/components/Dashboard/Superadmin";
+import { getDescription, ProgressBar } from "@/components/Dashboard/Superadmin";
 import {
   Select,
   SelectContent,
@@ -22,6 +22,7 @@ import { DataTables } from "@/components/Datatables";
 import { detailSurveyResultColumns } from "@/constants";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
+import { formatDate } from "@/lib/utils";
 
 const months = [
   { label: "Januari", value: 1 },
@@ -97,10 +98,36 @@ const TabSurveyService = ({ id }: { id: number }) => {
     },
   );
 
-  const { data: survey } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/${id}?limit=1000000`,
-    fetcher,
-  );
+  const buildUrl = (baseUrl: string, params: Record<string, any>) => {
+    const url = new URL(baseUrl);
+    // Tambahkan parameter lainnya
+    Object.keys(params).forEach((key) => {
+      if (params[key] !== undefined) {
+        url.searchParams.append(key, params[key]);
+      }
+    });
+
+    return url.toString();
+  };
+
+  // Pastikan startDate dan endDate dalam format yang benar
+  const startDateFormatted = startDate
+    ? formatDate(new Date(startDate))
+    : undefined;
+  const endDateFormatted = endDate ? formatDate(new Date(endDate)) : undefined;
+
+  const params = {
+    limit: 10000000, // atau false
+    start_date: startDateFormatted, // atau undefined
+    end_date: endDateFormatted, // atau undefined
+  };
+
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/${id}`;
+
+  // Bangun URL berdasarkan role dan instanceId
+  const fixUrl = buildUrl(baseUrl, params);
+
+  const { data: survey } = useSWR<any>(fixUrl, fetcher);
 
   const result = data?.data;
   const resultSurvey = survey?.data;
@@ -156,9 +183,11 @@ const TabSurveyService = ({ id }: { id: number }) => {
             Total Nilai SKM Keseluruhan
           </p>
           <h4 className="font-semibold text-[40px] text-neutral-50">
-            {result?.rataRataNilaiSKM?.toFixed(2)}
+            {result?.rataRataNilaiSKM?.toFixed(2) || 0}
           </h4>
-          <p className="text-secondary-700">Sangat Baik</p>
+          <p className="text-secondary-700">
+            {getDescription(result?.rataRataNilaiSKM?.toFixed(2))}
+          </p>
         </div>
       </div>
       <div className="rounded-[16px] w-full bg-neutral-50 p-8 shadow">

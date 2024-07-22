@@ -148,13 +148,15 @@ const Sidebar = () => {
             iconsActive="/icons/square-library-active.svg"
             title="Riwayat Permohonan"
           />
-          <Nav
-            route="/report"
-            path="/report"
-            icons="/icons/Report.svg"
-            iconsActive="/icons/Report-active.svg"
-            title="Laporan"
-          />
+          {role !== "Admin Layanan" && (
+            <Nav
+              route="/report"
+              path="/report"
+              icons="/icons/Report.svg"
+              iconsActive="/icons/Report-active.svg"
+              title="Laporan"
+            />
+          )}
           <Nav
             route="#"
             path="/survey"
@@ -165,11 +167,13 @@ const Sidebar = () => {
             content={
               <>
                 <ul className="space-y-4">
-                  <li
-                    className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/survey/question") || pathname.startsWith("/survey/question") ? "text-primary-700" : ""}`}
-                  >
-                    <Link href="/survey/question">Pertanyaan</Link>
-                  </li>
+                  {role !== "Admin Layanan" && (
+                    <li
+                      className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/survey/question") || pathname.startsWith("/survey/question") ? "text-primary-700" : ""}`}
+                    >
+                      <Link href="/survey/question">Pertanyaan</Link>
+                    </li>
+                  )}
                   <li
                     className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/survey/result") || pathname.startsWith("/survey/result") ? "text-primary-700" : ""}`}
                   >

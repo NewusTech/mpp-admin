@@ -3,6 +3,7 @@ import { create } from "zustand";
 
 interface InputType {
   field: string;
+  desc: string;
 }
 
 interface CreateSurveyProps {

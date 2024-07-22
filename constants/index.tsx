@@ -52,7 +52,6 @@ import AlertDialogUpdateMasterFlowBooking from "@/app/(root)/master/flow-booking
 import AlertDialogUpdateMasterFlowPermohonan from "@/app/(root)/master/flow-request/DialogFormUpdate";
 import AlertDialogCreateMasterFlow from "@/app/(root)/master/flow-mpp/DialogForm";
 import { RichTextDisplay } from "@/components/RichTextDisplay";
-import { stat } from "fs";
 
 function formatDate(dateString: any) {
   const date = new Date(dateString);
@@ -359,26 +358,6 @@ export const requestOfflineColumns: ColumnDef<RequestOffline>[] = [
   {
     accessorKey: "nik",
     header: "NIK",
-  },
-  {
-    accessorKey: "status",
-    header: () => {
-      return (
-        <div className="flex justify-center">
-          <p>Status</p>
-        </div>
-      );
-    },
-    cell: ({ row }) => {
-      const statusRow = row.original;
-      const status = statusRow.status;
-
-      return (
-        <div className="flex justify-center">
-          <StatusCell status={Number(status)} id={statusRow.id} />
-        </div>
-      );
-    },
   },
 ];
 
@@ -764,6 +743,14 @@ export const surveyQuestionColumns: ColumnDef<SurveyQuestion>[] = [
   {
     accessorKey: "field",
     header: "Pertanyaan",
+  },
+  {
+    accessorKey: "desc",
+    header: "Deskripsi",
+    cell: ({ row }) => {
+      const visi = row.original.desc;
+      return <RichTextDisplay content={visi} />;
+    },
   },
   {
     id: "actions",
@@ -1445,7 +1432,7 @@ export const activeQueueColumns: ColumnDef<ActiveQueue>[] = [
       const status = row.original.status;
 
       return (
-        <div className="flex justify-center">
+        <div className="flex">
           <StatusQueue status={status} />
         </div>
       );
@@ -1488,7 +1475,7 @@ export const historyQueueColumns: ColumnDef<HistoryQueue>[] = [
       const status = row.original.status;
 
       return (
-        <div className="flex justify-center">
+        <div className="flex">
           <StatusQueue status={status} />
         </div>
       );
