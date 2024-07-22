@@ -76,6 +76,7 @@ export function AlertDialogChangeStatusRequestNonactive({
       if (response.ok) {
         toast(data.message);
         handleAddModalClose();
+        window.location.reload();
       }
     } catch (e) {
     } finally {
@@ -89,7 +90,7 @@ export function AlertDialogChangeStatusRequestNonactive({
         <Button
           size="2xs"
           onClick={handleOpenAddModal}
-          className="py-1 text-[10px] px-4 rounded-full bg-transparent text-secondary-700 border border-secondary-700 hover:bg-secondary-700 hover:text-neutral-50 cursor-pointer"
+          className="py-1 text-[10px] px-4 rounded-full bg-transparent text-primary-700 border border-primary-700 hover:bg-primary-700 hover:text-neutral-50 cursor-pointer"
         >
           Offline
         </Button>

@@ -78,6 +78,7 @@ export function AlertDialogChangeStatusRequest({ id }: { id: number }) {
         await mutate(
           `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get/${id}?limit=10000000`,
         );
+        window.location.reload();
       }
     } catch (e) {
     } finally {

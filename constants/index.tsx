@@ -183,6 +183,28 @@ export const requestOnlineColumns: ColumnDef<RequestOnline>[] = [
     },
   },
   {
+    accessorKey: "createdAt",
+    header: "Hari",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{getDayName(date)}</p>;
+    },
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Jam",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{getTime(date)}</p>;
+    },
+  },
+  {
+    accessorKey: "nik",
+    header: "NIK",
+  },
+  {
     accessorKey: "name",
     header: "Nama",
     cell: ({ row }) => {
@@ -287,6 +309,24 @@ export const requestOfflineColumns: ColumnDef<RequestOffline>[] = [
       const date = row.original.createdAt;
 
       return <p>{formatDate(date)}</p>;
+    },
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Hari",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{getDayName(date)}</p>;
+    },
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Jam",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{getTime(date)}</p>;
     },
   },
   {
