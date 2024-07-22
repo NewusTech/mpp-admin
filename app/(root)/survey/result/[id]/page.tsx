@@ -13,22 +13,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { Loader } from "lucide-react";
 import InputComponent from "@/components/InputComponent";
-
-// async function getData(id: number): Promise<DetailSurveyResult[]> {
-//   const res = await fetch(
-//     `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/${id}`,
-//     {
-//       cache: "no-cache",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     },
-//   );
-//
-//   const data = await res.json();
-//
-//   return data?.data;
-// }
+import { formatDate } from "@/lib/utils";
 
 const SurveyPrint = ({
   params,
@@ -41,10 +26,36 @@ const SurveyPrint = ({
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
-  const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/${params.id}?limit=1000000`,
-    fetcher,
-  );
+  const buildUrl = (baseUrl: string, params: Record<string, any>) => {
+    const url = new URL(baseUrl);
+    // Tambahkan parameter lainnya
+    Object.keys(params).forEach((key) => {
+      if (params[key] !== undefined) {
+        url.searchParams.append(key, params[key]);
+      }
+    });
+
+    return url.toString();
+  };
+
+  // Pastikan startDate dan endDate dalam format yang benar
+  const startDateFormatted = startDate
+    ? formatDate(new Date(startDate))
+    : undefined;
+  const endDateFormatted = endDate ? formatDate(new Date(endDate)) : undefined;
+
+  const param = {
+    limit: 10000000, // atau false
+    start_date: startDateFormatted, // atau undefined
+    end_date: endDateFormatted, // atau undefined
+  };
+
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/${params.id}`;
+
+  // Bangun URL berdasarkan role dan instanceId
+  const fixUrl = buildUrl(baseUrl, param);
+
+  const { data } = useSWR<any>(fixUrl, fetcher);
 
   const result = data?.data;
 

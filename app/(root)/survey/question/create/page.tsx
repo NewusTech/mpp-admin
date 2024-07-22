@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,8 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Loader } from "lucide-react";
+import MyEditor from "@/components/Editor";
+import { Label } from "@/components/ui/label";
 
 interface Props {
   value: string;
@@ -47,13 +49,17 @@ const CreateQuestion = () => {
   const selectedId = useCreateSurvey((state) => state.selectedId);
   const router = useRouter();
 
+  const editorRefs = useRef<({ getContent: () => string } | null)[]>([]);
+
   const handleAddInput = () => {
-    setInputs([...inputs, { field: "" }]);
+    setInputs([...inputs, { field: "", desc: "" }]);
+    editorRefs.current.push(null); // Tambahkan referensi baru dengan null
   };
 
   const handleRemoveInput = (index: number) => {
     const newInputs = [...inputs];
     newInputs.splice(index, 1);
+    editorRefs.current.splice(index, 1);
     setInputs(newInputs);
   };
 
@@ -65,10 +71,11 @@ const CreateQuestion = () => {
 
   const handleSave = async () => {
     setIsLoading(true);
-    const payload: Payload[] = inputs.map((input) => ({
+    const payload: Payload[] = inputs.map((input, index) => ({
       field: input.field,
       status: 1,
       instansi_id: selectedId,
+      desc: editorRefs.current[index]?.getContent() || "",
     }));
 
     try {
@@ -81,12 +88,14 @@ const CreateQuestion = () => {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
           body: JSON.stringify(payload),
-        }
+        },
       );
 
       const result = await response.json();
       if (response.ok) {
         toast(result.message);
+        setInputs([]); // Bersihkan state inputs
+        editorRefs.current = [];
         router.push("/survey/question");
       }
 
@@ -99,8 +108,15 @@ const CreateQuestion = () => {
     }
   };
 
+  const setEditorRef = useCallback(
+    (ref: { getContent: () => string } | null, index: number) => {
+      editorRefs.current[index] = ref;
+    },
+    [],
+  );
+
   return (
-    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Admin Layanan"]}>
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi"]}>
       <section className="mr-16">
         <div className="-ml-14 mb-10">
           <Link href="/survey/question">
@@ -116,11 +132,19 @@ const CreateQuestion = () => {
           <h1 className="text-xl font-semibold">Survey Kepuasan Masyarakat</h1>
           {inputs.map((input, index) => (
             <div key={index} className="space-y-2 mt-4">
-              <p className="text-sm">Pertanyaan</p>
+              <Label>Pertanyaan</Label>
               <InputComponent
                 value={input.field}
                 onChange={(value) => handleChangeInput(value, index)}
               />
+              <div className="space-y-2">
+                <Label htmlFor={`editor${index}`}>Deskripsi</Label>
+                <MyEditor
+                  ref={(ref) => setEditorRef(ref, index)}
+                  name={`editor${index}`}
+                  initialValue={input.desc || "<p>Ketik disini</p>"}
+                />
+              </div>
               <div className="flex justify-end mt-3">
                 <div
                   className="cursor-pointer"

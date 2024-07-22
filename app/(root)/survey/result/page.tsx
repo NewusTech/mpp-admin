@@ -13,6 +13,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Loader } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 
 interface JwtPayload {
   role?: string;
@@ -62,10 +63,12 @@ const SurveyResult = () => {
 
   let url = `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey`;
 
+  let instanceId2;
+
   if (role === "Admin Instansi" || role === "Admin Layanan") {
-    url += `?instansi_id=${instansiId}&limit=10000000`;
+    instanceId2 = instansiId;
   } else if ("Super Admin") {
-    url += `?instansi_id=${instanceId}&limit=10000000`;
+    instanceId2 = instanceId;
   }
 
   const handleDownload = async () => {
@@ -99,7 +102,35 @@ const SurveyResult = () => {
     }
   };
 
-  const { data: resultSurvey } = useSWR<any>(url, fetcher);
+  const buildUrl = (baseUrl: string, params: Record<string, any>) => {
+    const url = new URL(baseUrl);
+    // Tambahkan parameter lainnya
+    Object.keys(params).forEach((key) => {
+      if (params[key] !== undefined) {
+        url.searchParams.append(key, params[key]);
+      }
+    });
+
+    return url.toString();
+  };
+
+  // Pastikan startDate dan endDate dalam format yang benar
+  const startDateFormatted = startDate
+    ? formatDate(new Date(startDate))
+    : undefined;
+  const endDateFormatted = endDate ? formatDate(new Date(endDate)) : undefined;
+
+  const param = {
+    instansi_id: instanceId2,
+    limit: 10000000, // atau false
+    start_date: startDateFormatted, // atau undefined
+    end_date: endDateFormatted, // atau undefined
+  };
+
+  // Bangun URL berdasarkan role dan instanceId
+  const fixUrl = buildUrl(url, param);
+
+  const { data: resultSurvey } = useSWR<any>(fixUrl, fetcher);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -117,7 +148,7 @@ const SurveyResult = () => {
       <section className="mr-16">
         <div className="flex justify-between mb-8 space-x-3">
           <div className="w-1/2">
-            {role !== "Admin Isntansi" && role !== "Admin Layanan" && (
+            {role !== "Admin Instansi" && role !== "Admin Layanan" && (
               <InputComponent
                 typeInput="selectSearch"
                 valueInput={searchInputInstance}

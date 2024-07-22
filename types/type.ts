@@ -67,6 +67,7 @@ export type SurveyQuestion = {
   id: number;
   no: number;
   field: string;
+  desc: string;
 };
 
 export type DetailSurveyResult = {

@@ -112,7 +112,7 @@ export default function AlertDialogUpdateSurvey({ id }: { id: number }) {
           <p className="text-sm">Edit</p>
         </div>
       </AlertDialogTrigger>
-      <AlertDialogContent className="p-0 border-0 overflow-auto h-full">
+      <AlertDialogContent className="p-0 border-0 overflow-auto max-w-4xl h-full">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
             Ubah Pertanyaan

@@ -80,7 +80,7 @@ const SurveyQuestion = () => {
   };
 
   return (
-    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Admin Layanan"]}>
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi"]}>
       <section className="mr-16">
         <div className="flex justify-between mb-8">
           <div className="w-1/2">
@@ -99,11 +99,11 @@ const SurveyQuestion = () => {
               />
             )}
           </div>
-          {instance || role === "Admin Instansi" || role === "Admin Layanan" ? (
-            <Link href="/manage-requirement/create">
+          {instance && role === "Admin Instansi" ? (
+            <Link href="/survey/question/create">
               <Button
                 onClick={() =>
-                  role === "Admin Instansi" || role === "Admin Layanan"
+                  role === "Admin Instansi"
                     ? handlePassIdInstnace(instansiId)
                     : handlePassIdInstnace(instanceId)
                 }
