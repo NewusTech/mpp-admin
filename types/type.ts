@@ -9,6 +9,7 @@ export type RequestOnline = {
   id: number;
   createdAt: string;
   name: string;
+  nik: string;
   status: string;
 };
 

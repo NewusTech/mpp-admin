@@ -146,6 +146,12 @@ const TabQueue = () => {
             Permohonan Online
           </Label>
           <AlertDialogChangeStatusRequest id={instansiId} />
+          <Label
+            htmlFor="airplane-mode"
+            className="text-primary-700 font-semibold"
+          >
+            Permohonan Offline/Booking Antrian
+          </Label>
           <AlertDialogChangeStatusRequestNonactive id={instansiId} />
         </div>
       </div>
