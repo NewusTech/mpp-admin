@@ -52,6 +52,7 @@ import AlertDialogUpdateMasterFlowBooking from "@/app/(root)/master/flow-booking
 import AlertDialogUpdateMasterFlowPermohonan from "@/app/(root)/master/flow-request/DialogFormUpdate";
 import AlertDialogCreateMasterFlow from "@/app/(root)/master/flow-mpp/DialogForm";
 import { RichTextDisplay } from "@/components/RichTextDisplay";
+import { stat } from "fs";
 
 function formatDate(dateString: any) {
   const date = new Date(dateString);
@@ -63,50 +64,71 @@ function formatDate(dateString: any) {
   return `${day}-${month}-${year}`;
 }
 
-const StatusCell = ({ status }: { status: number }) => {
+const StatusCell = ({ status, id }: { status: number; id: number }) => {
   const getStatusElement = () => {
     switch (status) {
       case 0:
         return (
-          <div className="bg-secondary-700 rounded-full w-8/12 text-[10px] p-1 text-center">
+          <Link
+            href={`history-approvals/${id}`}
+            className="bg-secondary-700 hover:bg-secondary-800 rounded-full w-8/12 text-[10px] p-1 text-center"
+          >
             <p className="text-neutral-50">Menunggu</p>
-          </div>
+          </Link>
         );
       case 1:
         return (
-          <div className="bg-primary-700 rounded-full w-8/12 text-[10px] p-1 text-center">
+          <Link
+            href={`history-approvals/${id}`}
+            className="bg-primary-700 hover:bg-primary-800 rounded-full w-8/12 text-[10px] p-1 text-center"
+          >
             <p className="text-neutral-50">Divalidasi</p>
-          </div>
+          </Link>
         );
       case 2:
         return (
-          <div className="bg-primary-800 rounded-full w-8/12 text-[10px] p-1 text-center">
+          <Link
+            href={`history-approvals/${id}`}
+            className="bg-primary-800 hover:bg-primary-700 rounded-full w-8/12 text-[10px] p-1 text-center"
+          >
             <p className="text-neutral-50">Disetujui</p>
-          </div>
+          </Link>
         );
       case 3:
         return (
-          <div className="bg-success-700 rounded-full w-8/12 text-[10px] p-1 text-center">
+          <Link
+            href={`history-approvals/${id}`}
+            className="bg-success-700 hover:bg-success-800 rounded-full w-8/12 text-[10px] p-1 text-center"
+          >
             <p className="text-neutral-50">Selesai</p>
-          </div>
+          </Link>
         );
       case 4:
         return (
-          <div className="bg-error-700 rounded-full w-8/12 text-[10px] p-1 text-center">
+          <Link
+            href={`history-approvals/${id}`}
+            className="bg-error-700 hover:bg-error-800 rounded-full w-8/12 text-[10px] p-1 text-center"
+          >
             <p className="text-neutral-50">Ditolak</p>
-          </div>
+          </Link>
         );
       case 5:
         return (
-          <div className="bg-warning-700 rounded-full w-8/12 text-[10px] p-1 text-center">
+          <Link
+            href={`history-approvals/${id}`}
+            className="bg-warning-700 hover:bg-warning-800 rounded-full w-8/12 text-[10px] p-1 text-center"
+          >
             <p className="text-neutral-50">Perbaikan</p>
-          </div>
+          </Link>
         );
       default:
         return (
-          <div className="bg-neutral-700 rounded-full w-8/12 text-[10px] text-neutral-50 p-1 text-center">
+          <Link
+            href={`history-approvals/${id}`}
+            className="bg-neutral-700 hover:bg-neutral-800 rounded-full w-8/12 text-[10px] text-neutral-50 p-1 text-center"
+          >
             <p>Diperbaiki</p>
-          </div>
+          </Link>
         );
     }
   };
@@ -231,7 +253,7 @@ export const requestOnlineColumns: ColumnDef<RequestOnline>[] = [
 
       return (
         <div className="flex justify-center">
-          <StatusCell status={Number(status)} />
+          <StatusCell status={Number(status)} id={statusRow.id} />
         </div>
       );
     },
@@ -262,11 +284,12 @@ export const revisionColumns: ColumnDef<RequestOnline>[] = [
       );
     },
     cell: ({ row }) => {
-      const status = row.original.status;
+      const statusRow = row.original;
+      const status = statusRow.status;
 
       return (
         <div className="flex justify-center">
-          <StatusCell status={Number(status)} />
+          <StatusCell status={Number(status)} id={statusRow.id} />
         </div>
       );
     },
@@ -352,7 +375,7 @@ export const requestOfflineColumns: ColumnDef<RequestOffline>[] = [
 
       return (
         <div className="flex justify-center">
-          <StatusCell status={Number(status)} />
+          <StatusCell status={Number(status)} id={statusRow.id} />
         </div>
       );
     },
@@ -383,11 +406,12 @@ export const manageApprovalColumns: ColumnDef<ManageApprovals>[] = [
       );
     },
     cell: ({ row }) => {
-      const status = row.original.status;
+      const statusRow = row.original;
+      const status = statusRow.status;
 
       return (
         <div className="flex justify-center">
-          <StatusCell status={Number(status)} />
+          <StatusCell status={Number(status)} id={statusRow.id} />
         </div>
       );
     },
@@ -451,7 +475,7 @@ export const historyApprovalColumns: ColumnDef<ManageApprovals>[] = [
 
       return (
         <div className="flex justify-center">
-          <StatusCell status={Number(status)} />
+          <StatusCell status={Number(status)} id={statusRow.id} />
         </div>
       );
     },
@@ -541,7 +565,7 @@ export const dashboardApprovalColumns: ColumnDef<ManageApprovals>[] = [
 
       return (
         <div className="flex justify-center">
-          <StatusCell status={Number(status)} />
+          <StatusCell status={Number(status)} id={statusRow.id} />
         </div>
       );
     },

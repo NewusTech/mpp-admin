@@ -56,11 +56,13 @@ const RequestPerMonth = ({
   type,
 }: RequestTodayProps) => {
   const [isLoading, setIsLoading] = useState(false);
-  const monthLabel = months.find((v) => v.value === month)?.label;
+  const monthLabel = months.find((v) => v.value === Number(month))?.label;
 
-  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform?month=${month}&year=${year}&status=${type === "success" ? 3 : 4}`;
 
   const { data } = useSWR<any>(baseUrl, fetcher);
+
+  console.log(month);
 
   const result = data?.data;
 

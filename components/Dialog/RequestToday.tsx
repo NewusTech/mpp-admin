@@ -38,7 +38,7 @@ const RequestToday = ({
 }: RequestTodayProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform?range=today&status=${type === "success" ? 3 : 4}`;
 
   const { data } = useSWR<any>(baseUrl, fetcher);
 
