@@ -73,13 +73,6 @@ const TabQueueService = ({ id }: { id: string }) => {
   const [isLoadingAudio, setIsLoadingAudio] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const { data: queue, mutate: mutateQueue } = useSWR(
-    shouldFetch
-      ? `${process.env.NEXT_PUBLIC_API_URL}/panggilantrian/get/${id}`
-      : null,
-    fetcher,
-  );
-
   const buildUrl = (baseUrl: string, params: Record<string, any>) => {
     const url = new URL(baseUrl);
     // Tambahkan parameter lainnya
@@ -148,14 +141,28 @@ const TabQueueService = ({ id }: { id: string }) => {
 
   const fetchAudio = async () => {
     setIsLoadingFetchAudio(true);
-    setShouldFetch(true);
-    if (queue && queue.data.audio) {
-      setAudioUrl(queue.data.audio);
-      await mutateQueueActive();
-      await dashboardToday();
-      await mutateQueue();
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/panggilantrian/get/${id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        },
+      );
+      const data = await response.json();
+      if (response.ok) {
+        setAudioUrl(data.data.audio);
+        toast(data.message);
+        await mutateQueueActive();
+        await dashboardToday();
+      }
+    } catch (e: any) {
+      toast(e.message);
+    } finally {
+      setIsLoadingFetchAudio(false);
     }
-    setIsLoadingFetchAudio(false);
   };
 
   const replayAudio = () => {
