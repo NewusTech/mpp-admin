@@ -27,8 +27,10 @@ const Report = () => {
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<number | null>(null);
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const now = new Date();
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
+  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -130,8 +132,6 @@ const Report = () => {
       document.body.appendChild(a);
       a.click();
       a.remove();
-
-      const data = await response.json();
 
       if (response.ok) {
         toast("Berhasil download laporan");

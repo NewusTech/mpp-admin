@@ -16,8 +16,10 @@ interface JwtPayload {
 }
 
 export default function ComplaintPage() {
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const now = new Date();
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
+  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<number | null>(null);
 
@@ -44,7 +46,7 @@ export default function ComplaintPage() {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/pengaduan/get?limit=1000000&instansi_id=${instansiId}`,
-    fetcher
+    fetcher,
   );
 
   const result = data?.data;

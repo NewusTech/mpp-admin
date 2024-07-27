@@ -23,8 +23,10 @@ const buttons: any = [
 ];
 
 export default function TabOffline({ serviceId, instanceId }: TabOfflineProps) {
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const now = new Date();
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
+  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [activeButton, setActiveButton] = useState("");
 
   const buildUrl = (baseUrl: string, params: Record<string, any>) => {

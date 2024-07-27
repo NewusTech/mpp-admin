@@ -195,6 +195,7 @@ export const queueColumns: ColumnDef<QueueTab>[] = [
 
 export const requestOnlineColumns: ColumnDef<RequestOnline>[] = [
   {
+    id: "tanggal",
     accessorKey: "createdAt",
     header: "Tanggal",
     cell: ({ row }) => {
@@ -204,6 +205,7 @@ export const requestOnlineColumns: ColumnDef<RequestOnline>[] = [
     },
   },
   {
+    id: "hari",
     accessorKey: "createdAt",
     header: "Hari",
     cell: ({ row }) => {
@@ -213,6 +215,7 @@ export const requestOnlineColumns: ColumnDef<RequestOnline>[] = [
     },
   },
   {
+    id: "jam",
     accessorKey: "createdAt",
     header: "Jam",
     cell: ({ row }) => {
@@ -325,6 +328,7 @@ export const revisionColumns: ColumnDef<RequestOnline>[] = [
 
 export const requestOfflineColumns: ColumnDef<RequestOffline>[] = [
   {
+    id: "tanggal",
     accessorKey: "createdAt",
     header: "Tanggal",
     cell: ({ row }) => {
@@ -334,6 +338,7 @@ export const requestOfflineColumns: ColumnDef<RequestOffline>[] = [
     },
   },
   {
+    id: "hari",
     accessorKey: "createdAt",
     header: "Hari",
     cell: ({ row }) => {
@@ -343,6 +348,7 @@ export const requestOfflineColumns: ColumnDef<RequestOffline>[] = [
     },
   },
   {
+    id: "jam",
     accessorKey: "createdAt",
     header: "Jam",
     cell: ({ row }) => {
@@ -358,6 +364,14 @@ export const requestOfflineColumns: ColumnDef<RequestOffline>[] = [
   {
     accessorKey: "nik",
     header: "NIK",
+    cell: ({ row }) => {
+      const record = row.original;
+      return (
+        <Link href={`/history-approvals/${record.id}`} className="underline">
+          {record.nik}
+        </Link>
+      );
+    },
   },
 ];
 
@@ -491,6 +505,7 @@ export const historyApprovalColumns: ColumnDef<ManageApprovals>[] = [
 
 export const dashboardApprovalColumns: ColumnDef<ManageApprovals>[] = [
   {
+    id: "tanggal",
     accessorKey: "createdAt",
     header: "Tanggal",
     cell: ({ row }) => {
@@ -500,6 +515,7 @@ export const dashboardApprovalColumns: ColumnDef<ManageApprovals>[] = [
     },
   },
   {
+    id: "hari",
     accessorKey: "createdAt",
     header: "Hari",
     cell: ({ row }) => {
@@ -509,6 +525,7 @@ export const dashboardApprovalColumns: ColumnDef<ManageApprovals>[] = [
     },
   },
   {
+    id: "jam",
     accessorKey: "createdAt",
     header: "Jam",
     cell: ({ row }) => {

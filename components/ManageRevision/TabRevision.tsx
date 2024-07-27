@@ -15,8 +15,10 @@ export default function TabRevision({
   serviceId,
   instanceId,
 }: TabRevisionProps) {
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const now = new Date();
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
+  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
 
   const buildUrl = (baseUrl: string, params: Record<string, any>) => {
     const url = new URL(baseUrl);

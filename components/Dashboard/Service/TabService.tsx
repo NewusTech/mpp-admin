@@ -25,10 +25,12 @@ import { Loader } from "lucide-react";
 import Image from "next/image";
 import RequestToday from "@/components/Dialog/RequestToday";
 import RequestPerMonth from "@/components/Dialog/RequestPerMonth";
+import { toast } from "sonner";
 
 interface JwtPayload {
   role?: string;
   instansi_id: number;
+  layanan_id: number;
 }
 
 const buttons: any = [
@@ -57,8 +59,10 @@ const months = [
 ];
 
 const TabService = () => {
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const now = new Date();
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
+  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [activeButton, setActiveButton] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedMonth, setSelectedMonth] = useState<any>(
@@ -94,6 +98,7 @@ const TabService = () => {
         if (decoded && decoded.role && decoded.instansi_id !== undefined) {
           setRole(decoded.role);
           setInstansiId(decoded.instansi_id);
+          setServiceId(decoded.layanan_id);
         }
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -121,6 +126,7 @@ const TabService = () => {
 
   const params = {
     instansi_id: instansiId,
+    layanan_id: serviceId,
     limit: 10000000,
     status: activeButton,
     start_date: startDateFormatted,
@@ -171,6 +177,37 @@ const TabService = () => {
 
     return `${day} ${month} ${year}`;
   }
+
+  const handleDownload = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/historyform/pdf?status=${activeButton}&layanan_id=${serviceId}&instansi_id=${instansiId}&start_date=${startDateFormatted}&end_date=${endDateFormatted}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        },
+      );
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "report-layanan.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      if (response.ok) {
+        toast("Berhasil download laporan");
+      }
+    } catch (e: any) {
+      toast(e.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <section className="space-y-4 mt-8">
@@ -282,7 +319,7 @@ const TabService = () => {
             />
           </div>
           <Button
-            // onClick={handleDownload}
+            onClick={handleDownload}
             className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[100px] rounded-full"
             disabled={isLoading}
           >

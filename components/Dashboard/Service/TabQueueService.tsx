@@ -13,7 +13,7 @@ import {
 import { CardDashboardQueueProps } from "@/types/interface";
 import useSWR from "swr";
 import { dataKiosk, fetcher, fetcherWithoutAuth } from "@/lib/fetch";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { DataTables } from "@/components/Datatables";
@@ -61,44 +61,24 @@ const CardDashboardQueue = ({
 const TabQueueService = ({ id }: { id: string }) => {
   const [activeButton, setActiveButton] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [isLoadingTwo, setIsLoadingTwo] = useState<boolean>(false);
+  const now = new Date();
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
+  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [audioUrl, setAudioUrl] = useState(null);
   const [shouldFetch, setShouldFetch] = useState(false);
+  const [isLoadingFetchAudio, setIsLoadingFetchAudio] =
+    useState<boolean>(false);
+  const [isLoadingAudio, setIsLoadingAudio] = useState<boolean>(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const {
-    data: queue,
-    error,
-    mutate,
-  } = useSWR(
+  const { data: queue, mutate: mutateQueue } = useSWR(
     shouldFetch
       ? `${process.env.NEXT_PUBLIC_API_URL}/panggilantrian/get/${id}`
       : null,
     fetcher,
   );
-
-  useEffect(() => {
-    if (audioUrl) {
-      const audioElement = new Audio(audioUrl);
-      audioElement.play().catch((error) => {
-        console.error("Error playing audio:", error);
-      });
-    }
-  }, [audioUrl]);
-
-  const fetchAudio = async () => {
-    setShouldFetch(true);
-    const response = await mutate();
-    if (response && response.audioUrl) {
-      setAudioUrl(response.audioUrl);
-    }
-  };
-
-  useEffect(() => {
-    if (shouldFetch) {
-      fetchAudio();
-    }
-  }, [shouldFetch]);
 
   const buildUrl = (baseUrl: string, params: Record<string, any>) => {
     const url = new URL(baseUrl);
@@ -139,7 +119,7 @@ const TabQueueService = ({ id }: { id: string }) => {
   // Bangun URL berdasarkan role dan instanceId
   const fixUrl = buildUrl(baseUrl, params);
 
-  const { data } = useSWR<any>(fixUrl, fetcher);
+  const { data, mutate: mutateQueueActive } = useSWR<any>(fixUrl, fetcher);
 
   const paramsToday = {
     limit: 10000000,
@@ -149,7 +129,49 @@ const TabQueueService = ({ id }: { id: string }) => {
   // Bangun URL berdasarkan role dan instanceId
   const fixUrlToday = buildUrlToday(baseUrl, paramsToday);
 
-  const { data: today } = useSWR<any>(fixUrlToday, fetcher);
+  const { data: today, mutate: dashboardToday } = useSWR<any>(
+    fixUrlToday,
+    fetcher,
+  );
+
+  useEffect(() => {
+    if (audioUrl) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      audioRef.current = new Audio(audioUrl);
+      audioRef.current.play().catch((error) => {
+        console.error("Error playing audio:", error);
+      });
+    }
+  }, [audioUrl]);
+
+  const fetchAudio = async () => {
+    setIsLoadingFetchAudio(true);
+    setShouldFetch(true);
+    if (queue && queue.data.audio) {
+      setAudioUrl(queue.data.audio);
+      await mutateQueueActive();
+      await dashboardToday();
+      await mutateQueue();
+    }
+    setIsLoadingFetchAudio(false);
+  };
+
+  const replayAudio = () => {
+    if (audioRef.current) {
+      setIsLoadingAudio(true);
+      audioRef.current.currentTime = 0;
+      audioRef.current
+        .play()
+        .catch((error) => {
+          console.error("Error replaying audio:", error);
+        })
+        .finally(() => {
+          setIsLoadingAudio(false);
+        });
+    }
+  };
 
   const result = data?.data;
   const riwayat = result?.riwayatAntrian;
@@ -159,6 +181,68 @@ const TabQueueService = ({ id }: { id: string }) => {
     setActiveButton(value);
   };
 
+  const handleDownload = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/antrian/pdf?start_date=${startDateFormatted}&end_date=${endDateFormatted}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        },
+      );
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "report-antrian.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      if (response.ok) {
+        toast("Berhasil download laporan");
+      }
+    } catch (e: any) {
+      toast(e.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDownloadNow = async () => {
+    setIsLoadingTwo(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/antrian/pdf?range=today&status=${activeButton}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        },
+      );
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "report-antrian-hari-ini.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      if (response.ok) {
+        toast("Berhasil download laporan");
+      }
+    } catch (e: any) {
+      toast(e.message);
+    } finally {
+      setIsLoadingTwo(false);
+    }
+  };
+
   return (
     <>
       <section className="bg-primary-200 px-8 py-9 rounded-[20px] shadow space-y-3">
@@ -166,7 +250,7 @@ const TabQueueService = ({ id }: { id: string }) => {
           <CardDashboardQueue
             title="Total Antrian"
             number={result?.AntrianCount || 0}
-            background="text-neutral-700"
+            background="text-neutral-900"
           />
           <CardDashboardQueue
             title="Antrian Selesai"
@@ -190,8 +274,12 @@ const TabQueueService = ({ id }: { id: string }) => {
           />
         </div>
         <div className="flex w-full justify-end space-x-2">
-          <Button className="bg-secondary-700 hover:bg-secondary-800 w-20 rounded-full">
-            Recall
+          <Button
+            className="bg-secondary-700 hover:bg-secondary-800 w-20 rounded-full"
+            onClick={replayAudio}
+            disabled={isLoadingAudio}
+          >
+            {isLoadingAudio ? <Loader className="animate-spin" /> : "Recall"}
           </Button>
           <Button className="bg-neutral-800 hover:bg-neutral-900 w-20 rounded-full">
             Transfer
@@ -199,8 +287,9 @@ const TabQueueService = ({ id }: { id: string }) => {
           <Button
             onClick={fetchAudio}
             className="bg-success-700 hover:bg-success-800 w-20 rounded-full"
+            disabled={isLoadingFetchAudio}
           >
-            Next
+            {isLoadingFetchAudio ? <Loader className="animate-spin" /> : "Next"}
           </Button>
         </div>
       </section>
@@ -241,11 +330,11 @@ const TabQueueService = ({ id }: { id: string }) => {
               </div>
               <div className="flex justify-end -mt-10">
                 <Button
-                  // onClick={handleDownload}
-                  className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[140px] rounded-full"
-                  disabled={isLoading}
+                  onClick={handleDownloadNow}
+                  className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[100px] rounded-full"
+                  disabled={isLoadingTwo}
                 >
-                  {isLoading ? (
+                  {isLoadingTwo ? (
                     <Loader className="animate-spin" />
                   ) : (
                     <>
@@ -286,25 +375,40 @@ const TabQueueService = ({ id }: { id: string }) => {
                     setDate={(e) => setEndDate(e)}
                   />
                 </div>
-                <Button
-                  // onClick={handleDownload}
-                  className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[100px] rounded-full"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <Loader className="animate-spin" />
-                  ) : (
-                    <>
-                      <Image
-                        src="/icons/printer.svg"
-                        alt="print"
-                        width={24}
-                        height={24}
-                      />
-                      Print
-                    </>
-                  )}
-                </Button>
+                {startDateFormatted && endDateFormatted ? (
+                  <Button
+                    onClick={handleDownload}
+                    className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[100px] rounded-full"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <Loader className="animate-spin" />
+                    ) : (
+                      <>
+                        <Image
+                          src="/icons/printer.svg"
+                          alt="print"
+                          width={24}
+                          height={24}
+                        />
+                        Print
+                      </>
+                    )}
+                  </Button>
+                ) : (
+                  <Button
+                    className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[100px] rounded-full"
+                    disabled={true}
+                  >
+                    <Image
+                      src="/icons/printer.svg"
+                      alt="print"
+                      width={24}
+                      height={24}
+                    />
+                    Print
+                  </Button>
+                )}
               </div>
               {riwayat && (
                 <DataTables
