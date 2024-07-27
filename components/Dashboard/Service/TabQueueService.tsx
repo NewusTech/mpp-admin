@@ -140,18 +140,19 @@ const TabQueueService = ({ id }: { id: string }) => {
   }, [audioUrl]);
 
   const fetchAudio = async () => {
-    setIsLoadingFetchAudio(true);
+    // setIsLoadingFetchAudio(true);
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/panggilantrian/get/${id}`,
         {
-          method: "GET",
+          method: "POST",
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
         },
       );
       const data = await response.json();
+      console.log(data);
       if (response.ok) {
         setAudioUrl(data.data.audio);
         toast(data.message);

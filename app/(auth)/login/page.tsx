@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import InputComponent from "@/components/InputComponent";
 import { Button } from "@/components/ui/button";
 import FormSignin from "@/components/Form/Signin";
+import Link from "next/link";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,6 +28,26 @@ const LoginPage = () => {
         <h3 className="text-sm text-primary-700">Kabupaten Lampung Timur</h3>
         <div className="w-full space-y-2">
           <FormSignin />
+        </div>
+        <div className="w-full text-center text-primary-700 text-[14px] mt-4">
+          Dengan mendaftar, Anda menyetujui {/*{term && (*/}
+          {/*  <Link*/}
+          {/*    href={term?.desc}*/}
+          {/*    target="_blank"*/}
+          {/*    className="text-primary-800 font-semibold hover:underline">*/}
+          {/*    Syarat & Ketentuan{" "}*/}
+          {/*  </Link>*/}
+          {/*)}{" "}*/}
+          {/*kami dan Anda telah membaca{" "}*/}
+          {/*{term && (*/}
+          {/*  <Link*/}
+          {/*    href={term?.privasi}*/}
+          {/*    target="_blank"*/}
+          {/*    className="text-primary-800 font-semibold hover:underline">*/}
+          {/*    Kebijakan Privasi{" "}*/}
+          {/*  </Link>*/}
+          {/*)}{" "}*/}
+          kami.
         </div>
       </div>
     </section>
