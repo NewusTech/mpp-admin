@@ -85,7 +85,7 @@ const CreateOffline = () => {
   };
 
   const handleChangeUserData = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setForm((prevData) => ({
@@ -96,27 +96,27 @@ const CreateOffline = () => {
 
   const { data: kecamatans } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/kecamatan/get?search=${searchKecamatanTerm}`,
-    fetcher
+    fetcher,
   );
 
   const { data: desa } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/desa/get?kecamatan_id=${userData ? userData.kecamatan_id : kecamatan}&search=${searchVillageTerm}`,
-    fetcher
+    fetcher,
   );
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/form/${serviceId}`,
-    fetcher
+    fetcher,
   );
 
   const { data: inputFile } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/docs/${serviceId}`,
-    fetcher
+    fetcher,
   );
 
   const { data: users } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/alluserinfo/get?search=${searchTerm}&role=5`,
-    fetcher
+    fetcher,
   );
 
   const resultUser = users?.data;
@@ -139,7 +139,7 @@ const CreateOffline = () => {
   useEffect(() => {
     if (selectedUser) {
       const user = resultUser?.find(
-        (item: any) => item.id.toString() === selectedUser
+        (item: any) => item.id.toString() === selectedUser,
       );
       setUserData(user);
     }
@@ -162,7 +162,7 @@ const CreateOffline = () => {
         formData.append(`datainput[${index}][layananform_id]`, key);
         formData.append(
           `datainput[${index}][data]`,
-          JSON.stringify(selectedValues)
+          JSON.stringify(selectedValues),
         );
       } else {
         // Jika value adalah data primitif
@@ -188,14 +188,14 @@ const CreateOffline = () => {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
           body: formData,
-        }
+        },
       );
 
       const data = await response.json();
       console.log(data);
       if (response.ok) {
         toast(data.message);
-        router.push("/request/offline");
+        router.push("/manage-approvals?tabs=offline");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -237,7 +237,7 @@ const CreateOffline = () => {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
           body: JSON.stringify(formData),
-        }
+        },
       );
 
       const data = await response.json();
@@ -594,7 +594,7 @@ const CreateOffline = () => {
                   onChange={(e) =>
                     handleDocChange(
                       v.id,
-                      e.target.files ? e.target.files[0] : null
+                      e.target.files ? e.target.files[0] : null,
                     )
                   }
                   required={v.isrequired}

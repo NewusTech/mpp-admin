@@ -18,7 +18,15 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader } from "lucide-react";
 
-const ModalValidate = ({ title, id }: { id: number; title: string }) => {
+const ModalValidate = ({
+  title,
+  id,
+  state,
+}: {
+  id: number;
+  title: string;
+  state: any;
+}) => {
   const router = useRouter();
   const [feedback, setFeedback] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
@@ -68,6 +76,7 @@ const ModalValidate = ({ title, id }: { id: number; title: string }) => {
         <Button
           onClick={handleOpenAddModal}
           className="bg-error-700 hover:bg-error-800 w-[140px] rounded-full"
+          disabled={state}
         >
           {title}
         </Button>

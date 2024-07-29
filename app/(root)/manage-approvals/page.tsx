@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import ManageApproval from "@/components/ManageApproval";
+import { useSearchParams } from "next/navigation";
 
 interface JwtPayload {
   role?: string;
@@ -30,6 +31,9 @@ const ManageApprovals = () => {
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
   const [searchTermService, setSearchTermService] = useState("");
   const [searchInputService, setSearchInputService] = useState(""); // State for search input
+  const queryParams = useSearchParams().get("tabs");
+
+  console.log(queryParams);
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -143,7 +147,11 @@ const ManageApprovals = () => {
             )}
           </div>
         </div>
-        <ManageApproval serviceId={serviceId2} instanceId={instanceId2} />
+        <ManageApproval
+          serviceId={serviceId2}
+          instanceId={instanceId2}
+          queryParams={queryParams}
+        />
       </section>
     </ProtectedRoute>
   );

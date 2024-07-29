@@ -11,6 +11,7 @@ export type RequestOnline = {
   name: string;
   nik: string;
   status: string;
+  layanan_name: string;
 };
 
 export type RequestOffline = {
@@ -19,13 +20,16 @@ export type RequestOffline = {
   name: string;
   nik: string;
   status: string;
+  layanan_name: string;
 };
 
 export type ManageApprovals = {
   id: number;
   createdAt: string;
   name: string;
+  nik: string;
   status: string;
+  layanan_name: string;
 };
 
 export type DataInstance = {

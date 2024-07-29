@@ -1,18 +1,37 @@
+"use client";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TabOffline from "@/components/ManageApproval/TabOffline";
 import TabOnline from "@/components/ManageApproval/TabOnline";
+import { useEffect, useState } from "react";
 
 interface ManageApprovalProps {
   serviceId: number | null;
   instanceId: number | null;
+  queryParams: string;
 }
 
 export default function ManageApproval({
   serviceId,
   instanceId,
+  queryParams,
 }: ManageApprovalProps) {
+  const [isTabs, setIsTabs] = useState<string>("online");
+
+  useEffect(() => {
+    if (queryParams == "online") {
+      setIsTabs("online");
+    } else if (queryParams == "offline") {
+      setIsTabs("offline");
+    }
+  }, []);
+
   return (
-    <Tabs defaultValue="offline" className="my-8">
+    <Tabs
+      value={isTabs ? isTabs : "offline"}
+      onValueChange={(value) => setIsTabs(value)}
+      className="my-8"
+    >
       <TabsList className="p-0 bg-transparent rounded-none w-full justify-between mb-4">
         <TabsTrigger
           value="offline"
@@ -30,7 +49,7 @@ export default function ManageApproval({
       <TabsContent value="offline" className="mt-8">
         <TabOffline serviceId={serviceId} instanceId={instanceId} />
       </TabsContent>
-      <TabsContent value="online">
+      <TabsContent value="online" className="mt-8">
         <TabOnline serviceId={serviceId} instanceId={instanceId} />
       </TabsContent>
     </Tabs>

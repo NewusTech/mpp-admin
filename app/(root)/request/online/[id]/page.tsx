@@ -63,6 +63,20 @@ const DetailRequestOnline = ({
     (item: any) => item.layananform_tipedata === "file",
   );
 
+  const [clickedLinks, setClickedLinks] = useState(
+    new Array(filteredDataFile?.length).fill(false),
+  );
+
+  // Fungsi untuk menandai link sebagai diklik
+  const handleLinkClick = (index: any) => {
+    const newClickedLinks = [...clickedLinks];
+    newClickedLinks[index] = true;
+    setClickedLinks(newClickedLinks);
+  };
+
+  // Memeriksa apakah semua link telah diklik
+  const allLinksClicked = clickedLinks.every((clicked) => clicked);
+
   const handleValidationStatus = async () => {
     setIsLoading(true);
     try {
@@ -83,7 +97,7 @@ const DetailRequestOnline = ({
       const data = await response.json();
       if (response.ok) {
         toast(data.message);
-        router.push("/request/online");
+        router.push("/manage-approvals?tabs=online");
       }
     } catch (e: any) {
       toast(e.message);
@@ -130,8 +144,9 @@ const DetailRequestOnline = ({
               />
             </div>
           </div>
-
-          <h2 className="text-lg font-semibold my-5">Formulir</h2>
+          <h2 className="text-lg font-semibold my-5">
+            Formulir {result?.layanan?.name}
+          </h2>
           {filteredData?.map((v: any) => (
             <div className="space-y-2 mt-3" key={v.id}>
               <p className="font-medium">{v.layananform_name}</p>
@@ -141,13 +156,14 @@ const DetailRequestOnline = ({
             </div>
           ))}
           <h2 className="text-lg font-semibold my-5">Dokumen</h2>
-          {filteredDataFile?.map((v: any) => (
+          {filteredDataFile?.map((v: any, index: any) => (
             <div className="space-y-2 mt-3" key={v.id}>
               <p>{v.layananform_name}</p>
               <Link
                 href={v.data}
                 target="_blank"
                 className="mt-2 w-[15%] rounded-[20px] bg-neutral-50 hover:bg-neutral-100 shadow p-3 flex justify-around items-center"
+                onClick={() => handleLinkClick(index)}
               >
                 <Image
                   src="/icons/download.svg"
@@ -159,15 +175,27 @@ const DetailRequestOnline = ({
                   {v.layananform_name}
                 </p>
               </Link>
+              <p className="text-xs">
+                Pastikan <span className="font-bold">{v.layananform_name}</span>{" "}
+                sudah benar
+              </p>
             </div>
           ))}
           <div className="text-center mt-8 mb-[46px] space-x-3">
-            <ModalValidate id={params.id} title="Tolak" />
-            <ModalValidateRevision id={params.id} title="Perbaiki" />
+            <ModalValidate
+              id={params.id}
+              title="Tolak"
+              state={!allLinksClicked}
+            />
+            <ModalValidateRevision
+              id={params.id}
+              title="Perbaiki"
+              state={!allLinksClicked}
+            />
             <Button
               onClick={handleValidationStatus}
               className="bg-success-700 hover:bg-success-800 w-[140px] rounded-full"
-              disabled={isLoading ? true : false}
+              disabled={!allLinksClicked || isLoading}
             >
               {isLoading ? <Loader className="animate-spin" /> : "Validasi"}
             </Button>

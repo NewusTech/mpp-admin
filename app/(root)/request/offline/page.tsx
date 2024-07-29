@@ -19,6 +19,7 @@ interface JwtPayload {
   role?: string;
   instansi_id: number;
   layanan_id: number;
+  layanan: string;
 }
 
 const RequestOffline = () => {
@@ -28,6 +29,8 @@ const RequestOffline = () => {
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<number | null>(null);
   const [layananId, setLayananId] = useState<number | null>(null);
+  const [layanan, setLayanan] = useState<string | null>(null);
+
   const [searchTermInstance, setSearchTermInstance] = useState("");
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
   const [searchTermService, setSearchTermService] = useState("");
@@ -52,6 +55,7 @@ const RequestOffline = () => {
           setRole(decoded.role);
           setInstansiId(decoded.instansi_id);
           setLayananId(decoded.layanan_id);
+          setLayanan(decoded.layanan);
         }
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -173,6 +177,9 @@ const RequestOffline = () => {
                 value={service}
                 onChange={(e: any) => setService(e)}
               />
+            )}
+            {role === "Admin Layanan" && (
+              <h1 className="text-3xl font-bold">{layanan}</h1>
             )}
           </div>
           <div className="flex w-5/12 items-center gap-x-2">

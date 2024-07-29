@@ -31,7 +31,7 @@ const DetailHistoryApproval = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/detail/${params.id}`,
-    fetcher
+    fetcher,
   );
 
   const result = data?.data;
@@ -54,11 +54,11 @@ const DetailHistoryApproval = ({
       ?.key || "Tidak Diketahui";
 
   const filteredData = serviceForm?.filter(
-    (item: any) => item.layananform_tipedata !== "file"
+    (item: any) => item.layananform_tipedata !== "file",
   );
 
   const filteredDataFile = serviceForm?.filter(
-    (item: any) => item.layananform_tipedata === "file"
+    (item: any) => item.layananform_tipedata === "file",
   );
 
   const handleValidationStatus = async () => {
@@ -75,7 +75,7 @@ const DetailHistoryApproval = ({
           body: JSON.stringify({
             status: 3,
           }),
-        }
+        },
       );
 
       const data = await response.json();
@@ -156,6 +156,10 @@ const DetailHistoryApproval = ({
                   {v.layananform_name}
                 </p>
               </Link>
+              <p className="text-xs">
+                Pastikan <span className="font-bold">{v.layananform_name}</span>{" "}
+                sudah benar
+              </p>
             </div>
           ))}
           <h2 className="text-lg font-semibold my-5">
