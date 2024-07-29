@@ -42,7 +42,7 @@ export default function TabOffline({ serviceId, instanceId }: TabOfflineProps) {
     start_date: startDateFormatted, // atau undefined
     end_date: endDateFormatted, // atau undefined
     status: 1,
-    isOnline: 0,
+    isonline: 0,
   };
 
   const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;

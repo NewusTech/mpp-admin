@@ -101,9 +101,7 @@ const ManageRequirements = () => {
                 />
               )}
             </div>
-            {instance ||
-            role === "Admin Instansi" ||
-            role === "Admin Layanan" ? (
+            {instance || role === "Admin Instansi" ? (
               <Link href="/manage-requirement/create">
                 <Button
                   onClick={() =>

@@ -283,21 +283,29 @@ const TabQueueService = ({ id }: { id: string }) => {
         </div>
         <div className="flex w-full justify-end space-x-2">
           <Button
-            className="bg-secondary-700 hover:bg-secondary-800 w-20 rounded-full"
+            className="bg-secondary-700 hover:bg-secondary-800 w-40 rounded-full"
             onClick={replayAudio}
             disabled={isLoadingAudio}
           >
-            {isLoadingAudio ? <Loader className="animate-spin" /> : "Recall"}
+            {isLoadingAudio ? (
+              <Loader className="animate-spin" />
+            ) : (
+              "Panggil Ulang"
+            )}
           </Button>
-          <Button className="bg-neutral-800 hover:bg-neutral-900 w-20 rounded-full">
+          <Button className="bg-neutral-800 hover:bg-neutral-900 w-40 rounded-full">
             Transfer
           </Button>
           <Button
             onClick={fetchAudio}
-            className="bg-success-700 hover:bg-success-800 w-20 rounded-full"
+            className="bg-success-700 hover:bg-success-800 w-40 rounded-full"
             disabled={isLoadingFetchAudio}
           >
-            {isLoadingFetchAudio ? <Loader className="animate-spin" /> : "Next"}
+            {isLoadingFetchAudio ? (
+              <Loader className="animate-spin" />
+            ) : (
+              "Selanjutnya"
+            )}
           </Button>
         </div>
       </section>
@@ -308,13 +316,13 @@ const TabQueueService = ({ id }: { id: string }) => {
               value="active"
               className="text-sm px-3 text-primary-700 w-2/12 bg-primary-100 rounded-tl-xl rounded-tr-xl rounded-bl-none rounded-br-none font-bold h-full data-[state=active]:border-0 data-[state=active]:bg-primary-700 data-[state=active]:text-neutral-50"
             >
-              Antrian
+              Antrian Hari Ini
             </TabsTrigger>
             <TabsTrigger
               value="history"
               className="text-sm px-3 text-primary-700 w-2/12 bg-primary-100 rounded-tl-xl rounded-tr-xl rounded-bl-none rounded-br-none font-bold h-full data-[state=active]:border-0 data-[state=active]:bg-primary-700 data-[state=active]:text-neutral-50"
             >
-              Layanan
+              Riwayat Antrian
             </TabsTrigger>
           </TabsList>
           <TabsContent value="active" className="mt-8">

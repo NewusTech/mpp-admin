@@ -63,6 +63,20 @@ const DetailRequestOnline = ({
     (item: any) => item.layananform_tipedata === "file",
   );
 
+  const [clickedLinks, setClickedLinks] = useState(
+    new Array(filteredDataFile?.length).fill(false),
+  );
+
+  // Fungsi untuk menandai link sebagai diklik
+  const handleLinkClick = (index: any) => {
+    const newClickedLinks = [...clickedLinks];
+    newClickedLinks[index] = true;
+    setClickedLinks(newClickedLinks);
+  };
+
+  // Memeriksa apakah semua link telah diklik
+  const allLinksClicked = clickedLinks.every((clicked) => clicked);
+
   const handleValidationStatus = async () => {
     setIsLoading(true);
     try {
@@ -162,12 +176,20 @@ const DetailRequestOnline = ({
             </div>
           ))}
           <div className="text-center mt-8 mb-[46px] space-x-3">
-            <ModalValidate id={params.id} title="Tolak" />
-            <ModalValidateRevision id={params.id} title="Perbaiki" />
+            <ModalValidate
+              id={params.id}
+              title="Tolak"
+              state={!allLinksClicked}
+            />
+            <ModalValidateRevision
+              id={params.id}
+              title="Perbaiki"
+              state={!allLinksClicked}
+            />
             <Button
               onClick={handleValidationStatus}
               className="bg-success-700 hover:bg-success-800 w-[140px] rounded-full"
-              disabled={isLoading ? true : false}
+              disabled={!allLinksClicked || isLoading}
             >
               {isLoading ? <Loader className="animate-spin" /> : "Validasi"}
             </Button>

@@ -63,14 +63,22 @@ function formatDate(dateString: any) {
   return `${day}-${month}-${year}`;
 }
 
-const StatusCell = ({ status, id }: { status: number; id: number }) => {
+const StatusCell = ({
+  status,
+  id,
+  link,
+}: {
+  link: string;
+  status: number;
+  id: number;
+}) => {
   const getStatusElement = () => {
     switch (status) {
       case 0:
         return (
           <Link
-            href={`history-approvals/${id}`}
-            className="bg-secondary-700 hover:bg-secondary-800 rounded-full w-8/12 text-[10px] p-1 text-center"
+            href={`${link}/${id}`}
+            className="bg-secondary-700 hover:bg-secondary-800 rounded-full w-full text-[10px] p-1 text-center"
           >
             <p className="text-neutral-50">Menunggu</p>
           </Link>
@@ -78,8 +86,8 @@ const StatusCell = ({ status, id }: { status: number; id: number }) => {
       case 1:
         return (
           <Link
-            href={`history-approvals/${id}`}
-            className="bg-primary-700 hover:bg-primary-800 rounded-full w-8/12 text-[10px] p-1 text-center"
+            href={`${link}/${id}`}
+            className="bg-primary-700 hover:bg-primary-800 rounded-full w-full text-[10px] p-1 text-center"
           >
             <p className="text-neutral-50">Divalidasi</p>
           </Link>
@@ -87,8 +95,8 @@ const StatusCell = ({ status, id }: { status: number; id: number }) => {
       case 2:
         return (
           <Link
-            href={`history-approvals/${id}`}
-            className="bg-primary-800 hover:bg-primary-700 rounded-full w-8/12 text-[10px] p-1 text-center"
+            href={`${link}/${id}`}
+            className="bg-primary-800 hover:bg-primary-700 rounded-full w-full text-[10px] p-1 text-center"
           >
             <p className="text-neutral-50">Disetujui</p>
           </Link>
@@ -96,8 +104,8 @@ const StatusCell = ({ status, id }: { status: number; id: number }) => {
       case 3:
         return (
           <Link
-            href={`history-approvals/${id}`}
-            className="bg-success-700 hover:bg-success-800 rounded-full w-8/12 text-[10px] p-1 text-center"
+            href={`${link}/${id}`}
+            className="bg-success-700 hover:bg-success-800 rounded-full w-full text-[10px] p-1 text-center"
           >
             <p className="text-neutral-50">Selesai</p>
           </Link>
@@ -105,8 +113,8 @@ const StatusCell = ({ status, id }: { status: number; id: number }) => {
       case 4:
         return (
           <Link
-            href={`history-approvals/${id}`}
-            className="bg-error-700 hover:bg-error-800 rounded-full w-8/12 text-[10px] p-1 text-center"
+            href={`${link}/${id}`}
+            className="bg-error-700 hover:bg-error-800 rounded-full w-full text-[10px] p-1 text-center"
           >
             <p className="text-neutral-50">Ditolak</p>
           </Link>
@@ -114,8 +122,8 @@ const StatusCell = ({ status, id }: { status: number; id: number }) => {
       case 5:
         return (
           <Link
-            href={`history-approvals/${id}`}
-            className="bg-warning-700 hover:bg-warning-800 rounded-full w-8/12 text-[10px] p-1 text-center"
+            href={`${link}/${id}`}
+            className="bg-warning-700 hover:bg-warning-800 rounded-full w-full text-[10px] p-1 text-center"
           >
             <p className="text-neutral-50">Perbaikan</p>
           </Link>
@@ -123,8 +131,8 @@ const StatusCell = ({ status, id }: { status: number; id: number }) => {
       default:
         return (
           <Link
-            href={`history-approvals/${id}`}
-            className="bg-neutral-700 hover:bg-neutral-800 rounded-full w-8/12 text-[10px] text-neutral-50 p-1 text-center"
+            href={`${link}/${id}`}
+            className="bg-neutral-700 hover:bg-neutral-800 rounded-full w-full text-[10px] text-neutral-50 p-1 text-center"
           >
             <p>Diperbaiki</p>
           </Link>
@@ -240,6 +248,7 @@ export const requestOnlineColumns: ColumnDef<RequestOnline>[] = [
       );
     },
   },
+  { accessorKey: "layanan_name", header: "Layanan" },
   {
     accessorKey: "status",
     header: () => {
@@ -255,7 +264,11 @@ export const requestOnlineColumns: ColumnDef<RequestOnline>[] = [
 
       return (
         <div className="flex justify-center">
-          <StatusCell status={Number(status)} id={statusRow.id} />
+          <StatusCell
+            status={Number(status)}
+            link="/request/online"
+            id={statusRow.id}
+          />
         </div>
       );
     },
@@ -273,8 +286,16 @@ export const revisionColumns: ColumnDef<RequestOnline>[] = [
     },
   },
   {
+    accessorKey: "nik",
+    header: "NIK",
+  },
+  {
     accessorKey: "name",
     header: "Nama",
+  },
+  {
+    accessorKey: "layanan_name",
+    header: "Layanan",
   },
   {
     accessorKey: "status",
@@ -291,7 +312,11 @@ export const revisionColumns: ColumnDef<RequestOnline>[] = [
 
       return (
         <div className="flex justify-center">
-          <StatusCell status={Number(status)} id={statusRow.id} />
+          <StatusCell
+            status={Number(status)}
+            link="/request/revision"
+            id={statusRow.id}
+          />
         </div>
       );
     },
@@ -357,21 +382,26 @@ export const requestOfflineColumns: ColumnDef<RequestOffline>[] = [
       return <p>{getTime(date)}</p>;
     },
   },
-  {
-    accessorKey: "name",
-    header: "Nama",
-  },
+
   {
     accessorKey: "nik",
     header: "NIK",
     cell: ({ row }) => {
       const record = row.original;
       return (
-        <Link href={`/history-approvals/${record.id}`} className="underline">
+        <Link href={`/offline/${record.id}`} className="underline">
           {record.nik}
         </Link>
       );
     },
+  },
+  {
+    accessorKey: "name",
+    header: "Nama",
+  },
+  {
+    accessorKey: "layanan_name",
+    header: "Layanan",
   },
 ];
 
@@ -386,8 +416,16 @@ export const manageApprovalColumns: ColumnDef<ManageApprovals>[] = [
     },
   },
   {
+    accessorKey: "nik",
+    header: "NIK",
+  },
+  {
     accessorKey: "name",
     header: "Nama",
+  },
+  {
+    accessorKey: "layanan_name",
+    header: "Layanan",
   },
   {
     accessorKey: "status",
@@ -404,7 +442,11 @@ export const manageApprovalColumns: ColumnDef<ManageApprovals>[] = [
 
       return (
         <div className="flex justify-center">
-          <StatusCell status={Number(status)} id={statusRow.id} />
+          <StatusCell
+            status={Number(status)}
+            link="/manage-approvals"
+            id={statusRow.id}
+          />
         </div>
       );
     },
@@ -449,9 +491,18 @@ export const historyApprovalColumns: ColumnDef<ManageApprovals>[] = [
       return <p>{formatDate(date)}</p>;
     },
   },
+
+  {
+    accessorKey: "nik",
+    header: "NIK",
+  },
   {
     accessorKey: "name",
     header: "Nama",
+  },
+  {
+    accessorKey: "layanan_name",
+    header: "Layanan",
   },
   {
     accessorKey: "status",
@@ -468,7 +519,11 @@ export const historyApprovalColumns: ColumnDef<ManageApprovals>[] = [
 
       return (
         <div className="flex justify-center">
-          <StatusCell status={Number(status)} id={statusRow.id} />
+          <StatusCell
+            status={Number(status)}
+            link="/history-approvals"
+            id={statusRow.id}
+          />
         </div>
       );
     },
@@ -561,7 +616,11 @@ export const dashboardApprovalColumns: ColumnDef<ManageApprovals>[] = [
 
       return (
         <div className="flex justify-center">
-          <StatusCell status={Number(status)} id={statusRow.id} />
+          <StatusCell
+            status={Number(status)}
+            link="/history-approvals"
+            id={statusRow.id}
+          />
         </div>
       );
     },

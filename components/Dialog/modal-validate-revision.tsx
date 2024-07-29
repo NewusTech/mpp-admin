@@ -21,9 +21,11 @@ import { Loader } from "lucide-react";
 const ModalValidateRevision = ({
   title,
   id,
+  state,
 }: {
   id: number;
   title: string;
+  state: any;
 }) => {
   const router = useRouter();
   const [feedback, setFeedback] = useState<string>("");
@@ -74,6 +76,7 @@ const ModalValidateRevision = ({
         <Button
           onClick={handleOpenAddModal}
           className="bg-warning-700 hover:bg-warning-800 w-[140px] rounded-full"
+          disabled={state}
         >
           {title}
         </Button>

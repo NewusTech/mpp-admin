@@ -162,7 +162,9 @@ const DetailApproval = ({
               />
             </div>
           </div>
-          <h2 className="text-lg font-semibold my-5">Formulir</h2>
+          <h2 className="text-lg font-semibold my-5">
+            Formulir {result?.layanan?.name}
+          </h2>
           {filteredData?.map((v: any) => (
             <div className="space-y-2 mt-3" key={v.id}>
               <p>{v.layananform_name}</p>
@@ -190,6 +192,10 @@ const DetailApproval = ({
                   {v.layananform_name}
                 </p>
               </Link>
+              <p className="text-xs">
+                Pastikan <span className="font-bold">{v.layananform_name}</span>{" "}
+                sudah benar
+              </p>
             </div>
           ))}
           <h2 className="text-lg font-semibold my-5">

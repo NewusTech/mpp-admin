@@ -50,8 +50,8 @@ export const UserInfoLeft = ({ userInfo, religion, gender }: UserInfoProps) => {
       <UserInfoItem label="Email" value={userInfo?.email} />
       <UserInfoItem label="Tanggal Lahir" value={userInfo?.tgl_lahir} />
       <UserInfoItem label="Tempat Lahir" value={userInfo?.tempat_lahir} />
-      <UserInfoItem label="Agama" value={religion} />
-      <UserInfoItem label="Jenis Kelamin" value={gender} />
+      <UserInfoItem label="Agama" value={religion || "-"} />
+      <UserInfoItem label="Jenis Kelamin" value={gender || "-"} />
       <h3 className="text-lg font-semibold">Dokumen Pendukung</h3>
       <div className="space-y-3">
         <h3 className="font-medium">Foto</h3>
@@ -89,12 +89,12 @@ export const UserInfoRight = ({
 }: UserInfoProps) => {
   return (
     <div className="space-y-3">
-      <UserInfoItem label="Pendidikan" value={education} />
-      <UserInfoItem label="Status Kawain" value={marriedStatus} />
-      <UserInfoItem label="Golongan Darah" value={bloodType} />
-      <UserInfoItem label="Pekerjaan" value={userInfo?.pekerjaan} />
-      <UserInfoItem label="Kecamatan" value={userInfo?.kecamatan} />
-      <UserInfoItem label="Desa" value={userInfo?.desa} />
+      <UserInfoItem label="Pendidikan" value={education || "-"} />
+      <UserInfoItem label="Status Kawain" value={marriedStatus || "-"} />
+      <UserInfoItem label="Golongan Darah" value={bloodType || "-"} />
+      <UserInfoItem label="Pekerjaan" value={userInfo?.pekerjaan || "-"} />
+      <UserInfoItem label="Kecamatan" value={userInfo?.kecamatan || "-"} />
+      <UserInfoItem label="Desa" value={userInfo?.desa || "-"} />
       <UserInfoItem label="RT" value={userInfo?.rt} />
       <UserInfoItem label="RW" value={userInfo?.rw} />
       <UserInfoItem label="Alamat" value={userInfo?.alamat} />

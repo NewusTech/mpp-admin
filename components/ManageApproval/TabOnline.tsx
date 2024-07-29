@@ -42,7 +42,7 @@ export default function TabOnline({ serviceId, instanceId }: TabOnlineProps) {
     start_date: startDateFormatted, // atau undefined
     end_date: endDateFormatted, // atau undefined
     status: 1,
-    isOnline: 1,
+    isonline: 1,
   };
 
   const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;

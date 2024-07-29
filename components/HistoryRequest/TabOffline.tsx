@@ -19,7 +19,8 @@ const buttons: any = [
   { label: "Disetujui", value: 2 },
   { label: "Selesai", value: 3 },
   { label: "Gagal", value: 4 },
-  { label: "Tidak Sesuai", value: 5 },
+  { label: "Perbaikan", value: 5 },
+  { label: "Diperbaiki", value: 6 },
 ];
 
 export default function TabOffline({ serviceId, instanceId }: TabOfflineProps) {
@@ -73,36 +74,34 @@ export default function TabOffline({ serviceId, instanceId }: TabOfflineProps) {
 
   return (
     <>
-      <div className="flex justify-between">
-        <div className="flex gap-x-3">
-          {buttons.map((button: any) => (
-            <Button
-              key={button.value}
-              size="sm"
-              className={`border border-primary-700 text-xs hover:bg-primary-700 hover:text-neutral-50 rounded-full ${
-                activeButton === button.value
-                  ? "bg-primary-700 text-neutral-50"
-                  : "bg-transparent text-primary-700"
-              }`}
-              onClick={() => handleClick(button.value)}
-            >
-              {button.label}
-            </Button>
-          ))}
-        </div>
-        <div className="flex w-[320px] items-center gap-x-2">
-          <InputComponent
-            typeInput="datepicker"
-            date={startDate}
-            setDate={(e) => setStartDate(e)}
-          />
-          <p>to</p>
-          <InputComponent
-            typeInput="datepicker"
-            date={endDate}
-            setDate={(e) => setEndDate(e)}
-          />
-        </div>
+      <div className="flex gap-x-3">
+        {buttons.map((button: any) => (
+          <Button
+            key={button.value}
+            size="sm"
+            className={`border border-primary-700 text-xs hover:bg-primary-700 hover:text-neutral-50 rounded-full ${
+              activeButton === button.value
+                ? "bg-primary-700 text-neutral-50"
+                : "bg-transparent text-primary-700"
+            }`}
+            onClick={() => handleClick(button.value)}
+          >
+            {button.label}
+          </Button>
+        ))}
+      </div>
+      <div className="flex w-full items-center gap-x-2 justify-end mt-5">
+        <InputComponent
+          typeInput="datepicker"
+          date={startDate}
+          setDate={(e) => setStartDate(e)}
+        />
+        <p>to</p>
+        <InputComponent
+          typeInput="datepicker"
+          date={endDate}
+          setDate={(e) => setEndDate(e)}
+        />
       </div>
       {histories && (
         <DataTables
