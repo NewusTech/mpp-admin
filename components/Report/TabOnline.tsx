@@ -7,7 +7,7 @@ import { fetcher } from "@/lib/fetch";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
 
-interface TabOfflineProps {
+interface TabOnlineProps {
   serviceId: number | null;
   instanceId: number | null;
 }
@@ -23,7 +23,7 @@ const buttons: any = [
   { label: "Diperbaiki", value: 6 },
 ];
 
-export default function TabOffline({ serviceId, instanceId }: TabOfflineProps) {
+export default function TabOnline({ serviceId, instanceId }: TabOnlineProps) {
   const now = new Date();
   const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
@@ -54,8 +54,8 @@ export default function TabOffline({ serviceId, instanceId }: TabOfflineProps) {
     limit: 10000000, // atau false
     start_date: startDateFormatted, // atau undefined
     end_date: endDateFormatted, // atau undefined
-    isonline: 0,
     status: activeButton,
+    isonline: 1,
   };
 
   const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;
@@ -90,7 +90,7 @@ export default function TabOffline({ serviceId, instanceId }: TabOfflineProps) {
           </Button>
         ))}
       </div>
-      <div className="flex w-full items-center gap-x-2 justify-end mt-5">
+      <div className="flex w-full justify-end mt-5 items-center gap-x-2">
         <InputComponent
           typeInput="datepicker"
           date={startDate}

@@ -558,6 +558,68 @@ export const historyApprovalColumns: ColumnDef<ManageApprovals>[] = [
   },
 ];
 
+export const reportTabColumns: ColumnDef<ManageApprovals>[] = [
+  {
+    accessorKey: "createdAt",
+    header: "Tanggal",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{formatDate(date)}</p>;
+    },
+  },
+
+  {
+    accessorKey: "nik",
+    header: "NIK",
+  },
+  {
+    accessorKey: "name",
+    header: "Nama",
+    cell: ({ row }) => {
+      const status = row.original;
+
+      return (
+        <>
+          <div className="flex justify-center items-center gap-x-3">
+            <Link href={`/history-approvals/${status.id}`}>
+              <p>{status.name}</p>
+            </Link>
+          </div>
+        </>
+      );
+    },
+  },
+  {
+    accessorKey: "layanan_name",
+    header: "Layanan",
+  },
+  {
+    accessorKey: "status",
+    header: () => {
+      return (
+        <div className="flex justify-center">
+          <p>Status</p>
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      const statusRow = row.original;
+      const status = statusRow.status;
+
+      return (
+        <div className="flex justify-center">
+          <StatusCell
+            status={Number(status)}
+            link="/history-approvals"
+            id={statusRow.id}
+          />
+        </div>
+      );
+    },
+  },
+];
+
 export const dashboardApprovalColumns: ColumnDef<ManageApprovals>[] = [
   {
     id: "tanggal",
