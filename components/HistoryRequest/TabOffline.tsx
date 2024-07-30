@@ -1,6 +1,6 @@
 import InputComponent from "@/components/InputComponent";
 import { DataTables } from "@/components/Datatables";
-import { reportTabColumns } from "@/constants";
+import { historyApprovalColumns } from "@/constants";
 import { useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
@@ -105,7 +105,7 @@ export default function TabOffline({ serviceId, instanceId }: TabOfflineProps) {
       </div>
       {histories && (
         <DataTables
-          columns={reportTabColumns}
+          columns={historyApprovalColumns}
           data={historyAll}
           filterBy="name"
           type="requirement"

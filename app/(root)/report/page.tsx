@@ -76,13 +76,13 @@ const Report = () => {
   let instanceId2: any;
   let additionalParams: Record<string, any> = { limit: 10000000 };
 
-  if (role === "Admin Instansi") {
+  if (role === "Admin Instansi" || role === "Admin Layanan") {
     instanceId2 = instansiId;
     additionalParams = {
       ...additionalParams,
       instansi_id: instanceId2,
     };
-  } else if (role === "Super Admin") {
+  } else {
     instanceId2 = instanceId;
     additionalParams = {
       ...additionalParams,
@@ -102,6 +102,8 @@ const Report = () => {
     end_date: endDateFormatted,
     ...additionalParams,
   };
+
+  console.log(params);
 
   const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/report`;
 
@@ -159,7 +161,7 @@ const Report = () => {
       <section className="mr-16">
         <div className="flex justify-between gap-x-5 mb-8">
           <div className="flex w-full gap-x-5 ">
-            {role !== "Admin Instansi" && (
+            {role !== "Admin Instansi" && role !== "Admin Layanan" && (
               <InputComponent
                 typeInput="selectSearch"
                 valueInput={searchInputInstance}
@@ -174,7 +176,7 @@ const Report = () => {
               />
             )}
             <div
-              className={`flex items-center gap-x-2 ${role === "Admin Instansi" ? "w-full justify-between" : "w-8/12 justify-end"}`}
+              className={`flex items-center gap-x-2 ${role === "Admin Instansi" || role === "Admin Layanan" ? "w-full justify-between" : "w-8/12 justify-end"}`}
             >
               <div className="flex items-center gap-x-2 w-8/12">
                 <InputComponent

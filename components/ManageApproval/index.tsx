@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 interface ManageApprovalProps {
   serviceId: number | null;
   instanceId: number | null;
-  queryParams: string;
+  queryParams: string | null;
 }
 
 export default function ManageApproval({

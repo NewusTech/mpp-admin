@@ -62,7 +62,7 @@ const ManageRequirements = () => {
 
   if (role === "Admin Instansi" || role === "Admin Layanan") {
     url += `/${instansiId}?limit=10000000`;
-  } else if ("Super Admin") {
+  } else {
     url += `/${instanceId}?limit=10000000`;
   }
 

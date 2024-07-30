@@ -339,9 +339,9 @@ export const revisionColumns: ColumnDef<RequestOnline>[] = [
             <Link href={`/request/revision/${action.id}`}>
               <Button
                 size="xs"
-                className="text-xs rounded-full py-1 bg-secondary-700 text-neutral-50 hover:bg-secondary-800"
+                className="text-xs w-full rounded-full py-1 bg-neutral-700 text-neutral-50 hover:bg-neutral-800"
               >
-                Lihat Detail
+                Detail
               </Button>
             </Link>
           </div>
@@ -469,9 +469,9 @@ export const manageApprovalColumns: ColumnDef<ManageApprovals>[] = [
             <Link href={`/manage-approvals/${action.id}`}>
               <Button
                 size="xs"
-                className="text-xs rounded-full py-1 bg-secondary-700 text-neutral-50 hover:bg-secondary-800"
+                className="text-xs w-full rounded-full py-1 bg-neutral-700 text-neutral-50 hover:bg-neutral-800"
               >
-                Lihat Detail
+                Detail
               </Button>
             </Link>
           </div>
@@ -546,9 +546,9 @@ export const historyApprovalColumns: ColumnDef<ManageApprovals>[] = [
             <Link href={`/history-approvals/${status.id}`}>
               <Button
                 size="xs"
-                className="text-xs rounded-full py-1 bg-secondary-700 text-neutral-50 hover:bg-secondary-800"
+                className="text-xs rounded-full w-full py-1 bg-neutral-700 text-neutral-50 hover:bg-neutral-800"
               >
-                Lihat Detail
+                Detail
               </Button>
             </Link>
           </div>
@@ -1085,6 +1085,14 @@ export const reportColumns: ColumnDef<Report>[] = [
   {
     accessorKey: "name",
     header: "Jenis Layanan",
+    cell: ({ row }) => {
+      const field = row.original;
+      return (
+        <Link href={`/report/${field.id}`} className="underline">
+          <p>{field.name}</p>
+        </Link>
+      );
+    },
   },
   {
     accessorKey: "menunggu",

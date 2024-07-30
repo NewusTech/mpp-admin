@@ -1,6 +1,11 @@
+"use client";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TabRevision from "@/components/ManageRevision/TabRevision";
 import TabFixed from "@/components/ManageRevision/TabFixed";
+import useRevisionStore from "@/lib/store/useRevisionStore";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetch";
 
 interface ManageRevisionProps {
   serviceId: number | null;
@@ -11,6 +16,20 @@ export default function ManageRevision({
   serviceId,
   instanceId,
 }: ManageRevisionProps) {
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;
+
+  const { data: revision } = useSWR<any>(
+    `${baseUrl}?instansi_id=${instanceId}&layanan_id=${serviceId}&limit=10000000&status=5`,
+    fetcher,
+  );
+  const { data: fixed } = useSWR<any>(
+    `${baseUrl}?instansi_id=${instanceId}&layanan_id=${serviceId}&limit=10000000&status=6`,
+    fetcher,
+  );
+
+  const countRevision = revision?.pagination?.totalCount;
+  const countFixed = fixed?.pagination?.totalCount;
+
   return (
     <Tabs defaultValue="revision" className="my-8">
       <TabsList className="p-0 bg-transparent rounded-none w-full justify-between mb-4">
@@ -20,9 +39,11 @@ export default function ManageRevision({
         >
           <div className="flex space-x-1">
             <p>Butuh Perbaikan</p>
-            <div className="rounded-full w-4 h-4 bg-error-700 items-center justify-center">
-              <p className="text-neutral-50 text-xs">5</p>
-            </div>
+            {countRevision !== 0 && (
+              <div className="rounded-full w-4 h-4 bg-error-700 items-center justify-center">
+                <p className="text-neutral-50 text-xs">{countRevision}</p>
+              </div>
+            )}
           </div>
         </TabsTrigger>
         <TabsTrigger
@@ -31,9 +52,11 @@ export default function ManageRevision({
         >
           <div className="flex space-x-1">
             <p>Sudah Diperbaiki</p>
-            <div className="rounded-full w-4 h-4 bg-error-700 items-center justify-center">
-              <p className="text-neutral-50 text-xs">5</p>
-            </div>
+            {countFixed !== 0 && (
+              <div className="rounded-full w-4 h-4 bg-error-700 items-center justify-center">
+                <p className="text-neutral-50 text-xs">{countFixed}</p>
+              </div>
+            )}
           </div>
         </TabsTrigger>
       </TabsList>

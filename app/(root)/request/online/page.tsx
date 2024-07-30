@@ -62,7 +62,7 @@ const RequestOnline = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher,
+    fetcher
   );
 
   const instanceId = Number(instance);
@@ -71,7 +71,7 @@ const RequestOnline = () => {
 
   if (role === "Admin Instansi" || role === "Admin Layanan") {
     url += `/${instansiId}?search=${searchTermService}`;
-  } else if ("Super Admin") {
+  } else {
     url += `/${instanceId}?search=${searchTermService}`;
   }
 

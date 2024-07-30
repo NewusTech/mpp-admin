@@ -1,6 +1,6 @@
 import InputComponent from "@/components/InputComponent";
 import { DataTables } from "@/components/Datatables";
-import { historyApprovalColumns } from "@/constants";
+import { reportTabColumns } from "@/constants";
 import { useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
@@ -9,7 +9,6 @@ import { formatDate } from "@/lib/utils";
 
 interface TabOfflineProps {
   serviceId: number | null;
-  instanceId: number | null;
 }
 
 const buttons: any = [
@@ -23,7 +22,7 @@ const buttons: any = [
   { label: "Diperbaiki", value: 6 },
 ];
 
-export default function TabOffline({ serviceId, instanceId }: TabOfflineProps) {
+export default function TabOffline({ serviceId }: TabOfflineProps) {
   const now = new Date();
   const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
@@ -49,7 +48,6 @@ export default function TabOffline({ serviceId, instanceId }: TabOfflineProps) {
   const endDateFormatted = endDate ? formatDate(new Date(endDate)) : undefined;
 
   const params = {
-    instansi_id: instanceId,
     layanan_id: serviceId,
     limit: 10000000, // atau false
     start_date: startDateFormatted, // atau undefined
@@ -105,7 +103,7 @@ export default function TabOffline({ serviceId, instanceId }: TabOfflineProps) {
       </div>
       {histories && (
         <DataTables
-          columns={historyApprovalColumns}
+          columns={reportTabColumns}
           data={historyAll}
           filterBy="name"
           type="requirement"

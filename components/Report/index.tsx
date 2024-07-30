@@ -1,16 +1,12 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import TabOffline from "@/components/HistoryRequest/TabOffline";
-import TabOnline from "@/components/HistoryRequest/TabOnline";
+import TabOffline from "@/components/Report/TabOffline";
+import TabOnline from "@/components/Report/TabOnline";
 
 interface HistoryRequestProps {
   serviceId: number | null;
-  instanceId: number | null;
 }
 
-export default function ReportTab({
-  serviceId,
-  instanceId,
-}: HistoryRequestProps) {
+export default function ReportTab({ serviceId }: HistoryRequestProps) {
   return (
     <Tabs defaultValue="offline" className="my-8">
       <TabsList className="p-0 bg-transparent rounded-none w-full justify-between mb-4">
@@ -28,10 +24,10 @@ export default function ReportTab({
         </TabsTrigger>
       </TabsList>
       <TabsContent value="offline">
-        <TabOffline serviceId={serviceId} instanceId={instanceId} />
+        <TabOffline serviceId={serviceId} />
       </TabsContent>
       <TabsContent value="online">
-        <TabOnline serviceId={serviceId} instanceId={instanceId} />
+        <TabOnline serviceId={serviceId} />
       </TabsContent>
     </Tabs>
   );

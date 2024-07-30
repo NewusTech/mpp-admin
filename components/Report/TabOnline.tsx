@@ -9,7 +9,6 @@ import { formatDate } from "@/lib/utils";
 
 interface TabOnlineProps {
   serviceId: number | null;
-  instanceId: number | null;
 }
 
 const buttons: any = [
@@ -23,7 +22,7 @@ const buttons: any = [
   { label: "Diperbaiki", value: 6 },
 ];
 
-export default function TabOnline({ serviceId, instanceId }: TabOnlineProps) {
+export default function TabOnline({ serviceId }: TabOnlineProps) {
   const now = new Date();
   const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
@@ -49,7 +48,6 @@ export default function TabOnline({ serviceId, instanceId }: TabOnlineProps) {
   const endDateFormatted = endDate ? formatDate(new Date(endDate)) : undefined;
 
   const params = {
-    instansi_id: instanceId,
     layanan_id: serviceId,
     limit: 10000000, // atau false
     start_date: startDateFormatted, // atau undefined

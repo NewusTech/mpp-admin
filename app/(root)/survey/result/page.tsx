@@ -58,7 +58,7 @@ const SurveyResult = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher,
+    fetcher
   );
 
   const instanceId = Number(instance);
@@ -69,7 +69,7 @@ const SurveyResult = () => {
 
   if (role === "Admin Instansi" || role === "Admin Layanan") {
     instanceId2 = instansiId;
-  } else if ("Super Admin") {
+  } else {
     instanceId2 = instanceId;
   }
 
