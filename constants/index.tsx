@@ -339,9 +339,9 @@ export const revisionColumns: ColumnDef<RequestOnline>[] = [
             <Link href={`/request/revision/${action.id}`}>
               <Button
                 size="xs"
-                className="text-xs rounded-full py-1 bg-secondary-700 text-neutral-50 hover:bg-secondary-800"
+                className="text-xs w-full rounded-full py-1 bg-neutral-700 text-neutral-50 hover:bg-neutral-800"
               >
-                Lihat Detail
+                Detail
               </Button>
             </Link>
           </div>
@@ -469,9 +469,9 @@ export const manageApprovalColumns: ColumnDef<ManageApprovals>[] = [
             <Link href={`/manage-approvals/${action.id}`}>
               <Button
                 size="xs"
-                className="text-xs rounded-full py-1 bg-secondary-700 text-neutral-50 hover:bg-secondary-800"
+                className="text-xs w-full rounded-full py-1 bg-neutral-700 text-neutral-50 hover:bg-neutral-800"
               >
-                Lihat Detail
+                Detail
               </Button>
             </Link>
           </div>
@@ -546,13 +546,75 @@ export const historyApprovalColumns: ColumnDef<ManageApprovals>[] = [
             <Link href={`/history-approvals/${status.id}`}>
               <Button
                 size="xs"
-                className="text-xs rounded-full py-1 bg-secondary-700 text-neutral-50 hover:bg-secondary-800"
+                className="text-xs rounded-full w-full py-1 bg-neutral-700 text-neutral-50 hover:bg-neutral-800"
               >
-                Lihat Detail
+                Detail
               </Button>
             </Link>
           </div>
         </>
+      );
+    },
+  },
+];
+
+export const reportTabColumns: ColumnDef<ManageApprovals>[] = [
+  {
+    accessorKey: "createdAt",
+    header: "Tanggal",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{formatDate(date)}</p>;
+    },
+  },
+
+  {
+    accessorKey: "nik",
+    header: "NIK",
+  },
+  {
+    accessorKey: "name",
+    header: "Nama",
+    cell: ({ row }) => {
+      const status = row.original;
+
+      return (
+        <>
+          <div className="flex justify-center items-center gap-x-3">
+            <Link href={`/history-approvals/${status.id}`}>
+              <p>{status.name}</p>
+            </Link>
+          </div>
+        </>
+      );
+    },
+  },
+  {
+    accessorKey: "layanan_name",
+    header: "Layanan",
+  },
+  {
+    accessorKey: "status",
+    header: () => {
+      return (
+        <div className="flex justify-center">
+          <p>Status</p>
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      const statusRow = row.original;
+      const status = statusRow.status;
+
+      return (
+        <div className="flex justify-center">
+          <StatusCell
+            status={Number(status)}
+            link="/history-approvals"
+            id={statusRow.id}
+          />
+        </div>
       );
     },
   },
@@ -1023,6 +1085,14 @@ export const reportColumns: ColumnDef<Report>[] = [
   {
     accessorKey: "name",
     header: "Jenis Layanan",
+    cell: ({ row }) => {
+      const field = row.original;
+      return (
+        <Link href={`/report/${field.id}`} className="underline">
+          <p>{field.name}</p>
+        </Link>
+      );
+    },
   },
   {
     accessorKey: "menunggu",

@@ -68,7 +68,7 @@ const ManageApprovals = () => {
 
   if (role === "Admin Instansi" || role === "Admin Layanan") {
     url += `/${instansiId}?search=${searchTermService}`;
-  } else if ("Super Admin") {
+  } else {
     url += `/${instanceId}?search=${searchTermService}`;
   }
 

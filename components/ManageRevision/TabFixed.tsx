@@ -1,10 +1,11 @@
 import InputComponent from "@/components/InputComponent";
 import { DataTables } from "@/components/Datatables";
 import { revisionColumns } from "@/constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import { formatDate } from "@/lib/utils";
+import useRevisionStore from "@/lib/store/useRevisionStore";
 
 interface TabFixedProps {
   serviceId: number | null;
@@ -16,6 +17,7 @@ export default function TabFixed({ serviceId, instanceId }: TabFixedProps) {
   const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
+  const setCountFixed = useRevisionStore((state) => state.setCountRevision);
 
   const buildUrl = (baseUrl: string, params: Record<string, any>) => {
     const url = new URL(baseUrl);
@@ -54,11 +56,18 @@ export default function TabFixed({ serviceId, instanceId }: TabFixedProps) {
   const { data: histories } = useSWR<any>(fixUrl, fetcher);
 
   const historyAll = histories?.data;
+  const countHistory = histories?.pagination?.totalCount;
+
+  useEffect(() => {
+    setCountFixed(countHistory);
+  }, [countHistory, setCountFixed]);
+
+  console.log(histories);
 
   return (
     <>
       <div className="flex justify-end">
-        <div className="flex w-6/12 items-center gap-x-2">
+        <div className="flex w-4/12 items-center gap-x-2">
           <InputComponent
             typeInput="datepicker"
             date={startDate}

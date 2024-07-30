@@ -58,7 +58,7 @@ const Articles = () => {
 
   if (role === "Admin Instansi" || role === "Admin Layanan") {
     url += `&instansi_id=${instansiId}`;
-  } else if ("Super Admin") {
+  } else {
     url += `&instansi_id=${instanceId}`;
   }
 

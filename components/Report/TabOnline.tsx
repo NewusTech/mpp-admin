@@ -1,26 +1,33 @@
 import InputComponent from "@/components/InputComponent";
 import { DataTables } from "@/components/Datatables";
-import { revisionColumns } from "@/constants";
-import { useEffect, useState } from "react";
+import { reportTabColumns } from "@/constants";
+import { useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
+import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
-import useRevisionStore from "@/lib/store/useRevisionStore";
 
-interface TabRevisionProps {
+interface TabOnlineProps {
   serviceId: number | null;
-  instanceId: number | null;
 }
 
-export default function TabRevision({
-  serviceId,
-  instanceId,
-}: TabRevisionProps) {
+const buttons: any = [
+  { label: "Semua", value: "" },
+  { label: "Menunggu", value: 0 },
+  { label: "Divalidasi", value: 1 },
+  { label: "Disetujui", value: 2 },
+  { label: "Selesai", value: 3 },
+  { label: "Gagal", value: 4 },
+  { label: "Perbaikan", value: 5 },
+  { label: "Diperbaiki", value: 6 },
+];
+
+export default function TabOnline({ serviceId }: TabOnlineProps) {
   const now = new Date();
   const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
-  const setCountRevision = useRevisionStore((state) => state.setCountRevision);
+  const [activeButton, setActiveButton] = useState("");
 
   const buildUrl = (baseUrl: string, params: Record<string, any>) => {
     const url = new URL(baseUrl);
@@ -41,13 +48,12 @@ export default function TabRevision({
   const endDateFormatted = endDate ? formatDate(new Date(endDate)) : undefined;
 
   const params = {
-    instansi_id: instanceId,
     layanan_id: serviceId,
     limit: 10000000, // atau false
     start_date: startDateFormatted, // atau undefined
     end_date: endDateFormatted, // atau undefined
-    status: 5,
-    isOnline: 1,
+    status: activeButton,
+    isonline: 1,
   };
 
   const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;
@@ -59,32 +65,45 @@ export default function TabRevision({
   const { data: histories } = useSWR<any>(fixUrl, fetcher);
 
   const historyAll = histories?.data;
-  const countHistory = histories?.pagination?.totalCount;
 
-  useEffect(() => {
-    setCountRevision(countHistory);
-  }, [countHistory, setCountRevision]);
+  const handleClick = (value: any) => {
+    setActiveButton(value);
+  };
 
   return (
     <>
-      <div className="flex justify-end">
-        <div className="flex w-4/12 items-center gap-x-2">
-          <InputComponent
-            typeInput="datepicker"
-            date={startDate}
-            setDate={(e) => setStartDate(e)}
-          />
-          <p>to</p>
-          <InputComponent
-            typeInput="datepicker"
-            date={endDate}
-            setDate={(e) => setEndDate(e)}
-          />
-        </div>
+      <div className="flex gap-x-3">
+        {buttons.map((button: any) => (
+          <Button
+            key={button.value}
+            size="sm"
+            className={`border border-primary-700 text-xs hover:bg-primary-700 hover:text-neutral-50 rounded-full ${
+              activeButton === button.value
+                ? "bg-primary-700 text-neutral-50"
+                : "bg-transparent text-primary-700"
+            }`}
+            onClick={() => handleClick(button.value)}
+          >
+            {button.label}
+          </Button>
+        ))}
+      </div>
+      <div className="flex w-full justify-end mt-5 items-center gap-x-2">
+        <InputComponent
+          typeInput="datepicker"
+          date={startDate}
+          setDate={(e) => setStartDate(e)}
+        />
+        <p>to</p>
+        <InputComponent
+          typeInput="datepicker"
+          date={endDate}
+          setDate={(e) => setEndDate(e)}
+        />
       </div>
       {histories && (
         <DataTables
-          columns={revisionColumns}
+          columns={reportTabColumns}
           data={historyAll}
           filterBy="name"
           type="requirement"

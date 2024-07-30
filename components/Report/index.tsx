@@ -1,37 +1,14 @@
-"use client";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import TabOffline from "@/components/ManageApproval/TabOffline";
-import TabOnline from "@/components/ManageApproval/TabOnline";
-import { useEffect, useState } from "react";
+import TabOffline from "@/components/Report/TabOffline";
+import TabOnline from "@/components/Report/TabOnline";
 
-interface ManageApprovalProps {
+interface HistoryRequestProps {
   serviceId: number | null;
-  instanceId: number | null;
-  queryParams: string | null;
 }
 
-export default function ManageApproval({
-  serviceId,
-  instanceId,
-  queryParams,
-}: ManageApprovalProps) {
-  const [isTabs, setIsTabs] = useState<string>("online");
-
-  useEffect(() => {
-    if (queryParams == "online") {
-      setIsTabs("online");
-    } else if (queryParams == "offline") {
-      setIsTabs("offline");
-    }
-  }, []);
-
+export default function ReportTab({ serviceId }: HistoryRequestProps) {
   return (
-    <Tabs
-      value={isTabs ? isTabs : "offline"}
-      onValueChange={(value) => setIsTabs(value)}
-      className="my-8"
-    >
+    <Tabs defaultValue="offline" className="my-8">
       <TabsList className="p-0 bg-transparent rounded-none w-full justify-between mb-4">
         <TabsTrigger
           value="offline"
@@ -46,11 +23,11 @@ export default function ManageApproval({
           Online
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="offline" className="mt-8">
-        <TabOffline serviceId={serviceId} instanceId={instanceId} />
+      <TabsContent value="offline">
+        <TabOffline serviceId={serviceId} />
       </TabsContent>
-      <TabsContent value="online" className="mt-8">
-        <TabOnline serviceId={serviceId} instanceId={instanceId} />
+      <TabsContent value="online">
+        <TabOnline serviceId={serviceId} />
       </TabsContent>
     </Tabs>
   );

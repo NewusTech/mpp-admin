@@ -148,15 +148,15 @@ const Sidebar = () => {
             iconsActive="/icons/square-library-active.svg"
             title="Riwayat Permohonan"
           />
-          {role !== "Admin Layanan" && (
-            <Nav
-              route="/report"
-              path="/report"
-              icons="/icons/Report.svg"
-              iconsActive="/icons/Report-active.svg"
-              title="Laporan"
-            />
-          )}
+          <Nav
+            route={
+              role === "Admin Layanan" ? `/report/${layananId}` : "/report"
+            }
+            path="/report"
+            icons="/icons/Report.svg"
+            iconsActive="/icons/Report-active.svg"
+            title="Laporan"
+          />
           <Nav
             route="#"
             path="/survey"
