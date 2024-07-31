@@ -5,11 +5,13 @@ import TabOnline from "@/components/HistoryRequest/TabOnline";
 interface HistoryRequestProps {
   serviceId: number | null;
   instanceId: number | null;
+  role: string | null;
 }
 
 export default function HistoryRequest({
   serviceId,
   instanceId,
+  role,
 }: HistoryRequestProps) {
   return (
     <Tabs defaultValue="offline" className="my-8">
@@ -28,10 +30,10 @@ export default function HistoryRequest({
         </TabsTrigger>
       </TabsList>
       <TabsContent value="offline">
-        <TabOffline serviceId={serviceId} instanceId={instanceId} />
+        <TabOffline serviceId={serviceId} instanceId={instanceId} role={role} />
       </TabsContent>
       <TabsContent value="online">
-        <TabOnline serviceId={serviceId} instanceId={instanceId} />
+        <TabOnline serviceId={serviceId} instanceId={instanceId} role={role} />
       </TabsContent>
     </Tabs>
   );
