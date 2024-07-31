@@ -40,9 +40,7 @@ jobs:
           npm i
           fi
     - name : Build proccess
-      run : |
-            cd /home/newus-mpp-admin/htdocs/mpp-admin.newus.id/mpp-admin
-            npm run build
+      run : npm run build --if-present
     - name : change repo
       run : cd /home/newus-mpp-admin/htdocs/mpp-admin.newus.id/mpp-admin/actions-runner/_work/mpp-admin/mpp-admin
     - run : pm2 restart mpp-admin.newus.id --update-env
