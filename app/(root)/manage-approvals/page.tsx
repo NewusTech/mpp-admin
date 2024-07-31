@@ -151,6 +151,7 @@ const ManageApprovals = () => {
           serviceId={serviceId2}
           instanceId={instanceId2}
           queryParams={queryParams}
+          role={role}
         />
       </section>
     </ProtectedRoute>

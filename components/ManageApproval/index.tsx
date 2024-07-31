@@ -9,12 +9,14 @@ interface ManageApprovalProps {
   serviceId: number | null;
   instanceId: number | null;
   queryParams: string | null;
+  role: string | null;
 }
 
 export default function ManageApproval({
   serviceId,
   instanceId,
   queryParams,
+  role,
 }: ManageApprovalProps) {
   const [isTabs, setIsTabs] = useState<string>("online");
 
@@ -47,10 +49,10 @@ export default function ManageApproval({
         </TabsTrigger>
       </TabsList>
       <TabsContent value="offline" className="mt-8">
-        <TabOffline serviceId={serviceId} instanceId={instanceId} />
+        <TabOffline serviceId={serviceId} instanceId={instanceId} role={role} />
       </TabsContent>
       <TabsContent value="online" className="mt-8">
-        <TabOnline serviceId={serviceId} instanceId={instanceId} />
+        <TabOnline serviceId={serviceId} instanceId={instanceId} role={role} />
       </TabsContent>
     </Tabs>
   );

@@ -6,9 +6,14 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
+import { Loader } from "lucide-react";
+import Image from "next/image";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
 
 interface TabOnlineProps {
   serviceId: number | null;
+  role: string | null;
 }
 
 const buttons: any = [
@@ -22,12 +27,13 @@ const buttons: any = [
   { label: "Diperbaiki", value: 6 },
 ];
 
-export default function TabOnline({ serviceId }: TabOnlineProps) {
+export default function TabOnline({ serviceId, role }: TabOnlineProps) {
   const now = new Date();
   const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [activeButton, setActiveButton] = useState("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const buildUrl = (baseUrl: string, params: Record<string, any>) => {
     const url = new URL(baseUrl);
@@ -70,6 +76,37 @@ export default function TabOnline({ serviceId }: TabOnlineProps) {
     setActiveButton(value);
   };
 
+  const handleDownload = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/historyform/pdf?status=${activeButton}&isonline=1&start_date=${startDateFormatted}&end_date=${endDateFormatted}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        },
+      );
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "report permohonan online.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      if (response.ok) {
+        toast("Berhasil download laporan");
+      }
+    } catch (e: any) {
+      toast(e.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="flex gap-x-3">
@@ -88,7 +125,7 @@ export default function TabOnline({ serviceId }: TabOnlineProps) {
           </Button>
         ))}
       </div>
-      <div className="flex w-full justify-end mt-5 items-center gap-x-2">
+      <div className="flex w-full justify-end mt-5 items-center mb-8 gap-x-2">
         <InputComponent
           typeInput="datepicker"
           date={startDate}
@@ -100,13 +137,46 @@ export default function TabOnline({ serviceId }: TabOnlineProps) {
           date={endDate}
           setDate={(e) => setEndDate(e)}
         />
+        {role === "Admin Instansi" || role === "Admin Layanan" ? (
+          <Button
+            disabled={isLoading}
+            onClick={handleDownload}
+            className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[100px] rounded-full"
+          >
+            {isLoading ? (
+              <Loader className="animate-spin" />
+            ) : (
+              <>
+                <Image
+                  src="/icons/printer.svg"
+                  alt="print"
+                  width={24}
+                  height={24}
+                />
+                Print
+              </>
+            )}
+          </Button>
+        ) : (
+          <Button
+            disabled={true}
+            className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[140px] rounded-full"
+          >
+            <Image
+              src="/icons/printer.svg"
+              alt="print"
+              width={24}
+              height={24}
+            />
+            Print
+          </Button>
+        )}
       </div>
       {histories && (
         <DataTables
           columns={reportTabColumns}
           data={historyAll}
           filterBy="name"
-          type="requirement"
         />
       )}
     </>

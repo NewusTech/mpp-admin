@@ -14,6 +14,9 @@ import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { formatDate } from "@/lib/utils";
+import { toast } from "sonner";
+import { Loader } from "lucide-react";
+import Image from "next/image";
 
 interface JwtPayload {
   role?: string;
@@ -39,6 +42,7 @@ const RequestOffline = () => {
   const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -65,7 +69,7 @@ const RequestOffline = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher
+    fetcher,
   );
 
   const instanceId = Number(instance);
@@ -145,6 +149,37 @@ const RequestOffline = () => {
     return () => clearTimeout(delayDebounceFn);
   }, [searchInputInstance, searchInputService]);
 
+  const handleDownload = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/historyform/pdf?isonline=0&instansi_id=${instansiId}&start_date=${startDateFormatted}&end_date=${endDateFormatted}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        },
+      );
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "report-online.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      if (response.ok) {
+        toast("Berhasil download laporan");
+      }
+    } catch (e: any) {
+      toast(e.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Admin Layanan"]}>
       <section className="mr-16">
@@ -196,7 +231,7 @@ const RequestOffline = () => {
             />
           </div>
         </div>
-        <div className="flex justify-start ">
+        <div className="flex justify-start space-x-2">
           {role === "Super Admin" ? (
             <div>
               {instansiId && serviceId ? (
@@ -237,6 +272,40 @@ const RequestOffline = () => {
                 </Button>
               )}
             </div>
+          )}
+          {instance || role === "Admin Instansi" || role === "Admin Layanan" ? (
+            <Button
+              disabled={isLoading}
+              onClick={handleDownload}
+              className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[140px] rounded-full"
+            >
+              {isLoading ? (
+                <Loader className="animate-spin" />
+              ) : (
+                <>
+                  <Image
+                    src="/icons/printer.svg"
+                    alt="print"
+                    width={24}
+                    height={24}
+                  />
+                  Print
+                </>
+              )}
+            </Button>
+          ) : (
+            <Button
+              disabled={true}
+              className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[140px] rounded-full"
+            >
+              <Image
+                src="/icons/printer.svg"
+                alt="print"
+                width={24}
+                height={24}
+              />
+              Print
+            </Button>
           )}
         </div>
         {histories && (

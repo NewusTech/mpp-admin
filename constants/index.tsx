@@ -581,7 +581,7 @@ export const reportTabColumns: ColumnDef<ManageApprovals>[] = [
 
       return (
         <>
-          <div className="flex justify-center items-center gap-x-3">
+          <div className="flex gap-x-3">
             <Link href={`/history-approvals/${status.id}`}>
               <p>{status.name}</p>
             </Link>

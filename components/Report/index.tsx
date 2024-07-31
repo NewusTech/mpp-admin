@@ -4,9 +4,10 @@ import TabOnline from "@/components/Report/TabOnline";
 
 interface HistoryRequestProps {
   serviceId: number | null;
+  role: string | null;
 }
 
-export default function ReportTab({ serviceId }: HistoryRequestProps) {
+export default function ReportTab({ serviceId, role }: HistoryRequestProps) {
   return (
     <Tabs defaultValue="offline" className="my-8">
       <TabsList className="p-0 bg-transparent rounded-none w-full justify-between mb-4">
@@ -24,10 +25,10 @@ export default function ReportTab({ serviceId }: HistoryRequestProps) {
         </TabsTrigger>
       </TabsList>
       <TabsContent value="offline">
-        <TabOffline serviceId={serviceId} />
+        <TabOffline serviceId={serviceId} role={role} />
       </TabsContent>
       <TabsContent value="online">
-        <TabOnline serviceId={serviceId} />
+        <TabOnline serviceId={serviceId} role={role} />
       </TabsContent>
     </Tabs>
   );

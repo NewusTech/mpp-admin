@@ -66,7 +66,7 @@ const HistoryApprovals = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher
+    fetcher,
   );
 
   const instanceId = Number(instance);
@@ -154,7 +154,11 @@ const HistoryApprovals = () => {
             )}
           </div>
         </div>
-        <HistoryRequest serviceId={serviceId2} instanceId={instanceId2} />
+        <HistoryRequest
+          serviceId={serviceId2}
+          instanceId={instanceId2}
+          role={role}
+        />
       </section>
     </ProtectedRoute>
   );

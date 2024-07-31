@@ -10,11 +10,13 @@ import { fetcher } from "@/lib/fetch";
 interface ManageRevisionProps {
   serviceId: number | null;
   instanceId: number | null;
+  role: string | null;
 }
 
 export default function ManageRevision({
   serviceId,
   instanceId,
+  role,
 }: ManageRevisionProps) {
   const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/user/historyform`;
 
@@ -61,10 +63,14 @@ export default function ManageRevision({
         </TabsTrigger>
       </TabsList>
       <TabsContent value="revision" className="mt-8">
-        <TabRevision serviceId={serviceId} instanceId={instanceId} />
+        <TabRevision
+          serviceId={serviceId}
+          instanceId={instanceId}
+          role={role}
+        />
       </TabsContent>
       <TabsContent value="fixed" className="mt-8">
-        <TabFixed serviceId={serviceId} instanceId={instanceId} />
+        <TabFixed serviceId={serviceId} instanceId={instanceId} role={role} />
       </TabsContent>
     </Tabs>
   );
