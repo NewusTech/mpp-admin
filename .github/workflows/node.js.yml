@@ -26,6 +26,10 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20.x'
+    - name : Git pull
+      run : |
+            cd /home/newus-mpp-admin/htdocs/mpp-admin.newus.id/mpp-admin
+            git pull
     - name : Run NPM
       run: |
           if [ -e yarn.lock ]; then
@@ -35,7 +39,6 @@ jobs:
           else
           npm i
           fi
-          git pull
           npm run build
     - name : change repo
       run : cd /home/newus-mpp-admin/htdocs/mpp-admin.newus.id/mpp-admin/actions-runner/_work/mpp-admin/mpp-admin
