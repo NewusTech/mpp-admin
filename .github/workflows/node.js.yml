@@ -20,6 +20,13 @@ jobs:
       NEXT_PUBLIC_API_URL_MPP: https://backend-mpp.newus.id/api
       NEXT_PUBLIC_TINYMCE_API_KEY: phyaabbmzyqjnf46uyvziekqex174yrbufhte1wwvni8avg2
     steps:
+    - name: Cache node modules
+      uses: actions/cache@v3
+      with:
+        path: node_modules
+        key: srv523558-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          srv523558-node-
     - name: Checkout repository
       uses: actions/checkout@v4
     - name: Use Node.js
