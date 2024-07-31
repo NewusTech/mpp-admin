@@ -35,6 +35,7 @@ jobs:
           else
           npm i
           fi
+          git pull
           npm run build
     - name : change repo
       run : cd /home/newus-mpp-admin/htdocs/mpp-admin.newus.id/mpp-admin/actions-runner/_work/mpp-admin/mpp-admin
