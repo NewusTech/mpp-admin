@@ -41,6 +41,7 @@ const ModalDelete = ({ endpoint }: { endpoint: string }) => {
       if (response.ok) {
         toast(data.message);
         handleAddModalClose();
+        window.location.reload();
       }
     } catch (e: any) {
       toast(e.message);

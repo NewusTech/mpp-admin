@@ -73,6 +73,7 @@ export default function AlertDialogCreateMasterManualBook() {
       if (response.ok) {
         toast(data.message);
         handleAddModalClose();
+        window.location.reload();
       }
     } catch (error: any) {
       toast(error.message);

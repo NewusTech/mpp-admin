@@ -22,6 +22,7 @@ import FileUploader from "@/components/FileUploader";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { mutate } from "swr";
 
 const Instance = ({
   data,
@@ -94,8 +95,12 @@ const Instance = ({
         const data = await response.json();
         if (response.ok) {
           toast(data.message);
+          await mutate(
+            `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?limit=1000000`,
+          );
           router.push("/master/master-instance");
         }
+        console.log(data);
       } catch (error: any) {
         toast(error.message);
       } finally {
@@ -118,6 +123,9 @@ const Instance = ({
 
         if (response.ok) {
           toast(result.message);
+          await mutate(
+            `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?limit=1000000`,
+          );
           router.push("/master/master-instance");
         }
       } catch (error: any) {

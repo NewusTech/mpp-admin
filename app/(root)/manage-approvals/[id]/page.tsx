@@ -167,9 +167,21 @@ const DetailApproval = ({
           </h2>
           {filteredData?.map((v: any) => (
             <div className="space-y-2 mt-3" key={v.id}>
-              <p>{v.layananform_name}</p>
+              <p className="font-medium">{v.layananform_name}</p>
               <div className="w-full rounded-[20px] bg-neutral-50 border border-neutral-700 p-4">
-                <p className="text-neutral-700">{v.data}</p>
+                {v.layananform_tipedata === "radio" ? (
+                  <p className="text-neutral-800">{v.data_key}</p>
+                ) : v.layananform_tipedata === "checkbox" ? (
+                  v.data_key.map((x: any, index: number) => (
+                    <ul key={index} className="text-neutral-800 prose">
+                      <li>
+                        {index + 1}. {x}
+                      </li>
+                    </ul>
+                  ))
+                ) : (
+                  <p className="text-neutral-800">{v.data}</p>
+                )}
               </div>
             </div>
           ))}
@@ -211,7 +223,46 @@ const DetailApproval = ({
               )}
             </div>
           </div>
-          <div className="text-right">
+          <div className="flex justify-between items-center mt-5">
+            <p className="text-xs">
+              Status permohonan
+              {result?.status === 0 ? (
+                <span className="bg-secondary-700 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                  {" "}
+                  masih menunggu
+                </span>
+              ) : result?.status === 1 ? (
+                <span className="bg-primary-700 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                  {" "}
+                  sudah divalidasi
+                </span>
+              ) : result?.status === 2 ? (
+                <span className="bg-primary-800 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                  {" "}
+                  sudah disetujui
+                </span>
+              ) : result?.status === 3 ? (
+                <span className="bg-success-700 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                  {" "}
+                  sudah selesai
+                </span>
+              ) : result?.status === 4 ? (
+                <span className="bg-error-700 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                  {" "}
+                  ditolak
+                </span>
+              ) : result?.status === 5 ? (
+                <span className="bg-warning-700 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                  {" "}
+                  harus diperbaiki
+                </span>
+              ) : (
+                <span className="bg-neutral-800 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                  {" "}
+                  sudah diperbaiki
+                </span>
+              )}
+            </p>
             <Button
               onClick={handleValidationStatus}
               className="bg-success-700 hover:bg-success-800 w-[140px] rounded-full"

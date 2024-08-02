@@ -72,6 +72,7 @@ export default function AlertDialogCreateVisionMission() {
       if (response.ok) {
         toast(result.message);
         handleAddModalClose();
+        window.location.reload();
       }
     } catch (error: any) {
       toast(error.message);

@@ -128,12 +128,26 @@ const DetailHistoryApproval = ({
               />
             </div>
           </div>
-          <h2 className="text-lg font-semibold my-5">Formulir</h2>
+          <h2 className="text-lg font-semibold my-5">
+            Formulir {result?.layanan?.name}
+          </h2>
           {filteredData?.map((v: any) => (
             <div className="space-y-2 mt-3" key={v.id}>
-              <p>{v.layananform_name}</p>
+              <p className="font-medium">{v.layananform_name}</p>
               <div className="w-full rounded-[20px] bg-neutral-50 border border-neutral-700 p-4">
-                <p className="text-neutral-700">{v.data}</p>
+                {v.layananform_tipedata === "radio" ? (
+                  <p className="text-neutral-800">{v.data_key}</p>
+                ) : v.layananform_tipedata === "checkbox" ? (
+                  v.data_key.map((x: any, index: number) => (
+                    <ul key={index} className="text-neutral-800 prose">
+                      <li>
+                        {index + 1}. {x}
+                      </li>
+                    </ul>
+                  ))
+                ) : (
+                  <p className="text-neutral-800">{v.data}</p>
+                )}
               </div>
             </div>
           ))}

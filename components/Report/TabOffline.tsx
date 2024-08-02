@@ -125,7 +125,7 @@ export default function TabOffline({ serviceId, role }: TabOfflineProps) {
           </Button>
         ))}
       </div>
-      <div className="flex w-full items-center gap-x-2 justify-end mt-5">
+      <div className="flex w-full items-center gap-x-2 justify-end mt-5 mb-8">
         <InputComponent
           typeInput="datepicker"
           date={startDate}

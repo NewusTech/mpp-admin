@@ -132,7 +132,7 @@ const StatusCell = ({
         return (
           <Link
             href={`${link}/${id}`}
-            className="bg-neutral-700 hover:bg-neutral-800 rounded-full w-full text-[10px] text-neutral-50 p-1 text-center"
+            className="bg-neutral-800 hover:bg-neutral-900 rounded-full w-full text-[10px] text-neutral-50 p-1 text-center"
           >
             <p>Diperbaiki</p>
           </Link>
@@ -389,7 +389,7 @@ export const requestOfflineColumns: ColumnDef<RequestOffline>[] = [
     cell: ({ row }) => {
       const record = row.original;
       return (
-        <Link href={`/offline/${record.id}`} className="underline">
+        <Link href={`/history-approvals/${record.id}`} className="underline">
           {record.nik}
         </Link>
       );

@@ -82,6 +82,7 @@ export default function AlertDialogUpdateCarousel({ id }: { id: number }) {
       if (response.ok) {
         toast(data.message);
         handleAddModalClose();
+        window.location.reload();
       }
     } catch (error: any) {
       toast(error.message);
