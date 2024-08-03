@@ -46,7 +46,6 @@ export default function AlertDialogCreateCarousel() {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof carouselValidation>) {
-
     setIsLoading(true);
     const formData = new FormData();
     formData.append("image", values.image[0]);
@@ -64,10 +63,10 @@ export default function AlertDialogCreateCarousel() {
       );
 
       const data = await response.json();
-      console.log(data);
       if (response.ok) {
         toast(data.message);
         handleAddModalClose();
+        window.location.reload();
       }
     } catch (error: any) {
       toast(error.message);

@@ -104,13 +104,13 @@ const TabSurvey = () => {
           <LineChart data={result?.surveyformnumPerBulan} />
         </div>
         <div className="rounded-[16px] w-6/12 bg-primary-700 p-4 flex flex-col justify-center items-center space-y-5">
-          <p className="text-center text-primary-800 text-[20px] font-semibold">
+          <p className="text-center text-neutral-50 text-[20px] font-semibold">
             Total Nilai SKM Keseluruhan
           </p>
           <h4 className="font-semibold text-[40px] text-neutral-50">
             {result?.rataRataNilaiSKM?.toFixed(2) || 0}
           </h4>
-          <p className="text-secondary-700">
+          <p className="text-secondary-700 font-bold">
             {getDescription(result?.rataRataNilaiSKM?.toFixed(2))}
           </p>
         </div>

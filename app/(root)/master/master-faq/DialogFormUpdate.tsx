@@ -91,6 +91,7 @@ export default function AlertDialogUpdateFaq({ id }: { id: number }) {
       if (response.ok) {
         toast(result.message);
         handleAddModalClose();
+        window.location.reload();
       }
     } catch (error: any) {
       toast(error.message);

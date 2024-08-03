@@ -151,7 +151,19 @@ const DetailRequestOnline = ({
             <div className="space-y-2 mt-3" key={v.id}>
               <p className="font-medium">{v.layananform_name}</p>
               <div className="w-full rounded-[20px] bg-neutral-50 border border-neutral-700 p-4">
-                <p className="text-neutral-800">{v.data}</p>
+                {v.layananform_tipedata === "radio" ? (
+                  <p className="text-neutral-800">{v.data_key}</p>
+                ) : v.layananform_tipedata === "checkbox" ? (
+                  v.data_key.map((x: any, index: number) => (
+                    <ul key={index} className="text-neutral-800 prose">
+                      <li>
+                        {index + 1}. {x}
+                      </li>
+                    </ul>
+                  ))
+                ) : (
+                  <p className="text-neutral-800">{v.data}</p>
+                )}
               </div>
             </div>
           ))}
@@ -181,7 +193,7 @@ const DetailRequestOnline = ({
               </p>
             </div>
           ))}
-          <div className="text-center mt-8 mb-[46px] space-x-3">
+          <div className="text-center mt-8 mb-5 space-x-3">
             <ModalValidate
               id={params.id}
               title="Tolak"
@@ -200,6 +212,45 @@ const DetailRequestOnline = ({
               {isLoading ? <Loader className="animate-spin" /> : "Validasi"}
             </Button>
           </div>
+          <p className="text-xs">
+            Status permohonan
+            {result?.status === 0 ? (
+              <span className="bg-secondary-700 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                {" "}
+                masih menunggu
+              </span>
+            ) : result?.status === 1 ? (
+              <span className="bg-primary-700 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                {" "}
+                sudah divalidasi
+              </span>
+            ) : result?.status === 2 ? (
+              <span className="bg-primary-800 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                {" "}
+                sudah disetujui
+              </span>
+            ) : result?.status === 3 ? (
+              <span className="bg-success-700 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                {" "}
+                sudah selesai
+              </span>
+            ) : result?.status === 4 ? (
+              <span className="bg-error-700 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                {" "}
+                ditolak
+              </span>
+            ) : result?.status === 5 ? (
+              <span className="bg-warning-700 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                {" "}
+                harus diperbaiki
+              </span>
+            ) : (
+              <span className="bg-neutral-800 px-3 py-1 ml-2 text-neutral-50 rounded-full">
+                {" "}
+                sudah diperbaiki
+              </span>
+            )}
+          </p>
         </div>
       </section>
     </ProtectedRoute>

@@ -133,7 +133,7 @@ const InstanceDashboard = () => {
           {state.role === "Admin Instansi" ? (
             <TabSurvey />
           ) : (
-            <TabSurveyService id={state.serviceId} />
+            <TabSurveyService id={state.serviceId} name={state.serviceName} />
           )}
         </TabsContent>
       </Tabs>
