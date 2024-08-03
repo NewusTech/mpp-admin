@@ -25,11 +25,11 @@ const DetailGuestBook = ({
   };
 }) => {
   const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL_KIOSKA}/bukutamu/get/${params.id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/bukutamu/get/${params.id}`,
     fetcher
   );
   const result = data?.data;
-  const resultGeustBook = detailGuestBook.data;
+  // const resultGeustBook = detailGuestBook.data;
 
   return (
     <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Admin Layanan"]}>
@@ -46,13 +46,10 @@ const DetailGuestBook = ({
         </div>
         <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-3 p-8">
           <h2 className="text-lg font-semibold my-5">Detail Buku Tamu</h2>
-          <Card label="Nama" value={resultGeustBook?.name} />
-          <Card label="Pekerjaan" value={resultGeustBook?.pekerjaan} />
-          <Card label="Alamat" value={resultGeustBook?.alamat} />
-          <Card
-            label="Tujuan"
-            value={resultGeustBook?.tujuan || "Tidak diisi"}
-          />
+          <Card label="Nama" value={result?.name} />
+          <Card label="Pekerjaan" value={result?.pekerjaan} />
+          <Card label="Alamat" value={result?.alamat} />
+          <Card label="Tujuan" value={result?.tujuan || "Tidak diisi"} />
         </div>
       </section>
     </ProtectedRoute>
