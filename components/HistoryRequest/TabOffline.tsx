@@ -132,17 +132,19 @@ export default function TabOffline({
         ))}
       </div>
       <div className="flex w-full items-center gap-x-2 justify-end mt-5 mb-8">
-        <InputComponent
-          typeInput="datepicker"
-          date={startDate}
-          setDate={(e) => setStartDate(e)}
-        />
-        <p>to</p>
-        <InputComponent
-          typeInput="datepicker"
-          date={endDate}
-          setDate={(e) => setEndDate(e)}
-        />
+        <div className="flex items-center gap-x-2 w-4/12">
+          <InputComponent
+            typeInput="datepicker"
+            date={startDate}
+            setDate={(e) => setStartDate(e)}
+          />
+          <p>to</p>
+          <InputComponent
+            typeInput="datepicker"
+            date={endDate}
+            setDate={(e) => setEndDate(e)}
+          />
+        </div>
         {instanceId || role === "Admin Instansi" || role === "Admin Layanan" ? (
           <Button
             disabled={isLoading}

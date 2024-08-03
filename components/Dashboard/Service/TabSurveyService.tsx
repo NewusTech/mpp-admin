@@ -39,13 +39,15 @@ const months = [
   { label: "Desember", value: 12 },
 ];
 
-const TabSurveyService = ({ id }: { id: number }) => {
+const TabSurveyService = ({ id, name }: { id: number; name: string }) => {
   const currentYear = new Date().getFullYear();
   const [years, setYears] = useState<any[]>([]);
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const now = new Date();
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
+  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [selectedMonth, setSelectedMonth] = useState<any>(
     new Date().getMonth() + 1,
   );
@@ -179,13 +181,13 @@ const TabSurveyService = ({ id }: { id: number }) => {
           <LineChart data={result?.surveyformnumPerBulan} />
         </div>
         <div className="rounded-[16px] w-6/12 bg-primary-700 p-4 flex flex-col justify-center items-center space-y-5">
-          <p className="text-center text-primary-800 text-[20px] font-semibold">
-            Total Nilai SKM Keseluruhan
+          <p className="text-center text-neutral-50 text-[20px] font-semibold">
+            Total Nilai SKM {name}
           </p>
           <h4 className="font-semibold text-[40px] text-neutral-50">
             {result?.rataRataNilaiSKM?.toFixed(2) || 0}
           </h4>
-          <p className="text-secondary-700">
+          <p className="text-secondary-700 font-bold">
             {getDescription(result?.rataRataNilaiSKM?.toFixed(2))}
           </p>
         </div>

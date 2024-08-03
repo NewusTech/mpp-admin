@@ -43,7 +43,7 @@ const Card = ({
 };
 
 export function getDescription(value: number): string {
-  if (value === 0) {
+  if (value <= 0) {
     return "Belum Dinilai";
   } else if (value > 0 && value <= 30) {
     return "Sangat Buruk";
@@ -56,7 +56,7 @@ export function getDescription(value: number): string {
   } else if (value > 90 && value <= 100) {
     return "Sangat Baik";
   }
-  return "nilai tidak valid";
+  return "Nilai tidak valid";
 }
 
 function getBackgroundClass(description: string): string {
