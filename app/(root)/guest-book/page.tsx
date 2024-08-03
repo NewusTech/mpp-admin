@@ -9,6 +9,11 @@ import { jwtDecode } from "jwt-decode";
 import useSWR from "swr";
 import { dataGuestBook, fetcher } from "@/lib/fetch";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Loader } from "lucide-react";
+import Image from "next/image";
+import { formatDate } from "@/lib/utils";
 
 interface JwtPayload {
   role?: string;
@@ -21,8 +26,11 @@ const GuestBook = () => {
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<any>(0);
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const now = new Date();
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
+  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -47,7 +55,7 @@ const GuestBook = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher
+    fetcher,
   );
 
   const instanceId = Number(instance);
@@ -79,7 +87,7 @@ const GuestBook = () => {
     end_date: endDate, // atau undefined
   };
 
-  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL_KIOSKA}/bukutamu/get`;
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/bukutamu/get`;
 
   // Bangun URL berdasarkan role dan instanceId
   const fixUrl = buildUrl(baseUrl, params);
@@ -95,8 +103,44 @@ const GuestBook = () => {
     return () => clearTimeout(delayDebounceFn);
   }, [searchInputInstance]);
 
+  const startDateFormatted = startDate
+    ? formatDate(new Date(startDate))
+    : undefined;
+  const endDateFormatted = endDate ? formatDate(new Date(endDate)) : undefined;
+
+  const handleDownload = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/bukutamu/get/pdf?instansi_id=${instanceId}&start_date=${startDateFormatted}&end_date=${endDateFormatted}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        },
+      );
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "report pengaduan user.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      if (response.ok) {
+        toast("Berhasil download laporan");
+      }
+    } catch (e: any) {
+      toast(e.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const result = data?.data;
-  const resultGuestBook = dataGuestBook.data;
+  const resultGuestBook = guestBook?.data;
 
   return (
     <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Admin Layanan"]}>
@@ -133,6 +177,42 @@ const GuestBook = () => {
               setDate={(e) => setEndDate(e)}
             />
           </div>
+          {instanceId ||
+          role === "Admin Instansi" ||
+          role === "Admin Layanan" ? (
+            <Button
+              disabled={isLoading}
+              onClick={handleDownload}
+              className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[140px] rounded-full"
+            >
+              {isLoading ? (
+                <Loader className="animate-spin" />
+              ) : (
+                <>
+                  <Image
+                    src="/icons/printer.svg"
+                    alt="print"
+                    width={24}
+                    height={24}
+                  />
+                  Print
+                </>
+              )}
+            </Button>
+          ) : (
+            <Button
+              disabled={true}
+              className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[140px] rounded-full"
+            >
+              <Image
+                src="/icons/printer.svg"
+                alt="print"
+                width={24}
+                height={24}
+              />
+              Print
+            </Button>
+          )}
         </div>
         {resultGuestBook && (
           <DataTables
