@@ -29,8 +29,8 @@ const buttons: any = [
 
 export default function TabOffline({ serviceId, role }: TabOfflineProps) {
   const now = new Date();
-  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
+  const firstDayOfYear = new Date(now.getFullYear(), 0, 1); // 0 berarti Januari
+  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfYear);
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [activeButton, setActiveButton] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -125,18 +125,20 @@ export default function TabOffline({ serviceId, role }: TabOfflineProps) {
           </Button>
         ))}
       </div>
-      <div className="flex w-full items-center gap-x-2 justify-end mt-5 mb-8">
-        <InputComponent
-          typeInput="datepicker"
-          date={startDate}
-          setDate={(e) => setStartDate(e)}
-        />
-        <p>to</p>
-        <InputComponent
-          typeInput="datepicker"
-          date={endDate}
-          setDate={(e) => setEndDate(e)}
-        />
+      <div className="flex items-center gap-x-2 justify-end mt-5 mb-8">
+        <div className="flex w-4/12 items-center gap-x-2">
+          <InputComponent
+            typeInput="datepicker"
+            date={startDate}
+            setDate={(e) => setStartDate(e)}
+          />
+          <p>to</p>
+          <InputComponent
+            typeInput="datepicker"
+            date={endDate}
+            setDate={(e) => setEndDate(e)}
+          />
+        </div>
         {role === "Admin Instansi" || role === "Admin Layanan" ? (
           <Button
             disabled={isLoading}

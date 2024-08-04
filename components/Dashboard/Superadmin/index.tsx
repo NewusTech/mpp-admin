@@ -34,7 +34,7 @@ const Card = ({
     <div
       className={`${color} rounded-[16px] w-full h-[155px] flex flex-col items-center justify-center gap-y-10`}
     >
-      <h5 className="text-neutral-900 text-sm w-[187px] text-center">
+      <h5 className="text-neutral-50 font-semibold text-sm w-[187px] text-center">
         {title}
       </h5>
       <h1 className="text-neutral-50 text-3xl font-medium">{text}</h1>
@@ -110,7 +110,7 @@ export const ProgressBar = ({
         <Progress value={value} />
       </div>
       <div
-        className={`text-[10px] ${backgroundClass} rounded-lg text-neutral-50 px-2 py-1`}
+        className={`text-[10px] ${backgroundClass} h-10 w-20 flex items-center justify-center rounded-lg text-neutral-50 px-2 py-1`}
       >
         <p className="text-center">{description}</p>
       </div>
@@ -125,9 +125,10 @@ const DashboardSuperadmin = () => {
   const currentYear = new Date().getFullYear();
   const [years, setYears] = useState<any[]>([]);
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
-
+  const now = new Date();
+  const firstDayOfYear = new Date(now.getFullYear(), 0, 1); // 0 berarti Januari
+  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfYear);
+  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   useEffect(() => {
     const startYear = 2023; // Tahun mulai yang diinginkan
     const yearArray = [];
@@ -202,6 +203,8 @@ const DashboardSuperadmin = () => {
     return null;
   }
 
+  console.log(histories);
+
   return (
     <section className="space-y-4">
       <div className="w-full py-4 px-8 rounded-[16px] shadow bg-neutral-50">
@@ -232,17 +235,17 @@ const DashboardSuperadmin = () => {
         </div>
         <div className="space-x-4 mt-4 flex justify-between">
           <Card
-            color="bg-secondary-700"
+            color="bg-gradient-to-b from-[#FF9742] via-[#FF9742] via-32% to-[#FE7301]"
             text="14,777"
-            title="Antrian Online ee"
+            title="Antrian Online"
           />
           <Card
-            color="bg-primary-700"
+            color="bg-gradient-to-b from-[#3568C0] via-[#3568C0] via-36% to-[#2A549E]"
             text={histories?.permohonanCount}
             title="Permohonan Layanan"
           />
           <Card
-            color="bg-neutral-700"
+            color="bg-gradient-to-b from-[#787878] to-[#ACAAAA] via-63%"
             text={histories?.skmCount}
             title="Survey Kepuasan Masyarakat (SKM)"
           />

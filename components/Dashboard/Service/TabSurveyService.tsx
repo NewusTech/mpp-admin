@@ -45,11 +45,12 @@ const TabSurveyService = ({ id, name }: { id: number; name: string }) => {
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const now = new Date();
-  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
+
+  const firstDayOfYear = new Date(now.getFullYear(), 0, 1); // 0 berarti Januari
+  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfYear);
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [selectedMonth, setSelectedMonth] = useState<any>(
-    new Date().getMonth() + 1,
+    new Date().getMonth() + 1
   );
 
   const handleDownload = async () => {
@@ -97,7 +98,7 @@ const TabSurveyService = ({ id, name }: { id: number; name: string }) => {
     fetcher,
     {
       revalidateOnFocus: false,
-    },
+    }
   );
 
   const buildUrl = (baseUrl: string, params: Record<string, any>) => {

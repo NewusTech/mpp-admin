@@ -30,6 +30,11 @@ const BarChart = ({ chartData }: BarChartProps) => {
       show: false,
     },
     colors: ["#3568C0", "#FF9742"],
+    plotOptions: {
+      bar: {
+        columnWidth: "20%",
+      },
+    },
   };
 
   const series = [

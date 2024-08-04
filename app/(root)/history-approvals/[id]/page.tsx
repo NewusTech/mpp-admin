@@ -139,11 +139,12 @@ const DetailHistoryApproval = ({
                   <p className="text-neutral-800">{v.data_key}</p>
                 ) : v.layananform_tipedata === "checkbox" ? (
                   v.data_key.map((x: any, index: number) => (
-                    <ul key={index} className="text-neutral-800 prose">
-                      <li>
-                        {index + 1}. {x}
+                    <ol key={index} className="text-neutral-800 prose">
+                      <li className="flex items-center space-x-1">
+                        <span className="w-[0.4rem] h-[0.4rem] bg-neutral-800 rounded-full"></span>
+                        <p>{x}</p>
                       </li>
-                    </ul>
+                    </ol>
                   ))
                 ) : (
                   <p className="text-neutral-800">{v.data}</p>
@@ -158,7 +159,7 @@ const DetailHistoryApproval = ({
               <Link
                 href={v.data}
                 target="_blank"
-                className="mt-2 w-[15%] rounded-[20px] bg-neutral-50 hover:bg-neutral-100 shadow p-3 flex space-x-3 justify-around items-center"
+                className="mt-2 w-full rounded-[20px] bg-neutral-50 hover:bg-neutral-100 shadow p-3 flex justify-start space-x-2 items-center"
               >
                 <Image
                   src="/icons/download.svg"
@@ -166,9 +167,7 @@ const DetailHistoryApproval = ({
                   width={24}
                   height={24}
                 />
-                <p className="text-neutral-900 truncate">
-                  {v.layananform_name}
-                </p>
+                <p className="text-neutral-900 truncate">Klik untuk melihat</p>
               </Link>
               <p className="text-xs">
                 Pastikan <span className="font-bold">{v.layananform_name}</span>{" "}

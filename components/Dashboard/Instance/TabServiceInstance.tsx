@@ -57,12 +57,13 @@ const months = [
 
 const TabServiceInstance = () => {
   const now = new Date();
-  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
+
+  const firstDayOfYear = new Date(now.getFullYear(), 0, 1); // 0 berarti Januari
+  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfYear);
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [activeButton, setActiveButton] = useState("");
   const [selectedMonth, setSelectedMonth] = useState<any>(
-    new Date().getMonth(),
+    new Date().getMonth()
   );
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<number | null>(null);
@@ -90,7 +91,7 @@ const TabServiceInstance = () => {
   }, []);
 
   const selectedMonthLabel = months.find(
-    (month) => month.value === Number(selectedMonth),
+    (month) => month.value === Number(selectedMonth)
   )?.label;
 
   const buildUrl = (baseUrl: string, params: Record<string, any>) => {
@@ -154,7 +155,7 @@ const TabServiceInstance = () => {
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-        },
+        }
       );
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);

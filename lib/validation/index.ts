@@ -128,9 +128,7 @@ export const userValidation = z.object({
   nik: z.string({
     message: "NIK harus diisi",
   }),
-  email: z.string({
-    message: "Email harus diisi",
-  }),
+  email: z.string().optional(),
   agama: z.string().optional(),
   telepon: z.string().optional(),
   alamat: z.string().optional(),

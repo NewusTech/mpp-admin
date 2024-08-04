@@ -59,7 +59,7 @@ const ManageApprovals = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher,
+    fetcher
   );
 
   const instanceId = Number(instance);
@@ -117,7 +117,7 @@ const ManageApprovals = () => {
       <section className="mr-16">
         <div className="flex justify-between gap-x-5 mb-8">
           <div className="flex w-full gap-x-5">
-            {role !== "Admin Isntansi" && role !== "Admin Layanan" && (
+            {role !== "Admin Instansi" && role !== "Admin Layanan" && (
               <InputComponent
                 typeInput="selectSearch"
                 valueInput={searchInputInstance}
