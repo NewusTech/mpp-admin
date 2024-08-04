@@ -24,8 +24,9 @@ export default function TabRevision({
   role,
 }: TabRevisionProps) {
   const now = new Date();
-  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
+
+  const firstDayOfYear = new Date(now.getFullYear(), 0, 1); // 0 berarti Januari
+  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfYear);
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const setCountRevision = useRevisionStore((state) => state.setCountRevision);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -83,7 +84,7 @@ export default function TabRevision({
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-        },
+        }
       );
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);

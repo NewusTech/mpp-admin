@@ -321,17 +321,47 @@ const Sidebar = () => {
               handleDropdownOpen={() => handleDropdownOpen("/master")}
             />
           )}
-          {role === "Admin Instansi" || role === "Admin Layanan" ? (
+          {role === "Admin Verifikasi" || role === "Admin Layanan" ? (
             ""
           ) : (
             <Nav
-              route="/manage-user"
+              route="#"
               path="/manage-user"
               icons="/icons/user-round.svg"
               iconsActive="/icons/user-round-active.svg"
               title="Kelola User"
+              type="dropdown"
+              content={
+                <>
+                  <ul className="space-y-4">
+                    {role !== "Admin Layanan" && (
+                      <li
+                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/survey/question") || pathname.startsWith("/survey/question") ? "text-primary-700" : ""}`}
+                      >
+                        <Link href="/survey/question">Pertanyaan</Link>
+                      </li>
+                    )}
+                    <li
+                      className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/survey/result") || pathname.startsWith("/survey/result") ? "text-primary-700" : ""}`}
+                    >
+                      <Link
+                        href={
+                          role !== "Admin Layanan"
+                            ? "/survey/result"
+                            : `/survey/result/${layananId}`
+                        }
+                      >
+                        Hasil
+                      </Link>
+                    </li>
+                  </ul>
+                </>
+              }
+              isDropdownOpen={isDropdownOpen === "/survey"}
+              handleDropdownOpen={() => handleDropdownOpen("/survey")}
             />
           )}
+
           <Nav
             route="/setting"
             path="/setting"

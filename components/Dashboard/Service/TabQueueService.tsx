@@ -63,8 +63,9 @@ const TabQueueService = ({ id }: { id: string }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingTwo, setIsLoadingTwo] = useState<boolean>(false);
   const now = new Date();
-  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
+
+  const firstDayOfYear = new Date(now.getFullYear(), 0, 1); // 0 berarti Januari
+  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfYear);
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [audioUrl, setAudioUrl] = useState(null);
   const [shouldFetch, setShouldFetch] = useState(false);
@@ -124,7 +125,7 @@ const TabQueueService = ({ id }: { id: string }) => {
 
   const { data: today, mutate: dashboardToday } = useSWR<any>(
     fixUrlToday,
-    fetcher,
+    fetcher
   );
 
   useEffect(() => {
@@ -149,7 +150,7 @@ const TabQueueService = ({ id }: { id: string }) => {
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-        },
+        }
       );
       const data = await response.json();
       console.log(data);
@@ -199,7 +200,7 @@ const TabQueueService = ({ id }: { id: string }) => {
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-        },
+        }
       );
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -230,7 +231,7 @@ const TabQueueService = ({ id }: { id: string }) => {
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-        },
+        }
       );
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);

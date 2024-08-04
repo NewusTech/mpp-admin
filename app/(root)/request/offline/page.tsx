@@ -39,8 +39,9 @@ const RequestOffline = () => {
   const [searchTermService, setSearchTermService] = useState("");
   const [searchInputService, setSearchInputService] = useState(""); // State for search input
   const now = new Date();
-  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
+
+  const firstDayOfYear = new Date(now.getFullYear(), 0, 1); // 0 berarti Januari
+  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfYear);
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -69,7 +70,7 @@ const RequestOffline = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher,
+    fetcher
   );
 
   const instanceId = Number(instance);
@@ -159,7 +160,7 @@ const RequestOffline = () => {
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-        },
+        }
       );
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);

@@ -18,6 +18,7 @@ import { formatDate } from "@/lib/utils";
 interface JwtPayload {
   role?: string;
   instansi_id: number;
+  instansi: string;
 }
 
 const GuestBook = () => {
@@ -25,10 +26,12 @@ const GuestBook = () => {
   const [searchTermInstance, setSearchTermInstance] = useState("");
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<any>(0);
+  const [instansiName, setInstansiName] = useState<any>(0);
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
   const now = new Date();
-  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfMonth);
+
+  const firstDayOfYear = new Date(now.getFullYear(), 0, 1); // 0 berarti Januari
+  const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfYear);
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -46,6 +49,7 @@ const GuestBook = () => {
         if (decoded && decoded.role && decoded.instansi_id !== undefined) {
           setRole(decoded.role);
           setInstansiId(decoded.instansi_id);
+          setInstansiName(decoded.instansi);
         }
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -55,7 +59,7 @@ const GuestBook = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher,
+    fetcher
   );
 
   const instanceId = Number(instance);
@@ -118,7 +122,7 @@ const GuestBook = () => {
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-        },
+        }
       );
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -149,7 +153,7 @@ const GuestBook = () => {
           className={`flex gap-x-6 ${role === "Admin Instansi" ? "justify-end mb-8" : "justify-between mb-[86px]"}`}
         >
           <div className="w-full">
-            {role !== "Admin Instansi" && (
+            {role !== "Admin Instansi" && role !== "Admin Layanan" && (
               <InputComponent
                 typeInput="selectSearch"
                 valueInput={searchInputInstance}
@@ -162,6 +166,11 @@ const GuestBook = () => {
                 value={instance}
                 onChange={(e: any) => setInstance(e)}
               />
+            )}
+            {role === "Admin Layanan" && (
+              <h1 className="text-3xl font-bold w-10/12">
+                Buku Tamu {instansiName}
+              </h1>
             )}
           </div>
           <div className="flex w-4/12 items-center gap-x-2">
