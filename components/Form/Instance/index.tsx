@@ -70,7 +70,9 @@ const Instance = ({
       formData.append("image", values.image[0]);
     }
     formData.append("alamat", values.address);
-    formData.append("telp", values.phone);
+    if (values.phone) {
+      formData.append("telp", values.phone);
+    }
     formData.append("pj", values.pj);
     formData.append("nip_pj", values.nip_pj);
     formData.append("active_offline", values.active_offline);
@@ -353,7 +355,7 @@ const Instance = ({
               name="active_online"
               render={({ field }) => (
                 <FormItem className="space-y-3">
-                  <FormLabel>Aktif Online</FormLabel>
+                  <FormLabel>Permohonan Layanan Online</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -364,13 +366,15 @@ const Instance = ({
                         <FormControl>
                           <RadioGroupItem value="1" />
                         </FormControl>
-                        <FormLabel className="font-normal">Ya</FormLabel>
+                        <FormLabel className="font-normal">Aktif</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-2 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="0" />
                         </FormControl>
-                        <FormLabel className="font-normal">Tidak</FormLabel>
+                        <FormLabel className="font-normal">
+                          Tidak Aktif
+                        </FormLabel>
                       </FormItem>
                     </RadioGroup>
                   </FormControl>
@@ -383,7 +387,7 @@ const Instance = ({
               name="active_offline"
               render={({ field }) => (
                 <FormItem className="space-y-3">
-                  <FormLabel>Aktif Offline</FormLabel>
+                  <FormLabel>Booking Antrian</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -394,13 +398,15 @@ const Instance = ({
                         <FormControl>
                           <RadioGroupItem value="1" />
                         </FormControl>
-                        <FormLabel className="font-normal">Ya</FormLabel>
+                        <FormLabel className="font-normal">Aktif</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-2 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="0" />
                         </FormControl>
-                        <FormLabel className="font-normal">Tidak</FormLabel>
+                        <FormLabel className="font-normal">
+                          Tidak Aktif
+                        </FormLabel>
                       </FormItem>
                     </RadioGroup>
                   </FormControl>

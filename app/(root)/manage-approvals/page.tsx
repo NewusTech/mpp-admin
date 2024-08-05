@@ -20,7 +20,6 @@ interface JwtPayload {
 }
 
 const ManageApprovals = () => {
-  const [activeButton, setActiveButton] = useState("");
   const [instance, setInstance] = useState<string>("");
   const [service, setService] = useState<string>("");
   const [searchTermInstance, setSearchTermInstance] = useState("");
@@ -32,8 +31,6 @@ const ManageApprovals = () => {
   const [searchTermService, setSearchTermService] = useState("");
   const [searchInputService, setSearchInputService] = useState(""); // State for search input
   const queryParams = useSearchParams().get("tabs");
-
-  console.log(queryParams);
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -59,7 +56,7 @@ const ManageApprovals = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher
+    fetcher,
   );
 
   const instanceId = Number(instance);
@@ -75,18 +72,6 @@ const ManageApprovals = () => {
   const { data: services } = useSWR(url, fetcher);
 
   const serviceId = Number(service);
-
-  const buildUrl = (baseUrl: string, params: Record<string, any>) => {
-    const url = new URL(baseUrl);
-    // Tambahkan parameter lainnya
-    Object.keys(params).forEach((key) => {
-      if (params[key] !== undefined) {
-        url.searchParams.append(key, params[key]);
-      }
-    });
-
-    return url.toString();
-  };
 
   let instanceId2;
   let serviceId2;

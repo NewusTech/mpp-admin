@@ -73,6 +73,8 @@ const Sidebar = () => {
       setIsDropdownOpen("/survey");
     } else if (pathname.startsWith("/master")) {
       setIsDropdownOpen("/master");
+    } else if (pathname.startsWith("/manage-user")) {
+      setIsDropdownOpen("/manage-user");
     } else {
       setIsDropdownOpen(null);
     }
@@ -321,47 +323,37 @@ const Sidebar = () => {
               handleDropdownOpen={() => handleDropdownOpen("/master")}
             />
           )}
-          {role === "Admin Verifikasi" || role === "Admin Layanan" ? (
-            ""
-          ) : (
-            <Nav
-              route="#"
-              path="/manage-user"
-              icons="/icons/user-round.svg"
-              iconsActive="/icons/user-round-active.svg"
-              title="Kelola User"
-              type="dropdown"
-              content={
-                <>
-                  <ul className="space-y-4">
-                    {role !== "Admin Layanan" && (
-                      <li
-                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/survey/question") || pathname.startsWith("/survey/question") ? "text-primary-700" : ""}`}
-                      >
-                        <Link href="/survey/question">Pertanyaan</Link>
-                      </li>
-                    )}
-                    <li
-                      className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/survey/result") || pathname.startsWith("/survey/result") ? "text-primary-700" : ""}`}
-                    >
-                      <Link
-                        href={
-                          role !== "Admin Layanan"
-                            ? "/survey/result"
-                            : `/survey/result/${layananId}`
-                        }
-                      >
-                        Hasil
-                      </Link>
-                    </li>
-                  </ul>
-                </>
-              }
-              isDropdownOpen={isDropdownOpen === "/survey"}
-              handleDropdownOpen={() => handleDropdownOpen("/survey")}
-            />
-          )}
-
+          <Nav
+            route="#"
+            path="/manage-user"
+            icons="/icons/user-round.svg"
+            iconsActive="/icons/user-round-active.svg"
+            title="Kelola Akun"
+            type="dropdown"
+            content={
+              <>
+                <ul className="space-y-4">
+                  <li
+                    className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/manage-user/society") || pathname.startsWith("/manage-user/society") ? "text-primary-700" : ""}`}
+                  >
+                    <Link href="/manage-user/society">Masyarakat</Link>
+                  </li>
+                  <li
+                    className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/manage-user/admin") || pathname.startsWith("/manage-user/admin") ? "text-primary-700" : ""}`}
+                  >
+                    <Link href="/manage-user/admin">Admin</Link>
+                  </li>
+                  <li
+                    className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/manage-user/permission") || pathname.startsWith("/manage-user/permission") ? "text-primary-700" : ""}`}
+                  >
+                    <Link href="/manage-user/permission">Hak Akses</Link>
+                  </li>
+                </ul>
+              </>
+            }
+            isDropdownOpen={isDropdownOpen === "/manage-user"}
+            handleDropdownOpen={() => handleDropdownOpen("/manage-user")}
+          />
           <Nav
             route="/setting"
             path="/setting"

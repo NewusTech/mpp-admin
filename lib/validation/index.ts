@@ -44,7 +44,7 @@ export const InstanceValidation = z.object({
   }),
   image: z.custom<File[]>().optional(),
   address: z.string({ message: "Alamat wajib diisi" }),
-  phone: z.string().max(15, { message: "No. Telfon wajib diisi" }),
+  phone: z.string().optional(),
   pj: z.string({ message: "PJ wajib diisi" }),
   nip_pj: z.string({ message: "NIP PJ wajib diisi" }),
   active_offline: z.enum(["0", "1"], {
@@ -146,6 +146,41 @@ export const userValidation = z.object({
   desa_id: z.string().optional(),
   rt: z.string().optional(),
   rw: z.string().optional(),
+});
+
+export const AdminValidation = z.object({
+  name: z.string({
+    message: "Nama harus diisi",
+  }),
+  nik: z.string({
+    message: "Username harus diisi",
+  }),
+  password: z.string().min(6, { message: "Minimal 6" }).optional(),
+  instansi_id: z
+    .string({ message: "Wajib pilih instansi" })
+    .transform((val) => Number(val))
+    .optional(),
+  layanan_id: z
+    .string({ message: "Wajib pilih instansi" })
+    .transform((val) => Number(val))
+    .optional(),
+  role_id: z
+    .string({ message: "Wajib pilih role admin" })
+    .transform((val) => Number(val))
+    .optional(),
+});
+
+export const AdminValidationUpdate = z.object({
+  name: z
+    .string({
+      message: "Nama harus diisi",
+    })
+    .optional(),
+  nik: z
+    .string({
+      message: "Username harus diisi",
+    })
+    .optional(),
 });
 
 export const ContactValidation = z.object({

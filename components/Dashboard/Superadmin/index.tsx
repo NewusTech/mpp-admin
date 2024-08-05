@@ -236,7 +236,7 @@ const DashboardSuperadmin = () => {
         <div className="space-x-4 mt-4 flex justify-between">
           <Card
             color="bg-gradient-to-b from-[#FF9742] via-[#FF9742] via-32% to-[#FE7301]"
-            text="14,777"
+            text={histories?.antrianCount}
             title="Antrian Online"
           />
           <Card
@@ -254,9 +254,12 @@ const DashboardSuperadmin = () => {
       <div className="flex space-x-4">
         <div className="rounded-[16px] w-6/12 shadow bg-neutral-50">
           <div className="p-4">
-            <h1 className="text-[16px] font-medium ">
-              Pengguna Layanan & Antrian
-            </h1>
+            <div className="flex justify-between items-center">
+              <h1 className="text-[16px] font-medium ">
+                Pengguna Layanan & Antrian
+              </h1>
+              <p className="text-[10px] text-neutral-800">{selectedYear}</p>
+            </div>
             <div className="flex gap-x-5 justify-end mt-5">
               <div className="flex gap-x-2 items-center justify-center">
                 <div className="w-2 h-2 bg-primary-700 rounded-full"></div>
@@ -282,7 +285,7 @@ const DashboardSuperadmin = () => {
               <div className="rounded-[8px] w-full py-2 px-4 bg-slate-100 space-y-1">
                 <h4 className="text-slate-400 text-sm">Antrian Online</h4>
                 <h1 className="text-neutral-900 text-3xl font-medium">
-                  15,777
+                  {histories?.antrianCount}
                 </h1>
               </div>
             </div>

@@ -24,6 +24,7 @@ import {
   FlowBooking,
   GuestBook,
   HistoryQueue,
+  ManageAdmin,
   ManageApprovals,
   ManageRequirements,
   ManageUser,
@@ -52,6 +53,7 @@ import AlertDialogUpdateMasterFlowBooking from "@/app/(root)/master/flow-booking
 import AlertDialogUpdateMasterFlowPermohonan from "@/app/(root)/master/flow-request/DialogFormUpdate";
 import AlertDialogCreateMasterFlow from "@/app/(root)/master/flow-mpp/DialogForm";
 import { RichTextDisplay } from "@/components/RichTextDisplay";
+import ModalPermission from "@/components/Dialog/permission";
 
 function formatDate(dateString: any) {
   const date = new Date(dateString);
@@ -382,7 +384,6 @@ export const requestOfflineColumns: ColumnDef<RequestOffline>[] = [
       return <p>{getTime(date)}</p>;
     },
   },
-
   {
     accessorKey: "nik",
     header: "NIK",
@@ -1034,6 +1035,102 @@ export const manageUserColumns: ColumnDef<ManageUser>[] = [
     header: "Nama",
   },
   {
+    id: "hari",
+    accessorKey: "createdAt",
+    header: "Hari",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{getDayName(date)}</p>;
+    },
+  },
+  {
+    id: "jam",
+    accessorKey: "createdAt",
+    header: "Jam",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{getTime(date)}</p>;
+    },
+  },
+  {
+    id: "date",
+    accessorKey: "createdAt",
+    header: "Tanggal Gabung",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{formatDate(date)}</p>;
+    },
+  },
+  {
+    accessorKey: "Role",
+    header: "Role",
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const user = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <Link href={`/manage-user/society/${user.slug}`}>
+              <DropdownMenuItem>Edit</DropdownMenuItem>
+            </Link>
+            <ModalDelete endpoint={`alluserinfo/delete/${user.slug}`} />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
+
+export const manageAdminColumns: ColumnDef<ManageAdmin>[] = [
+  {
+    accessorKey: "name",
+    header: "Nama",
+  },
+  {
+    id: "hari",
+    accessorKey: "createdAt",
+    header: "Hari",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{getDayName(date)}</p>;
+    },
+  },
+  {
+    id: "jam",
+    accessorKey: "createdAt",
+    header: "Jam",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{getTime(date)}</p>;
+    },
+  },
+  {
+    id: "date",
+    accessorKey: "createdAt",
+    header: "Tanggal Didaftarkan",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{formatDate(date)}</p>;
+    },
+  },
+  {
     accessorKey: "Role",
     header: "Role",
   },
@@ -1042,7 +1139,6 @@ export const manageUserColumns: ColumnDef<ManageUser>[] = [
     header: "Instansi",
     cell: ({ row }) => {
       const user = row.original;
-
       return (
         <p>
           {user.Instansi === null && user.Role === "Bupati"
@@ -1070,13 +1166,50 @@ export const manageUserColumns: ColumnDef<ManageUser>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <Link href={`/manage-user/${user.slug}`}>
-              <DropdownMenuItem>Edit</DropdownMenuItem>
+            <Link href={`/manage-user/admin/${user.slug}`}>
+              <DropdownMenuItem className="cursor-pointer w-full">
+                Edit
+              </DropdownMenuItem>
             </Link>
             <ModalDelete endpoint={`alluserinfo/delete/${user.slug}`} />
           </DropdownMenuContent>
         </DropdownMenu>
       );
+    },
+  },
+];
+
+export const managePermissionColumns: ColumnDef<ManageAdmin>[] = [
+  {
+    accessorKey: "name",
+    header: "Nama",
+  },
+  {
+    accessorKey: "Role",
+    header: "Role",
+  },
+  {
+    accessorKey: "Instansi",
+    header: "Instansi",
+    cell: ({ row }) => {
+      const user = row.original;
+      return (
+        <p>
+          {user.Instansi === null && user.Role === "Bupati"
+            ? "Kepala Daerah"
+            : user.Instansi === null
+              ? "Masyarakat"
+              : user.Instansi}
+        </p>
+      );
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const user = row.original;
+
+      return <ModalPermission id={user?.id} />;
     },
   },
 ];
@@ -1701,4 +1834,12 @@ export const bloodTypes = [
 export const genders = [
   { id: 1, key: "Laki-Laki" },
   { id: 2, key: "Perempuan" },
+];
+
+export const roles = [
+  { id: 1, key: "Bupati" },
+  { id: 2, key: "Super Admin" },
+  { id: 3, key: "Admin Instansi" },
+  { id: 4, key: "Admin Verifikasi" },
+  { id: 6, key: "Admin Layanan" },
 ];
