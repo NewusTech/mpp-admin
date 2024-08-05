@@ -96,7 +96,16 @@ export type ManageUser = {
   name: string;
   slug: string;
   Role: string;
+  createdAt: string;
+};
+
+export type ManageAdmin = {
+  id: number;
+  name: string;
+  slug: string;
   Instansi: string;
+  Role: string;
+  createdAt: string;
 };
 
 export type Report = {

@@ -15,13 +15,15 @@ interface BarChartProps {
 
 const BarChart = ({ chartData }: BarChartProps) => {
   const permohonanData = chartData?.map((data: any) => data.permohonanCount);
+  const months = chartData?.map((data: any) => data.month);
+  const queues = chartData?.map((data: any) => data.antrianCount);
 
   const option = {
     chart: {
       id: "apexchart-example",
     },
     xaxis: {
-      categories: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun"],
+      categories: months,
     },
     dataLabels: {
       enabled: false,
@@ -44,7 +46,7 @@ const BarChart = ({ chartData }: BarChartProps) => {
     },
     {
       name: "Antrian Online",
-      data: [76, 85, 101, 98, 87, 105],
+      data: queues,
     },
   ];
 

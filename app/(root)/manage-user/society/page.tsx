@@ -10,7 +10,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 
 const ManageUser = () => {
   const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/alluserinfo/get?limit=1000000`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/alluserinfo/get?limit=1000000&role=5`,
     fetcher,
   );
 
