@@ -17,10 +17,14 @@ import { UserInfoLeft, UserInfoRight } from "@/components/BiodataUser";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 
+interface JwtPayload {
+  permission: string[];
+}
 const DetailApproval = ({
   params,
 }: {
@@ -32,9 +36,31 @@ const DetailApproval = ({
     `${process.env.NEXT_PUBLIC_API_URL}/user/inputform/detail/${params.id}`,
     fetcher,
   );
+  const [permission, setPermission] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
+
+  useEffect(() => {
+    // Ambil token dari cookies
+    const token = Cookies.get("token");
+
+    // Periksa apakah token ada dan decode token jika ada
+    if (token) {
+      try {
+        // Decode token untuk mendapatkan payload
+        const decoded = jwtDecode<JwtPayload>(token);
+        // Pastikan token terdecode dan mengandung informasi role dan instansi_id
+        if (decoded && decoded.permission) {
+          setPermission(decoded.permission);
+        }
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, []);
+
+  console.log(permission);
 
   const result = data?.data;
   const userInfo = result?.userinfo;
@@ -262,13 +288,15 @@ const DetailApproval = ({
                 </span>
               )}
             </p>
-            <Button
-              onClick={handleValidationStatus}
-              className="bg-success-700 hover:bg-success-800 w-[140px] rounded-full"
-              disabled={loading ? true : false}
-            >
-              {loading ? <Loader className="animate-spin" /> : "Setujui"}
-            </Button>
+            {permission.includes("Setujui Permohonan") && (
+              <Button
+                onClick={handleValidationStatus}
+                className="bg-success-700 hover:bg-success-800 w-[140px] rounded-full"
+                disabled={loading}
+              >
+                {loading ? <Loader className="animate-spin" /> : "Setujui"}
+              </Button>
+            )}
           </div>
         </div>
       </section>

@@ -273,13 +273,6 @@ const Sidebar = () => {
                           <Link href="/master/manual-book">Manual Book</Link>
                         </li>
                         <li
-                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/flow-request") || pathname.startsWith("/master/flow-request") ? "text-primary-700" : ""}`}
-                        >
-                          <Link href="/master/flow-request">
-                            Alur Permohonan
-                          </Link>
-                        </li>
-                        <li
                           className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/flow-booking") || pathname.startsWith("/master/flow-booking") ? "text-primary-700" : ""}`}
                         >
                           <Link href="/master/flow-booking">Alur Booking</Link>

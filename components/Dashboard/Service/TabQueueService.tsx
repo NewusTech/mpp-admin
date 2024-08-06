@@ -316,24 +316,47 @@ const TabQueueService = ({ id }: { id: string }) => {
               Panggil
             </Button>
           )}
-          <Button
-            className="bg-secondary-700 hover:bg-secondary-800 w-40 rounded-full"
-            onClick={replayAudio}
-            disabled={isLoadingAudio}
-          >
-            {isLoadingAudio ? (
-              <Loader className="animate-spin" />
-            ) : (
-              "Panggil Ulang"
-            )}
-          </Button>
-          <Button
-            className="bg-success-700 hover:bg-success-800 w-40 rounded-full"
-            onClick={finishQueue}
-            disabled={isLoadingThree}
-          >
-            {isLoadingThree ? <Loader className="animate-spin" /> : "Selesai"}
-          </Button>
+          {idQueue !== null && audioUrl !== null ? (
+            <>
+              <Button
+                className="bg-secondary-700 hover:bg-secondary-800 w-40 rounded-full"
+                onClick={replayAudio}
+                disabled={isLoadingAudio}
+              >
+                {isLoadingAudio ? (
+                  <Loader className="animate-spin" />
+                ) : (
+                  "Panggil Ulang"
+                )}
+              </Button>
+              <Button
+                className="bg-success-700 hover:bg-success-800 w-40 rounded-full"
+                onClick={finishQueue}
+                disabled={isLoadingThree}
+              >
+                {isLoadingThree ? (
+                  <Loader className="animate-spin" />
+                ) : (
+                  "Selesai"
+                )}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                className="bg-secondary-700 hover:bg-secondary-800 w-40 rounded-full"
+                disabled={true}
+              >
+                Panggil Ulang
+              </Button>
+              <Button
+                className="bg-success-700 hover:bg-success-800 w-40 rounded-full"
+                disabled={true}
+              >
+                Selesai
+              </Button>
+            </>
+          )}
         </div>
       </section>
       <section className="rounded-[16px] bg-neutral-50 shadow p-8 my-10">
