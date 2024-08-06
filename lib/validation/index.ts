@@ -199,6 +199,9 @@ export const ContactValidation = z.object({
   longitude: z.string({
     message: "Garis bujur harus diisi",
   }),
+  website: z.string({
+    message: "website harus diisi",
+  }),
 });
 
 export const ManualBookValidation = z.object({

@@ -1,36 +1,20 @@
 "use client";
 
-import ChartDashboard from "@/components/Dashboard/ChartDashboard";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { CardDashboardQueueProps } from "@/types/interface";
 import useSWR from "swr";
 import { dataKiosk, fetcher, fetcherWithoutAuth } from "@/lib/fetch";
 import { useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
 import { DataTables } from "@/components/Datatables";
 import { historyQueueColumns, activeQueueColumns } from "@/constants";
-import useQueueStore from "@/lib/store/useQueueStore";
 import { Button } from "@/components/ui/button";
-import { AlertDialogChangeStatus } from "@/components/Dialog/change-status";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { AlertDialogChangeStatusRequest } from "@/components/Dialog/change-active-request";
-import { AlertDialogChangeStatusRequestNonactive } from "@/components/Dialog/change-nonactive-request";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader } from "lucide-react";
 import Image from "next/image";
 import InputComponent from "@/components/InputComponent";
 import { formatDate } from "@/lib/utils";
 import { toast } from "sonner";
+import useAudioStore from "@/lib/store/useAudioStore";
 
 interface JwtPayload {
   role?: string;
@@ -62,13 +46,13 @@ const TabQueueService = ({ id }: { id: string }) => {
   const [activeButton, setActiveButton] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingTwo, setIsLoadingTwo] = useState<boolean>(false);
+  const [isLoadingThree, setIsLoadingThree] = useState<boolean>(false);
   const now = new Date();
 
   const firstDayOfYear = new Date(now.getFullYear(), 0, 1); // 0 berarti Januari
   const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfYear);
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
-  const [audioUrl, setAudioUrl] = useState(null);
-  const [shouldFetch, setShouldFetch] = useState(false);
+  const { audioUrl, idQueue, setAudioUrl, setIdQueue } = useAudioStore();
   const [isLoadingFetchAudio, setIsLoadingFetchAudio] =
     useState<boolean>(false);
   const [isLoadingAudio, setIsLoadingAudio] = useState<boolean>(false);
@@ -125,7 +109,7 @@ const TabQueueService = ({ id }: { id: string }) => {
 
   const { data: today, mutate: dashboardToday } = useSWR<any>(
     fixUrlToday,
-    fetcher
+    fetcher,
   );
 
   useEffect(() => {
@@ -141,7 +125,7 @@ const TabQueueService = ({ id }: { id: string }) => {
   }, [audioUrl]);
 
   const fetchAudio = async () => {
-    // setIsLoadingFetchAudio(true);
+    setIsLoadingFetchAudio(true);
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/panggilantrian/get/${id}`,
@@ -150,12 +134,13 @@ const TabQueueService = ({ id }: { id: string }) => {
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-        }
+        },
       );
       const data = await response.json();
       console.log(data);
       if (response.ok) {
         setAudioUrl(data.data.audio);
+        setIdQueue(data.data.id);
         toast(data.message);
         await mutateQueueActive();
         await dashboardToday();
@@ -164,6 +149,34 @@ const TabQueueService = ({ id }: { id: string }) => {
       toast(e.message);
     } finally {
       setIsLoadingFetchAudio(false);
+    }
+  };
+
+  const finishQueue = async () => {
+    setIsLoadingThree(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/antrianfinish/${idQueue}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        },
+      );
+      const data = await response.json();
+      if (response.ok) {
+        setAudioUrl(null);
+        setIdQueue(null);
+        localStorage.removeItem("audio");
+        toast(data.message);
+        await mutateQueueActive();
+        await dashboardToday();
+      }
+    } catch (e: any) {
+      toast(e.message);
+    } finally {
+      setIsLoadingThree(false);
     }
   };
 
@@ -200,7 +213,7 @@ const TabQueueService = ({ id }: { id: string }) => {
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-        }
+        },
       );
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -231,7 +244,7 @@ const TabQueueService = ({ id }: { id: string }) => {
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-        }
+        },
       );
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -283,6 +296,26 @@ const TabQueueService = ({ id }: { id: string }) => {
           />
         </div>
         <div className="flex w-full justify-end space-x-2">
+          {idQueue === null && audioUrl === null ? (
+            <Button
+              onClick={fetchAudio}
+              className="bg-error-700 hover:bg-error-800 w-40 rounded-full"
+              disabled={isLoadingFetchAudio}
+            >
+              {isLoadingFetchAudio ? (
+                <Loader className="animate-spin" />
+              ) : (
+                "Panggil"
+              )}
+            </Button>
+          ) : (
+            <Button
+              className="bg-error-700 hover:bg-error-800 w-40 rounded-full"
+              disabled={true}
+            >
+              Panggil
+            </Button>
+          )}
           <Button
             className="bg-secondary-700 hover:bg-secondary-800 w-40 rounded-full"
             onClick={replayAudio}
@@ -294,19 +327,12 @@ const TabQueueService = ({ id }: { id: string }) => {
               "Panggil Ulang"
             )}
           </Button>
-          <Button className="bg-neutral-800 hover:bg-neutral-900 w-40 rounded-full">
-            Transfer
-          </Button>
           <Button
-            onClick={fetchAudio}
             className="bg-success-700 hover:bg-success-800 w-40 rounded-full"
-            disabled={isLoadingFetchAudio}
+            onClick={finishQueue}
+            disabled={isLoadingThree}
           >
-            {isLoadingFetchAudio ? (
-              <Loader className="animate-spin" />
-            ) : (
-              "Selanjutnya"
-            )}
+            {isLoadingThree ? <Loader className="animate-spin" /> : "Selesai"}
           </Button>
         </div>
       </section>
