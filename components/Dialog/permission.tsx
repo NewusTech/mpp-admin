@@ -15,7 +15,7 @@ import InputComponent from "@/components/InputComponent";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader } from "lucide-react";
 import {
   AlertDialog,
@@ -36,6 +36,7 @@ const ModalPermission = ({ id }: { id: number }) => {
   const [datapermis, setDatapermis] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
+
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
   };
@@ -49,17 +50,61 @@ const ModalPermission = ({ id }: { id: number }) => {
     fetcher,
   );
 
-  const handleCheckboxChange = (name: any) => {
+  const { data: permission } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/permissions/${id}`,
+    fetcher,
+  );
+
+  const handleCheckboxChange = (id: number) => {
     setDatapermis((prevState: any) =>
-      prevState.includes(name)
-        ? prevState.filter((item: any) => item !== name)
-        : [...prevState, name],
+      prevState.includes(id)
+        ? prevState.filter((item: any) => item !== id)
+        : [...prevState, id],
     );
   };
 
   const result = data?.data;
+  const permissionResult = permission?.data;
 
-  console.log(result);
+  useEffect(() => {
+    const ids = permissionResult?.permissions.map(
+      (permission: any) => permission.id,
+    );
+    setDatapermis(ids);
+  }, [permissionResult]);
+
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    const payload = {
+      userId: id, // Assuming `id` is an integer
+      permissions: datapermis, // Array of integers
+    };
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/permissions`,
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+            "Content-Type": "application/json",
+          },
+          method: "PUT",
+          body: JSON.stringify(payload),
+        },
+      );
+
+      const result = await response.json();
+      console.log(result);
+      if (response.ok) {
+        toast(result.message);
+        handleAddModalClose();
+      }
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <AlertDialog open={addModalOpen}>
@@ -80,15 +125,36 @@ const ModalPermission = ({ id }: { id: number }) => {
         <div className="px-5">
           {result?.map((v: any) => (
             <div key={v.id} className="flex items-center mb-2 justify-between">
-              <label htmlFor={v.id}>{v.name}</label>
-              <input
-                type="checkbox"
-                id={v.id}
-                name={v.name}
-                value={v.name}
-                checked={datapermis.includes(v.name)}
-                onChange={() => handleCheckboxChange(v.name)}
-              />
+              <label htmlFor={v.name} className="cursor-pointer">
+                {v.name}
+              </label>
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="hidden peer"
+                  id={v.id}
+                  name={v.name}
+                  value={v.id}
+                  checked={datapermis?.includes(v.id)}
+                  onChange={() => handleCheckboxChange(v.id)}
+                />
+                <div className="w-6 h-6 border-2 border-gray-300 rounded-md peer-checked:bg-blue-600 peer-checked:border-blue-600 flex items-center justify-center">
+                  <svg
+                    className={`w-4 h-4 text-white ${datapermis?.includes(v.id) ? "block" : "hidden"}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              </label>
             </div>
           ))}
         </div>
@@ -107,6 +173,7 @@ const ModalPermission = ({ id }: { id: number }) => {
           <AlertDialogAction
             className="bg-primary-700 hover:bg-primary-800 text-neutral-50 rounded-full px-[37px]"
             disabled={isLoading}
+            onClick={handleSubmit}
           >
             {isLoading ? <Loader className="animate-spin" /> : "Simpan"}
           </AlertDialogAction>
