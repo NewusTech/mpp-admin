@@ -71,7 +71,7 @@ const ManagePermission = () => {
   const result = data?.data;
 
   return (
-    <ProtectedRoute roles={["Super Admin", "Admin Layanan", "Admin Instansi"]}>
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi"]}>
       <section className="mr-16">
         <div className="flex justify-between mt-4">
           {role !== "Admin Instansi" && role !== "Admin Layanan" && (

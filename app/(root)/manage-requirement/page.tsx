@@ -26,6 +26,7 @@ const ManageRequirements = () => {
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<any>(0);
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
+  const [permission, setPermission] = useState<string[]>([]);
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -40,6 +41,7 @@ const ManageRequirements = () => {
         if (decoded && decoded.role && decoded.instansi_id !== undefined) {
           setRole(decoded.role);
           setInstansiId(decoded.instansi_id);
+          setPermission(decoded.permission);
         }
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -114,6 +116,8 @@ const ManageRequirements = () => {
                   Tambah
                 </Button>
               </Link>
+            ) : permission.includes("Buat Permohonan") ? (
+              ""
             ) : (
               <Button
                 disabled={true}
