@@ -156,6 +156,10 @@ export type Contact = {
   alamat: string;
   email: string;
   telp: string;
+  latitude: string;
+  longitude: string;
+  website: string;
+  desc: string;
 };
 
 export type VisionMission = {
@@ -191,19 +195,13 @@ export type GuestBook = {
   tujuan?: string | undefined | null;
 };
 
-export type ActiveQueue = {
-  no: number;
-  code: string;
-  createdAt: string;
-  status: boolean;
-};
-
 export type HistoryQueue = {
   no: number;
   code: string;
   createdAt: string;
-  updatedAt: string;
+  finishedAt: string;
   status: boolean;
+  timeprocess: string;
 };
 
 export const dataActive = {

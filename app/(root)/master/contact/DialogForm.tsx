@@ -26,13 +26,15 @@ import { z } from "zod";
 import { ContactValidation } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import MyEditor from "@/components/Editor";
 
 export default function AlertDialogCreateContact() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const editor1Ref = useRef<{ getContent: () => string }>(null);
 
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
@@ -49,12 +51,16 @@ export default function AlertDialogCreateContact() {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof ContactValidation>) {
     setIsLoading(true);
+    const content1 = editor1Ref.current?.getContent();
+
     const formData = {
       email: values.email,
       alamat: values.alamat,
       telp: values.telp,
       latitude: values.latitude,
       longitude: values.longitude,
+      website: values.website,
+      desc: content1,
     };
 
     try {
@@ -95,7 +101,7 @@ export default function AlertDialogCreateContact() {
           Kontak
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="p-0 border-0 overflow-auto h-full">
+      <AlertDialogContent className="p-0 border-0 overflow-auto max-w-[60%] h-[80%]">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
             Ubah Kontak
@@ -174,6 +180,23 @@ export default function AlertDialogCreateContact() {
               />
               <FormField
                 control={form.control}
+                name="website"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel>Website</FormLabel>
+                    <FormControl>
+                      <Input
+                        className="rounded-full"
+                        placeholder="Masukkan website"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="alamat"
                 render={({ field }) => (
                   <FormItem className="space-y-3">
@@ -189,6 +212,16 @@ export default function AlertDialogCreateContact() {
                   </FormItem>
                 )}
               />
+              <div className="space-y-4">
+                <label htmlFor="editor1" className="font-semibold">
+                  Deskripsi
+                </label>
+                <MyEditor
+                  ref={editor1Ref}
+                  name="editor1"
+                  initialValue={"<p>Ketik disini</p>"}
+                />
+              </div>
               <AlertDialogFooter className="p-6">
                 <AlertDialogCancel
                   onClick={handleAddModalClose}

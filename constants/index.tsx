@@ -12,7 +12,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  ActiveQueue,
   Complaint,
   Contact,
   DataApps,
@@ -1518,6 +1517,22 @@ export const contactColumns: ColumnDef<Contact>[] = [
     header: "Email",
   },
   {
+    accessorKey: "latitude",
+    header: "Garis Lintang",
+  },
+  {
+    accessorKey: "longitude",
+    header: "Garis Bujur",
+  },
+  {
+    accessorKey: "website",
+    header: "Website",
+  },
+  {
+    accessorKey: "desc",
+    header: "Deskripsi",
+  },
+  {
     accessorKey: "telp",
     header: "Telepon",
   },
@@ -1684,7 +1699,7 @@ export const guestBookColumns: ColumnDef<GuestBook>[] = [
   },
 ];
 
-export const activeQueueColumns: ColumnDef<ActiveQueue>[] = [
+export const activeQueueColumns: ColumnDef<HistoryQueue>[] = [
   {
     accessorKey: "no",
     header: "No",
@@ -1702,6 +1717,22 @@ export const activeQueueColumns: ColumnDef<ActiveQueue>[] = [
     cell: ({ row }) => {
       const time = row.original.createdAt;
       return <p>{getTime(time)}</p>;
+    },
+  },
+  {
+    accessorKey: "finishedAt",
+    header: "Waktu Selesai",
+    cell: ({ row }) => {
+      const time = row.original.finishedAt;
+      return <p>{getTime(time)}</p>;
+    },
+  },
+  {
+    accessorKey: "timeprocess",
+    header: "Waktu Proses",
+    cell: ({ row }) => {
+      const time = row.original;
+      return <p>{time.timeprocess || "-"}</p>;
     },
   },
   {
@@ -1740,11 +1771,19 @@ export const historyQueueColumns: ColumnDef<HistoryQueue>[] = [
     },
   },
   {
-    accessorKey: "updatedAt",
+    accessorKey: "finishedAt",
     header: "Waktu Selesai",
     cell: ({ row }) => {
-      const time = row.original.updatedAt;
+      const time = row.original.finishedAt;
       return <p>{getTime(time)}</p>;
+    },
+  },
+  {
+    accessorKey: "timeprocess",
+    header: "Waktu Proses",
+    cell: ({ row }) => {
+      const time = row.original;
+      return <p>{time.timeprocess || "-"}</p>;
     },
   },
   {
