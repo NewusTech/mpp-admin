@@ -25,6 +25,7 @@ import { jwtDecode } from "jwt-decode";
 interface JwtPayload {
   permission: string[];
 }
+
 const DetailApproval = ({
   params,
 }: {
@@ -59,8 +60,6 @@ const DetailApproval = ({
       }
     }
   }, []);
-
-  console.log(permission);
 
   const result = data?.data;
   const userInfo = result?.userinfo;

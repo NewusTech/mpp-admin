@@ -18,9 +18,14 @@ import {
 import Cookies from "js-cookie";
 import { UserInfoLeft, UserInfoRight } from "@/components/BiodataUser";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader } from "lucide-react";
 import ModalValidateRevision from "@/components/Dialog/modal-validate-revision";
+import { jwtDecode } from "jwt-decode";
+
+interface JwtPayload {
+  permission: string[];
+}
 
 const DetailRequestOnline = ({
   params,
@@ -35,6 +40,26 @@ const DetailRequestOnline = ({
     fetcher,
   );
   const [isLoading, setIsLoading] = useState(false);
+  const [permission, setPermission] = useState<string[]>([]);
+
+  useEffect(() => {
+    // Ambil token dari cookies
+    const token = Cookies.get("token");
+
+    // Periksa apakah token ada dan decode token jika ada
+    if (token) {
+      try {
+        // Decode token untuk mendapatkan payload
+        const decoded = jwtDecode<JwtPayload>(token);
+        // Pastikan token terdecode dan mengandung informasi role dan instansi_id
+        if (decoded && decoded.permission) {
+          setPermission(decoded.permission);
+        }
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, []);
 
   const result = data?.data;
   const userInfo = result?.userinfo;
@@ -192,25 +217,27 @@ const DetailRequestOnline = ({
               </p>
             </div>
           ))}
-          <div className="text-center mt-8 mb-5 space-x-3">
-            <ModalValidate
-              id={params.id}
-              title="Tolak"
-              state={!allLinksClicked}
-            />
-            <ModalValidateRevision
-              id={params.id}
-              title="Perbaiki"
-              state={!allLinksClicked}
-            />
-            <Button
-              onClick={handleValidationStatus}
-              className="bg-success-700 hover:bg-success-800 w-[140px] rounded-full"
-              disabled={!allLinksClicked || isLoading}
-            >
-              {isLoading ? <Loader className="animate-spin" /> : "Validasi"}
-            </Button>
-          </div>
+          {permission.includes("Validasi Permohonan") && (
+            <div className="text-center mt-8 mb-5 space-x-3">
+              <ModalValidate
+                id={params.id}
+                title="Tolak"
+                state={!allLinksClicked}
+              />
+              <ModalValidateRevision
+                id={params.id}
+                title="Perbaiki"
+                state={!allLinksClicked}
+              />
+              <Button
+                onClick={handleValidationStatus}
+                className="bg-success-700 hover:bg-success-800 w-[140px] rounded-full"
+                disabled={!allLinksClicked || isLoading}
+              >
+                {isLoading ? <Loader className="animate-spin" /> : "Validasi"}
+              </Button>
+            </div>
+          )}
           <p className="text-xs">
             Status permohonan
             {result?.status === 0 ? (

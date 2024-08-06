@@ -336,11 +336,13 @@ const Sidebar = () => {
                   >
                     <Link href="/manage-user/admin">Admin</Link>
                   </li>
-                  <li
-                    className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/manage-user/permission") || pathname.startsWith("/manage-user/permission") ? "text-primary-700" : ""}`}
-                  >
-                    <Link href="/manage-user/permission">Hak Akses</Link>
-                  </li>
+                  {role !== "Admin Layanan" && (
+                    <li
+                      className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/manage-user/permission") || pathname.startsWith("/manage-user/permission") ? "text-primary-700" : ""}`}
+                    >
+                      <Link href="/manage-user/permission">Hak Akses</Link>
+                    </li>
+                  )}
                 </ul>
               </>
             }
