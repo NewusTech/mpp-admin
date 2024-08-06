@@ -16,6 +16,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 interface JwtPayload {
   role?: string;
   instansi_id: number;
+  permission: string[];
 }
 
 const ManageRequirements = () => {
@@ -35,7 +36,6 @@ const ManageRequirements = () => {
       try {
         // Decode token untuk mendapatkan payload
         const decoded = jwtDecode<JwtPayload>(token);
-
         // Pastikan token terdecode dan mengandung informasi role dan instansi_id
         if (decoded && decoded.role && decoded.instansi_id !== undefined) {
           setRole(decoded.role);
@@ -86,7 +86,7 @@ const ManageRequirements = () => {
           <h1 className="text-lg font-semibold">Kelola Persyaratan</h1>
           <div className="flex justify-between mt-4">
             <div className="w-1/2">
-              {role !== "Admin Isntansi" && role !== "Admin Layanan" && (
+              {role !== "Admin Instansi" && role !== "Admin Layanan" && (
                 <InputComponent
                   typeInput="selectSearch"
                   valueInput={searchInputInstance}

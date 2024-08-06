@@ -101,7 +101,7 @@ export default function AlertDialogCreateContact() {
           Kontak
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="p-0 border-0 overflow-auto max-w-[60%] h-[80%]">
+      <AlertDialogContent className="p-0 border-0 overflow-auto max-w-[80%] h-[80%]">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
             Ubah Kontak
@@ -232,7 +232,7 @@ export default function AlertDialogCreateContact() {
                 <AlertDialogAction
                   type="submit"
                   className="bg-primary-700 hover:bg-primary-800 rounded-full"
-                  disabled={isLoading ? true : false}
+                  disabled={isLoading}
                 >
                   {isLoading ? <Loader className="animate-spin" /> : "Ubah"}
                 </AlertDialogAction>

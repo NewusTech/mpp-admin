@@ -19,7 +19,7 @@ const MasterFlowRequest = async () => {
   const data = await getData();
 
   return (
-    <ProtectedRoute roles={["Super Admin"]}>
+    <ProtectedRoute roles={["Admin"]}>
       <section className="mr-16">
         <div className="flex justify-end mb-8">
           <AlertDialogCreateMasterFlowRequest />

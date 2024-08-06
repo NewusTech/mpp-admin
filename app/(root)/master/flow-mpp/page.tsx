@@ -1,7 +1,6 @@
 import { flowColumns } from "@/constants";
 import { DataTables } from "@/components/Datatables";
 import { Slider } from "@/types/type";
-import AlertDialogCreateMasterFlow from "@/app/(root)/master/flow-mpp/DialogForm";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 async function getData(): Promise<Slider[]> {
@@ -22,7 +21,12 @@ const MasterFlow = async () => {
   return (
     <ProtectedRoute roles={["Super Admin"]}>
       <section className="mr-16">
-        <DataTables columns={flowColumns} data={result} filterBy="image" />
+        <DataTables
+          columns={flowColumns}
+          data={result}
+          filterBy="image"
+          type="requirement"
+        />
       </section>
     </ProtectedRoute>
   );

@@ -69,26 +69,27 @@ const ManagePermission = () => {
   const { data } = useSWR<any>(url, fetcher);
 
   const result = data?.data;
-  console.log(result);
 
   return (
     <ProtectedRoute roles={["Super Admin", "Admin Layanan", "Admin Instansi"]}>
       <section className="mr-16">
         <div className="flex justify-between mt-4">
-          <div className="w-1/2">
-            <InputComponent
-              typeInput="selectSearch"
-              valueInput={searchInputInstance}
-              onChangeInputSearch={(e) =>
-                setSearchInputInstance(e.target.value)
-              }
-              items={instances?.data}
-              label="Instansi"
-              placeholder="Pilih Instansi"
-              value={instance}
-              onChange={(e: any) => setInstance(e)}
-            />
-          </div>
+          {role !== "Admin Instansi" && role !== "Admin Layanan" && (
+            <div className="w-1/2">
+              <InputComponent
+                typeInput="selectSearch"
+                valueInput={searchInputInstance}
+                onChangeInputSearch={(e) =>
+                  setSearchInputInstance(e.target.value)
+                }
+                items={instances?.data}
+                label="Instansi"
+                placeholder="Pilih Instansi"
+                value={instance}
+                onChange={(e: any) => setInstance(e)}
+              />
+            </div>
+          )}
         </div>
         {result && (
           <DataTables
