@@ -56,9 +56,12 @@ const Articles = () => {
 
   let url = `${process.env.NEXT_PUBLIC_API_URL}/user/artikel/get?limit=10000000`;
 
-  if (role === "Admin Instansi" || role === "Admin Layanan") {
+  if (
+    (role === "Admin Instansi" || role === "Admin Layanan") &&
+    instansiId != 0
+  ) {
     url += `&instansi_id=${instansiId}`;
-  } else {
+  } else if (instanceId != 0) {
     url += `&instansi_id=${instanceId}`;
   }
 
