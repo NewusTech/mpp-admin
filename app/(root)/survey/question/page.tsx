@@ -99,7 +99,7 @@ const SurveyQuestion = () => {
               />
             )}
           </div>
-          {instance && role === "Admin Instansi" ? (
+          {instance || role === "Admin Instansi" ? (
             <Link href="/survey/question/create">
               <Button
                 onClick={() =>

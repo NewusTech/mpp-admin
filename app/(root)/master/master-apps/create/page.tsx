@@ -22,7 +22,7 @@ const CreateApps = () => {
             Tambah Aplikasi Dinas
           </h1>
           <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-3 p-8">
-            <h1 className="text-xl font-semibold mb-4">Berita</h1>
+            <h1 className="text-xl font-semibold mb-4">Aplikasi Pendukung</h1>
             <Apps type="create" label="Tambah" />
           </div>
         </div>
