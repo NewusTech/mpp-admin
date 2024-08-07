@@ -8,7 +8,7 @@ async function getDataBySlug(slug: string) {
     `${process.env.NEXT_PUBLIC_API_URL}/user/aplikasietc/get/${slug}`,
     {
       cache: "no-cache",
-    },
+    }
   );
   const data = await res.json();
   return data.data;
@@ -41,7 +41,7 @@ const EditArticle = async ({
             Ubah Aplikasi Dinas
           </h1>
           <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-3 p-8">
-            <h1 className="text-xl font-semibold mb-4">Aplikasi Dinas</h1>
+            <h1 className="text-xl font-semibold mb-4">Aplikasi Pendukung</h1>
             <Apps data={data} label="Ubah" />
           </div>
         </div>

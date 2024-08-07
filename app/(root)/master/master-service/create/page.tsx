@@ -27,7 +27,7 @@ const CreateServive = () => {
           </h1>
           <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-3 p-8">
             <h1 className="text-xl font-semibold mb-4">Layanan</h1>
-            <ServiceForm type="create" label="Ubah" id={selectedId} />
+            <ServiceForm type="create" label="Tambah" id={selectedId} />
           </div>
         </div>
       </section>
