@@ -116,7 +116,9 @@ const CreateQuestion = () => {
   );
 
   return (
-    <ProtectedRoute roles={["Super Admin", "Admin Instansi"]}>
+    <ProtectedRoute
+      roles={["Super Admin", "Admin Instansi", "Admin Verifikasi"]}
+    >
       <section className="mr-16">
         <div className="-ml-14 mb-10">
           <Link href="/survey/question">

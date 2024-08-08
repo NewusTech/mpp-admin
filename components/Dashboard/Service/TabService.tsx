@@ -26,6 +26,7 @@ import Image from "next/image";
 import RequestToday from "@/components/Dialog/RequestToday";
 import RequestPerMonth from "@/components/Dialog/RequestPerMonth";
 import { toast } from "sonner";
+import Swal from "sweetalert2";
 
 interface JwtPayload {
   role?: string;
@@ -67,7 +68,7 @@ const TabService = () => {
   const [activeButton, setActiveButton] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedMonth, setSelectedMonth] = useState<any>(
-    new Date().getMonth() + 1
+    new Date().getMonth() + 1,
   );
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<number | null>(null);
@@ -189,7 +190,7 @@ const TabService = () => {
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-        }
+        },
       );
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -201,10 +202,22 @@ const TabService = () => {
       a.remove();
 
       if (response.ok) {
-        toast("Berhasil download laporan");
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil download",
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
       }
     } catch (e: any) {
-      toast(e.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal download!",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }

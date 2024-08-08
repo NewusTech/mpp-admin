@@ -24,7 +24,7 @@ const UpdateUserData = ({
   console.log(data);
 
   return (
-    <ProtectedRoute roles={["Super Admin"]}>
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi"]}>
       <section className="mr-16">
         <div className="-ml-14 mb-10">
           <Link href="/manage-user">

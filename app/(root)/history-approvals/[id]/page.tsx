@@ -91,7 +91,14 @@ const DetailHistoryApproval = ({
   };
 
   return (
-    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Admin Layanan"]}>
+    <ProtectedRoute
+      roles={[
+        "Admin Instansi",
+        "Super Admin",
+        "Admin Layanan",
+        "Admin Verifikasi",
+      ]}
+    >
       <section className="mr-16">
         <div className="-ml-14 mb-10 w-12 h-12">
           <Link href="/history-approvals">

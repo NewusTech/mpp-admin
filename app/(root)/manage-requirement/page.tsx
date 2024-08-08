@@ -82,7 +82,14 @@ const ManageRequirements = () => {
   const serviceAll = services?.data;
 
   return (
-    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Admin Layanan"]}>
+    <ProtectedRoute
+      roles={[
+        "Admin Instansi",
+        "Super Admin",
+        "Admin Layanan",
+        "Admin Verifikasi",
+      ]}
+    >
       <section className="mr-16">
         <div>
           <h1 className="text-lg font-semibold">Kelola Persyaratan</h1>

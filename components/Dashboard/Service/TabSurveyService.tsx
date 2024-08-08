@@ -23,6 +23,7 @@ import { detailSurveyResultColumns } from "@/constants";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { formatDate } from "@/lib/utils";
+import Swal from "sweetalert2";
 
 const months = [
   { label: "Januari", value: 1 },
@@ -50,7 +51,7 @@ const TabSurveyService = ({ id, name }: { id: number; name: string }) => {
   const [startDate, setStartDate] = useState<Date | undefined>(firstDayOfYear);
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [selectedMonth, setSelectedMonth] = useState<any>(
-    new Date().getMonth() + 1
+    new Date().getMonth() + 1,
   );
 
   const handleDownload = async () => {
@@ -75,10 +76,22 @@ const TabSurveyService = ({ id, name }: { id: number; name: string }) => {
       a.remove();
 
       if (response.ok) {
-        toast("Berhasil download laporan");
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil download",
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
       }
     } catch (e: any) {
-      console.log(e.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal download!",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -98,7 +111,7 @@ const TabSurveyService = ({ id, name }: { id: number; name: string }) => {
     fetcher,
     {
       revalidateOnFocus: false,
-    }
+    },
   );
 
   const buildUrl = (baseUrl: string, params: Record<string, any>) => {

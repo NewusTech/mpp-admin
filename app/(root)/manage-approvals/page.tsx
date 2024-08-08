@@ -98,7 +98,14 @@ const ManageApprovals = () => {
   }, [searchInputInstance, searchInputService]);
 
   return (
-    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Admin Layanan"]}>
+    <ProtectedRoute
+      roles={[
+        "Admin Instansi",
+        "Super Admin",
+        "Admin Layanan",
+        "Admin Verifikasi",
+      ]}
+    >
       <section className="mr-16">
         <div className="flex justify-between gap-x-5 mb-8">
           <div className="flex w-full gap-x-5">

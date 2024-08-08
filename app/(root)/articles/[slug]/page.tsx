@@ -8,7 +8,7 @@ async function getDataBySlug(slug: string) {
     `${process.env.NEXT_PUBLIC_API_URL}/user/artikel/get/${slug}`,
     {
       cache: "no-cache",
-    }
+    },
   );
   const data = await res.json();
   return data.data;
@@ -24,7 +24,14 @@ const EditArticle = async ({
   const data = await getDataBySlug(params.slug);
 
   return (
-    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Admin Layanan"]}>
+    <ProtectedRoute
+      roles={[
+        "Admin Instansi",
+        "Super Admin",
+        "Admin Layanan",
+        "Admin Verifikasi",
+      ]}
+    >
       <section className="mr-16">
         <div className="-ml-14 mb-10">
           <Link href="/articles">

@@ -7,7 +7,14 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 
 const CreateArticle = () => {
   return (
-    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Admin Layanan"]}>
+    <ProtectedRoute
+      roles={[
+        "Admin Instansi",
+        "Super Admin",
+        "Admin Layanan",
+        "Admin Verifikasi",
+      ]}
+    >
       <section className="mr-16">
         <div className="-ml-14 mb-10">
           <Link href="/articles">

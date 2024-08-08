@@ -57,7 +57,7 @@ const Report = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher
+    fetcher,
   );
 
   const instanceId = Number(instance);
@@ -124,7 +124,7 @@ const Report = () => {
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-        }
+        },
       );
 
       const blob = await response.blob();
@@ -158,7 +158,9 @@ const Report = () => {
   const report = reports?.data?.report;
 
   return (
-    <ProtectedRoute roles={["Super Admin", "Admin Instansi"]}>
+    <ProtectedRoute
+      roles={["Super Admin", "Admin Instansi", "Admin Verifikasi"]}
+    >
       <section className="mr-16">
         <div className="flex justify-between gap-x-5 mb-8">
           <div className="flex w-full gap-x-5 ">

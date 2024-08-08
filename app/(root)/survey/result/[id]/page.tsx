@@ -94,7 +94,14 @@ const SurveyPrint = ({
   };
 
   return (
-    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Admin Layanan"]}>
+    <ProtectedRoute
+      roles={[
+        "Super Admin",
+        "Admin Instansi",
+        "Admin Layanan",
+        "Admin Verifikasi",
+      ]}
+    >
       <section className="mr-16">
         {/*<div className="flex justify-between mb-8">*/}
         {/*  <div className="w-1/2">*/}

@@ -48,7 +48,7 @@ const CreateManageRequirementPageStep2 = () => {
             tipedata: "text",
             isrequired: "",
           },
-        ]
+        ],
   );
   const [lastOptionId, setLastOptionId] = useState<number>(0); // State for incremental option ID
 
@@ -74,10 +74,12 @@ const CreateManageRequirementPageStep2 = () => {
   const handleCardChange = (
     id: number,
     field: keyof CardType,
-    value: string | number | OptionType[]
+    value: string | number | OptionType[],
   ) => {
     setCards(
-      cards.map((card) => (card.id === id ? { ...card, [field]: value } : card))
+      cards.map((card) =>
+        card.id === id ? { ...card, [field]: value } : card,
+      ),
     );
   };
 
@@ -92,7 +94,7 @@ const CreateManageRequirementPageStep2 = () => {
               { id: (card.options?.length || 0) + 1, key: "" },
             ],
           }
-        : card
+        : card,
     );
     setCards(updatedCards);
   };
@@ -106,7 +108,7 @@ const CreateManageRequirementPageStep2 = () => {
               ?.filter((option) => option.id !== optionId)
               ?.map((option, index) => ({ ...option, id: index + 1 })), // Reassign IDs starting from 1
           }
-        : card
+        : card,
     );
     setCards(updatedCards);
   };
@@ -114,17 +116,17 @@ const CreateManageRequirementPageStep2 = () => {
   const handleOptionChange = (
     cardId: number,
     optionId: number,
-    value: string
+    value: string,
   ) => {
     const updatedCards = cards.map((card) =>
       card.id === cardId
         ? {
             ...card,
             options: card.options?.map((option) =>
-              option.id === optionId ? { ...option, key: value } : option
+              option.id === optionId ? { ...option, key: value } : option,
             ),
           }
-        : card
+        : card,
     );
     setCards(updatedCards);
   };
@@ -164,7 +166,7 @@ const CreateManageRequirementPageStep2 = () => {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
           body: JSON.stringify(formattedData),
-        }
+        },
       );
 
       const responseData = await response.json();
@@ -182,7 +184,14 @@ const CreateManageRequirementPageStep2 = () => {
   };
 
   return (
-    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Admin Layanan"]}>
+    <ProtectedRoute
+      roles={[
+        "Admin Instansi",
+        "Super Admin",
+        "Admin Layanan",
+        "Admin Verifikasi",
+      ]}
+    >
       <section className="mr-16">
         <div className="-ml-14 mb-10">
           <Link href="/manage-requirement/create">

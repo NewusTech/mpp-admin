@@ -2,7 +2,7 @@
 
 import { CardDashboardQueueProps } from "@/types/interface";
 import useSWR from "swr";
-import { dataKiosk, fetcher, fetcherWithoutAuth } from "@/lib/fetch";
+import { fetcher } from "@/lib/fetch";
 import { useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
 import { DataTables } from "@/components/Datatables";
@@ -15,6 +15,7 @@ import InputComponent from "@/components/InputComponent";
 import { formatDate } from "@/lib/utils";
 import { toast } from "sonner";
 import useAudioStore from "@/lib/store/useAudioStore";
+import Swal from "sweetalert2";
 
 interface JwtPayload {
   role?: string;
@@ -137,11 +138,16 @@ const TabQueueService = ({ id }: { id: string }) => {
         },
       );
       const data = await response.json();
-      console.log(data);
       if (response.ok) {
         setAudioUrl(data.data.audio);
         setIdQueue(data.data.id);
-        toast(data.message);
+        Swal.fire({
+          icon: "success",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         await mutateQueueActive();
         await dashboardToday();
       }
@@ -169,12 +175,24 @@ const TabQueueService = ({ id }: { id: string }) => {
         setAudioUrl(null);
         setIdQueue(null);
         localStorage.removeItem("audio");
-        toast(data.message);
+        Swal.fire({
+          icon: "success",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         await mutateQueueActive();
         await dashboardToday();
       }
     } catch (e: any) {
-      toast(e.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal menyelesaikan antrian",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoadingThree(false);
     }
@@ -225,10 +243,22 @@ const TabQueueService = ({ id }: { id: string }) => {
       a.remove();
 
       if (response.ok) {
-        toast("Berhasil download laporan");
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil download",
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
       }
     } catch (e: any) {
-      toast(e.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal download!",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -256,10 +286,22 @@ const TabQueueService = ({ id }: { id: string }) => {
       a.remove();
 
       if (response.ok) {
-        toast("Berhasil download laporan");
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil download",
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
       }
     } catch (e: any) {
-      toast(e.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal download!",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoadingTwo(false);
     }

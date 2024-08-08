@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { SigninValidation } from "@/lib/validation";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
+import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { Loader } from "lucide-react";
 import Cookies from "js-cookie";
@@ -51,16 +51,18 @@ const FormSignin = () => {
       );
 
       const data = await response.json();
-      if (!response.ok) {
-        toast("username atau password salah");
-      }
 
       if (response.ok) {
         const tokenAuth = data.data.token;
         login(tokenAuth);
         await new Promise((resolve) => setTimeout(resolve, 300));
-        toast(data.message);
-
+        Swal.fire({
+          icon: "success",
+          title: "Login berhasil!",
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         // Redirect ke path tujuan setelah login
         const pathBeforeLogin =
           sessionStorage.getItem("pathBeforeLogin") || "/";
@@ -68,7 +70,13 @@ const FormSignin = () => {
         router.push(pathBeforeLogin);
       }
     } catch (e: any) {
-      toast(e.message);
+      Swal.fire({
+        icon: "error",
+        title: "Username atau password salah",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false); // Stop loading
     }

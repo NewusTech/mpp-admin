@@ -22,7 +22,7 @@ const CreateFormat = ({
 }) => {
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/detailsurat/${params.id}`,
-    fetcher
+    fetcher,
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -63,7 +63,7 @@ const CreateFormat = ({
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
           body: JSON.stringify(payload),
-        }
+        },
       );
 
       const result = await response.json();
@@ -79,7 +79,14 @@ const CreateFormat = ({
   };
 
   return (
-    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Admin Layanan"]}>
+    <ProtectedRoute
+      roles={[
+        "Super Admin",
+        "Admin Instansi",
+        "Admin Layanan",
+        "Admin Verifikasi",
+      ]}
+    >
       <section className="mr-16">
         <div className="-ml-14 mb-10 w-12 h-12">
           <Link href="/setting">

@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader, Search } from "lucide-react";
+import { Loader, Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -254,7 +254,14 @@ const CreateOffline = () => {
   };
 
   return (
-    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Admin Layanan"]}>
+    <ProtectedRoute
+      roles={[
+        "Super Admin",
+        "Admin Instansi",
+        "Admin Layanan",
+        "Admin Verifikasi",
+      ]}
+    >
       <section className="mr-16">
         <div className="-ml-14 mb-10">
           <Link href="/request/offline">
@@ -301,7 +308,9 @@ const CreateOffline = () => {
               </SelectContent>
             </Select>
           </div>
-          {/*<p className="text-error-700">NIK Belum Terdaftar</p>*/}
+          <div>
+            <X className="text-error-700 font-bold" />
+          </div>
         </div>
         <div className="w-full h-full bg-neutral-200 rounded-[20px] mt-8 p-8">
           {userData ? (
