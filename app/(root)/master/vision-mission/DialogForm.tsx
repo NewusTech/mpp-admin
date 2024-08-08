@@ -21,6 +21,7 @@ import { useRef, useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import MyEditor from "@/components/Editor";
+import Swal from "sweetalert2";
 
 export default function AlertDialogCreateVisionMission() {
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -70,12 +71,24 @@ export default function AlertDialogCreateVisionMission() {
 
       const result = await response.json();
       if (response.ok) {
-        toast(result.message);
+        Swal.fire({
+          icon: "success",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         handleAddModalClose();
         window.location.reload();
       }
     } catch (error: any) {
-      toast(error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal submit",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false); // Stop loading
     }

@@ -26,6 +26,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import Swal from "sweetalert2";
 
 const steps = [
   { id: 1, title: "1" },
@@ -172,12 +173,24 @@ const CreateManageRequirementPageStep2 = () => {
       const responseData = await response.json();
 
       if (response.ok) {
-        toast(responseData.message);
+        Swal.fire({
+          icon: "success",
+          title: `${responseData}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         setCards([]);
         router.push("/manage-requirement/create/step-3");
       }
     } catch (error) {
-      console.error("Error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal submit",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }

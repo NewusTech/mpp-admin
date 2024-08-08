@@ -21,6 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import FileUploader from "@/components/FileUploader";
 import Cookies from "js-cookie";
 import { useEffect, useRef, useState } from "react";
+import Swal from "sweetalert2";
 
 interface ArticleBySlug {
   name: string;
@@ -83,12 +84,24 @@ const AppsInstance = ({
         const data = await response.json();
 
         if (response.ok) {
-          toast(data.message);
+          Swal.fire({
+            icon: "success",
+            title: `${data.message}`,
+            timer: 2000,
+            showConfirmButton: false,
+            position: "center",
+          });
+
           router.push("/master/master-apps");
         }
       } catch (error: any) {
-        toast(error.message);
-        console.log(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Gagal submit",
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
       } finally {
         setIsLoading(false);
       }
@@ -107,11 +120,24 @@ const AppsInstance = ({
 
         const result = await response.json();
         if (response.ok) {
-          toast(result.message);
+          Swal.fire({
+            icon: "success",
+            title: `${result.message}`,
+            timer: 2000,
+            showConfirmButton: false,
+            position: "center",
+          });
+
           router.push("/master/master-apps");
         }
       } catch (error: any) {
-        toast(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Gagal submit",
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
       } finally {
         setIsLoading(false);
       }

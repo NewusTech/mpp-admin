@@ -23,6 +23,7 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { mutate } from "swr";
+import Swal from "sweetalert2";
 
 const Instance = ({
   data,
@@ -96,15 +97,24 @@ const Instance = ({
 
         const data = await response.json();
         if (response.ok) {
-          toast(data.message);
-          await mutate(
-            `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?limit=1000000`,
-          );
+          Swal.fire({
+            icon: "success",
+            title: `${data.message}`,
+            timer: 2000,
+            showConfirmButton: false,
+            position: "center",
+          });
           router.push("/master/master-instance");
         }
         console.log(data);
       } catch (error: any) {
-        toast(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Gagal Submit",
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
       } finally {
         setIsLoading(false); // Stop loading
       }
@@ -124,14 +134,23 @@ const Instance = ({
         const result = await response.json();
 
         if (response.ok) {
-          toast(result.message);
-          await mutate(
-            `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?limit=1000000`,
-          );
+          Swal.fire({
+            icon: "success",
+            title: `${result.message}`,
+            timer: 2000,
+            showConfirmButton: false,
+            position: "center",
+          });
           router.push("/master/master-instance");
         }
       } catch (error: any) {
-        toast(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Gagal Submit",
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
       } finally {
         setIsLoading(false); // Stop loading
       }

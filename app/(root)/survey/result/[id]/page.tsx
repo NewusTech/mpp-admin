@@ -9,11 +9,11 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Cookies from "js-cookie";
-import { toast } from "sonner";
 import { useState } from "react";
 import { Loader } from "lucide-react";
 import InputComponent from "@/components/InputComponent";
 import { formatDate } from "@/lib/utils";
+import Swal from "sweetalert2";
 
 const SurveyPrint = ({
   params,
@@ -84,10 +84,22 @@ const SurveyPrint = ({
       a.remove();
 
       if (response.ok) {
-        toast("Berhasil download laporan");
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil download",
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
       }
     } catch (e: any) {
-      console.log(e.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal download!",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }

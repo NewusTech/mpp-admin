@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Loader } from "lucide-react";
+import Swal from "sweetalert2";
 
 const CreateFormat = ({
   params,
@@ -20,7 +21,7 @@ const CreateFormat = ({
     id: number;
   };
 }) => {
-  const { data } = useSWR<any>(
+  const { data, mutate } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/detailsurat/${params.id}`,
     fetcher,
   );
@@ -28,6 +29,7 @@ const CreateFormat = ({
   const router = useRouter();
 
   const result = data?.data?.Layanansurat;
+  const resultPj = data?.data?.Instansi;
 
   const editor1Ref = useRef<{ getContent: () => string }>(null);
   const editor2Ref = useRef<{ getContent: () => string }>(null);
@@ -68,11 +70,24 @@ const CreateFormat = ({
 
       const result = await response.json();
       if (response.ok) {
-        toast(result.message);
+        Swal.fire({
+          icon: "success",
+          title: `${result.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
+        await mutate();
         router.push("/setting");
       }
     } catch (error: any) {
-      toast(error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal Submit",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -120,7 +135,7 @@ const CreateFormat = ({
             <MyEditor
               ref={editor3Ref}
               name="editor3"
-              initialValue={result?.instansi_pj || "<p>Ketik disni</p>"}
+              initialValue={resultPj?.pj || "<p>Ketik disni</p>"}
             />
           </div>
           <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
@@ -128,7 +143,7 @@ const CreateFormat = ({
             <MyEditor
               ref={editor4Ref}
               name="editor4"
-              initialValue={result?.nip_pj || "<p>Ketik disni</p>"}
+              initialValue={resultPj?.nip_pj || "<p>Ketik disni</p>"}
             />
           </div>
           <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">

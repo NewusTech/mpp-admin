@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
+import Swal from "sweetalert2";
 
 interface JwtPayload {
   permission: string[];
@@ -111,10 +112,22 @@ const DetailApproval = ({
       a.remove();
 
       if (response.ok) {
-        toast("Berhasil download surat");
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil download surat",
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
       }
     } catch (e: any) {
-      toast("Gagal download surat");
+      Swal.fire({
+        icon: "error",
+        title: "Gagal download surat",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -139,11 +152,23 @@ const DetailApproval = ({
 
       const data = await response.json();
       if (response.ok) {
-        toast(data.message);
+        Swal.fire({
+          icon: "success",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         router.push("/manage-approvals");
       }
     } catch (e: any) {
-      toast(e.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal submit",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setLoading(false);
     }

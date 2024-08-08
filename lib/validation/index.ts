@@ -2,11 +2,18 @@ import { z } from "zod";
 
 export const SigninValidation = z.object({
   nik: z.string({
-    message: "NIK wajib diisi.",
+    message: "Username wajib diisi.",
   }),
-  password: z.string().min(6, {
-    message: "Password wajib.",
-  }),
+  password: z
+    .string({
+      message: "Password wajib diisi.",
+    })
+    .min(6, {
+      message: "Password minimal 6 karakter.",
+    })
+    .max(16, {
+      message: "Password maksimal 16 karakter.",
+    }),
 });
 
 export const NewsValidation = z.object({

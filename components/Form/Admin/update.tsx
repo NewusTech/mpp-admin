@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { Loader, Search } from "lucide-react";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 const UpdateAdmin = ({ slug, data }: { slug: string; data: any }) => {
   const router = useRouter();
@@ -61,11 +62,23 @@ const UpdateAdmin = ({ slug, data }: { slug: string; data: any }) => {
       const data = await response.json();
       console.log(data);
       if (response.ok) {
-        toast(data.message);
+        Swal.fire({
+          icon: "success",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         router.push("/manage-user/admin");
       }
     } catch (error: any) {
-      toast(error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal submit",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     }
   }
 

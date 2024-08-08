@@ -33,6 +33,7 @@ import { fetcher } from "@/lib/fetch";
 import { Label } from "@/components/ui/label";
 import MyEditor from "@/components/Editor";
 import { Loader } from "lucide-react";
+import Swal from "sweetalert2";
 
 export default function AlertDialogUpdateSurvey({ id }: { id: number }) {
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -92,11 +93,25 @@ export default function AlertDialogUpdateSurvey({ id }: { id: number }) {
       );
 
       const result = await response.json();
-      toast(result.message);
-      handleAddModalClose();
+
+      if (response.ok) {
+        Swal.fire({
+          icon: "success",
+          title: `${result.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
+        handleAddModalClose();
+      }
     } catch (error: any) {
-      toast(error.message);
-      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal submit",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }

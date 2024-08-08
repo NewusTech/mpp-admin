@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Loader } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
+import Swal from "sweetalert2";
 
 interface JwtPayload {
   role?: string;
@@ -168,10 +169,22 @@ const RequestOnline = () => {
       a.remove();
 
       if (response.ok) {
-        toast("Berhasil download laporan");
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil download",
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
       }
     } catch (e: any) {
-      toast(e.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal download!",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }

@@ -51,7 +51,13 @@ const FormSignin = () => {
       );
 
       const data = await response.json();
-
+      if (!response.ok) {
+        // Tangani respons yang bukan 2xx
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || `HTTP error! status: ${response.status}`,
+        );
+      }
       if (response.ok) {
         const tokenAuth = data.data.token;
         login(tokenAuth);
@@ -72,7 +78,8 @@ const FormSignin = () => {
     } catch (e: any) {
       Swal.fire({
         icon: "error",
-        title: "Username atau password salah",
+        title: "Login gagal",
+        text: "Username atau password salah",
         timer: 2000,
         showConfirmButton: false,
         position: "center",

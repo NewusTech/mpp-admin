@@ -133,7 +133,7 @@ const ModalPermission = ({ id }: { id: number }) => {
             Hak Akses Admin
           </AlertDialogTitle>
         </AlertDialogHeader>
-        <p className="px-5 text-error-700">Role minimal 1</p>
+        <p className="px-5 text-error-700">Minimal 1 hak akses</p>
         <div className="px-5">
           {result?.map((v: any) => (
             <div key={v.id} className="flex items-center mb-2 justify-between">

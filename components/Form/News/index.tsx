@@ -24,6 +24,7 @@ import { useEffect, useRef, useState } from "react";
 import useNewsStore from "@/lib/store/useNewsStore";
 import MyEditor from "@/components/Editor";
 import { Label } from "@/components/ui/label";
+import Swal from "sweetalert2";
 
 interface ArticleBySlug {
   title: string;
@@ -73,14 +74,24 @@ const News = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
         );
 
         const data = await response.json();
-        console.log(data);
         if (response.ok) {
-          toast(data.message);
+          Swal.fire({
+            icon: "success",
+            title: `${data.message}`,
+            timer: 2000,
+            showConfirmButton: false,
+            position: "center",
+          });
           router.push("/articles");
         }
       } catch (error: any) {
-        toast(error.message);
-        console.log(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Gagal submit",
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
       } finally {
         setIsLoading(false);
       }
@@ -100,18 +111,28 @@ const News = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
         const result = await response.json();
 
         if (response.ok) {
-          toast(result.message);
+          Swal.fire({
+            icon: "success",
+            title: `${result.message}`,
+            timer: 2000,
+            showConfirmButton: false,
+            position: "center",
+          });
           router.push("/articles");
         }
       } catch (error: any) {
-        toast(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Gagal submit",
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
       } finally {
         setIsLoading(false);
       }
     }
   }
-
-  console.log(data);
 
   return (
     <div className="space-y-5">

@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import FileUploader from "@/components/FileUploader";
+import Swal from "sweetalert2";
 
 export default function AlertDialogCreateMasterManualBook() {
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -71,13 +72,24 @@ export default function AlertDialogCreateMasterManualBook() {
       const data = await response.json();
       console.log(data);
       if (response.ok) {
-        toast(data.message);
+        Swal.fire({
+          icon: "success",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         handleAddModalClose();
         window.location.reload();
       }
     } catch (error: any) {
-      toast(error.message);
-      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal submit",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false); // Stop loading
     }

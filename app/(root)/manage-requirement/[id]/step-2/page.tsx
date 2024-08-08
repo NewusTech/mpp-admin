@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import useUpdateRequirementStore from "@/lib/store/useUpdateRequirementStore";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import Swal from "sweetalert2";
 
 const steps = [
   { id: 1, title: "1" },
@@ -188,12 +189,24 @@ const UpdateManageRequirementPageStep2 = () => {
       );
       const responseData = await response.json();
       if (response.ok) {
-        toast(responseData.message);
+        Swal.fire({
+          icon: "success",
+          title: `${responseData}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         router.push(`/manage-requirement/${serviceId}/step-3`);
         setCards([]);
       }
     } catch (error) {
-      console.error("Error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal submit",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }

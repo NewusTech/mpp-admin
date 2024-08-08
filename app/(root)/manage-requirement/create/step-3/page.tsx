@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Loader } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import Swal from "sweetalert2";
 
 const steps = [
   { id: 1, title: "1" },
@@ -95,13 +96,25 @@ const CreateManageRequirementPageStep3 = () => {
 
       const data = await response.json();
       if (response.ok) {
-        toast(data.message);
+        Swal.fire({
+          icon: "success",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         localStorage.removeItem("requirement");
         setCards([]);
         router.push("/manage-requirement");
       }
     } catch (error) {
-      toast("An error occurred while submitting the form.");
+      Swal.fire({
+        icon: "error",
+        title: "Gagal submit",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }

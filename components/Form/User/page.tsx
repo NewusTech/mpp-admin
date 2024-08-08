@@ -49,6 +49,7 @@ import {
 import { cn } from "@/lib/utils";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
+import Swal from "sweetalert2";
 
 const UserData = ({
   data,
@@ -168,11 +169,23 @@ const UserData = ({
         const data = await response.json();
         console.log(data);
         if (response.ok) {
-          toast(data.message);
+          Swal.fire({
+            icon: "success",
+            title: `${data.message}`,
+            timer: 2000,
+            showConfirmButton: false,
+            position: "center",
+          });
           router.push("/manage-user");
         }
       } catch (error: any) {
-        toast(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Gagal submit",
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
       }
     } else {
       try {
@@ -191,11 +204,23 @@ const UserData = ({
         const result = await response.json();
         console.log(result);
         if (response.ok) {
-          toast(result.message);
+          Swal.fire({
+            icon: "success",
+            title: `${result.message}`,
+            timer: 2000,
+            showConfirmButton: false,
+            position: "center",
+          });
           router.push("/manage-user");
         }
       } catch (error: any) {
-        toast(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Gagal submit",
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
       } finally {
         setIsLoading(false); // Stop loading
       }
