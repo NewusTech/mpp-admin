@@ -8,8 +8,8 @@ interface UserInfoProps {
     telepon?: string;
     email?: string;
     alamat?: string;
-    kecamatan?: string;
-    desa?: string;
+    Kecamatan?: any;
+    Desa?: any;
     pekerjaan?: string;
     tempat_lahir?: string;
     tgl_lahir?: string;
@@ -93,8 +93,11 @@ export const UserInfoRight = ({
       <UserInfoItem label="Status Kawain" value={marriedStatus || "-"} />
       <UserInfoItem label="Golongan Darah" value={bloodType || "-"} />
       <UserInfoItem label="Pekerjaan" value={userInfo?.pekerjaan || "-"} />
-      <UserInfoItem label="Kecamatan" value={userInfo?.kecamatan || "-"} />
-      <UserInfoItem label="Desa" value={userInfo?.desa || "-"} />
+      <UserInfoItem
+        label="Kecamatan"
+        value={userInfo?.Kecamatan?.name || "-"}
+      />
+      <UserInfoItem label="Desa" value={userInfo?.Desa?.name || "-"} />
       <UserInfoItem label="RT" value={userInfo?.rt} />
       <UserInfoItem label="RW" value={userInfo?.rw} />
       <UserInfoItem label="Alamat" value={userInfo?.alamat} />

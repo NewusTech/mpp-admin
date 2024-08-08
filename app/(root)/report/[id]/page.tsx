@@ -40,7 +40,14 @@ const ReportDetail = ({
     }
   }, []);
   return (
-    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Admin Layanan"]}>
+    <ProtectedRoute
+      roles={[
+        "Admin Instansi",
+        "Super Admin",
+        "Admin Layanan",
+        "Admin Verifikasi",
+      ]}
+    >
       <section className="mr-16">
         <ReportTab serviceId={params.id} role={role} />
       </section>

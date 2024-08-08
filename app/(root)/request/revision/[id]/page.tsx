@@ -132,7 +132,14 @@ const DetailRequestOnline = ({
   };
 
   return (
-    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Admin Layanan"]}>
+    <ProtectedRoute
+      roles={[
+        "Super Admin",
+        "Admin Instansi",
+        "Admin Layanan",
+        "Admin Verifikasi",
+      ]}
+    >
       <section className="mr-16">
         <div className="-ml-14 mb-10">
           <Link href="/request/revision">

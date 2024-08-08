@@ -25,7 +25,7 @@ const CreateManageRequirementPage = () => {
       selectedId: state.selectedId,
       serviceId: state.serviceId,
       setServiceId: state.setServiceId,
-    })
+    }),
   );
   const [informationService, setInformationService] = useState("");
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
@@ -33,7 +33,7 @@ const CreateManageRequirementPage = () => {
 
   const { data: services } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get/${selectedId}`,
-    fetcher
+    fetcher,
   );
 
   const serviceAll = services?.data;
@@ -44,7 +44,7 @@ const CreateManageRequirementPage = () => {
 
     // Find the selected service to get its description
     const selectedService = serviceAll.find(
-      (service: any) => service.id === parseInt(selectedServiceId)
+      (service: any) => service.id === parseInt(selectedServiceId),
     );
 
     if (selectedService) {
@@ -61,7 +61,14 @@ const CreateManageRequirementPage = () => {
   }, [searchInputInstance]);
 
   return (
-    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Admin Layanan"]}>
+    <ProtectedRoute
+      roles={[
+        "Admin Instansi",
+        "Super Admin",
+        "Admin Layanan",
+        "Admin Verifikasi",
+      ]}
+    >
       <section className="mr-16">
         <div className="-ml-14 mb-10">
           <Link href="/manage-requirement">

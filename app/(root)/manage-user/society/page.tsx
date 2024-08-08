@@ -17,7 +17,14 @@ const ManageUser = () => {
   const result = data?.data;
 
   return (
-    <ProtectedRoute roles={["Super Admin"]}>
+    <ProtectedRoute
+      roles={[
+        "Super Admin",
+        "Admin Instansi",
+        "Admin Layanan",
+        "Admin Verifikasi",
+      ]}
+    >
       <section className="mr-16">
         <div className="flex justify-end mb-8">
           <Link href="/manage-user/create">

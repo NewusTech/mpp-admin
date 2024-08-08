@@ -66,6 +66,8 @@ const InstanceDashboard = () => {
     }
   }, []);
 
+  console.log(state.role);
+
   return (
     <>
       <div className="rounded-[16px] bg-primary-200 p-8 flex gap-x-[73px] items-center">
@@ -116,21 +118,24 @@ const InstanceDashboard = () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="queue" className="mt-8">
-          {state.role === "Admin Instansi" ? (
+          {state.role === "Admin Instansi" ||
+          state.role === "Admin Verifikasi" ? (
             <TabQueue />
           ) : (
             <TabQueueService id={state.slug} />
           )}
         </TabsContent>
         <TabsContent value="service">
-          {state.role === "Admin Instansi" ? (
+          {state.role === "Admin Instansi" ||
+          state.role === "Admin Verifikasi" ? (
             <TabServiceInstance />
           ) : (
             <TabService />
           )}
         </TabsContent>
         <TabsContent value="survey">
-          {state.role === "Admin Instansi" ? (
+          {state.role === "Admin Instansi" ||
+          state.role === "Admin Verifikasi" ? (
             <TabSurvey />
           ) : (
             <TabSurveyService id={state.serviceId} name={state.serviceName} />

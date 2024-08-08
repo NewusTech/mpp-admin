@@ -70,7 +70,7 @@ const RequestOffline = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher
+    fetcher,
   );
 
   const instanceId = Number(instance);
@@ -160,7 +160,7 @@ const RequestOffline = () => {
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-        }
+        },
       );
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -182,7 +182,14 @@ const RequestOffline = () => {
   };
 
   return (
-    <ProtectedRoute roles={["Super Admin", "Admin Instansi", "Admin Layanan"]}>
+    <ProtectedRoute
+      roles={[
+        "Super Admin",
+        "Admin Instansi",
+        "Admin Layanan",
+        "Admin Verifikasi",
+      ]}
+    >
       <section className="mr-16">
         <div className="flex justify-between gap-x-5 mb-8">
           <div className="flex w-7/12 gap-x-5">

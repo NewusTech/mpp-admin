@@ -33,7 +33,7 @@ const CreateManageRequirementPageStep3 = () => {
 
   const { data: service } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/docs/${serviceId}`,
-    fetcher
+    fetcher,
   );
   const [cards, setCards] = useState<CardTypeFile[]>([]);
 
@@ -53,8 +53,8 @@ const CreateManageRequirementPageStep3 = () => {
   const handleSwitch = (id: number) => {
     setCards(
       cards.map((card) =>
-        card.id === id ? { ...card, toggle: !card.toggle } : card
-      )
+        card.id === id ? { ...card, toggle: !card.toggle } : card,
+      ),
     );
   };
 
@@ -68,7 +68,7 @@ const CreateManageRequirementPageStep3 = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-        }
+        },
       );
 
       const data = await response.json();
@@ -90,7 +90,9 @@ const CreateManageRequirementPageStep3 = () => {
 
   const handleInputChange = (id: number, field: string, value: any) => {
     setCards(
-      cards.map((card) => (card.id === id ? { ...card, [field]: value } : card))
+      cards.map((card) =>
+        card.id === id ? { ...card, [field]: value } : card,
+      ),
     );
   };
 
@@ -112,7 +114,7 @@ const CreateManageRequirementPageStep3 = () => {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
           body: JSON.stringify(requestData),
-        }
+        },
       );
 
       const data = await response.json();
@@ -130,7 +132,14 @@ const CreateManageRequirementPageStep3 = () => {
   };
 
   return (
-    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Admin Layanan"]}>
+    <ProtectedRoute
+      roles={[
+        "Admin Instansi",
+        "Super Admin",
+        "Admin Layanan",
+        "Admin Verifikasi",
+      ]}
+    >
       <section className="mr-16">
         <div className="-ml-14 mb-10">
           <Link href={`/manage-requirement/${serviceId}/step-2`}>

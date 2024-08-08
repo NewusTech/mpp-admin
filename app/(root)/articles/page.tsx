@@ -82,7 +82,14 @@ const Articles = () => {
   const result = data?.data;
 
   return (
-    <ProtectedRoute roles={["Admin Instansi", "Super Admin", "Admin Layanan"]}>
+    <ProtectedRoute
+      roles={[
+        "Admin Instansi",
+        "Super Admin",
+        "Admin Layanan",
+        "Admin Verifikasi",
+      ]}
+    >
       <section className="mr-16">
         <div
           className={`flex gap-x-6 ${role === "Admin Instansi" || role === "Admin Layanan" ? "justify-end mb-8" : "justify-between mb-[86px]"}`}
