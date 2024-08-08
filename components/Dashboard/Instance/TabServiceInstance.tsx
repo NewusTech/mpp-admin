@@ -24,6 +24,7 @@ import { formatDate } from "@/lib/utils";
 import { Loader } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
+import Swal from "sweetalert2";
 
 interface JwtPayload {
   role?: string;
@@ -63,7 +64,7 @@ const TabServiceInstance = () => {
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [activeButton, setActiveButton] = useState("");
   const [selectedMonth, setSelectedMonth] = useState<any>(
-    new Date().getMonth()
+    new Date().getMonth(),
   );
   const [role, setRole] = useState<string | null>(null);
   const [instansiId, setInstansiId] = useState<number | null>(null);
@@ -91,7 +92,7 @@ const TabServiceInstance = () => {
   }, []);
 
   const selectedMonthLabel = months.find(
-    (month) => month.value === Number(selectedMonth)
+    (month) => month.value === Number(selectedMonth),
   )?.label;
 
   const buildUrl = (baseUrl: string, params: Record<string, any>) => {
@@ -155,7 +156,7 @@ const TabServiceInstance = () => {
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-        }
+        },
       );
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -167,10 +168,22 @@ const TabServiceInstance = () => {
       a.remove();
 
       if (response.ok) {
-        toast("Berhasil download laporan");
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil download",
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
       }
     } catch (e: any) {
-      toast(e.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal download!",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }

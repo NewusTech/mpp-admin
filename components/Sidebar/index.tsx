@@ -195,13 +195,15 @@ const Sidebar = () => {
             isDropdownOpen={isDropdownOpen === "/survey"}
             handleDropdownOpen={() => handleDropdownOpen("/survey")}
           />
-          <Nav
-            route="/articles"
-            path="/articles"
-            icons="/icons/newspaper.svg"
-            iconsActive="/icons/newspaper-active.svg"
-            title="Berita"
-          />
+          {role !== "Admin Layanan" && (
+            <Nav
+              route="/articles"
+              path="/articles"
+              icons="/icons/newspaper.svg"
+              iconsActive="/icons/newspaper-active.svg"
+              title="Berita"
+            />
+          )}
           {role === "Admin Instansi" ||
             (role === "Admin Layanan" && (
               <Nav
@@ -331,17 +333,19 @@ const Sidebar = () => {
                   >
                     <Link href="/manage-user/society">Masyarakat</Link>
                   </li>
-                  <li
-                    className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/manage-user/admin") || pathname.startsWith("/manage-user/admin") ? "text-primary-700" : ""}`}
-                  >
-                    <Link href="/manage-user/admin">Admin</Link>
-                  </li>
                   {role !== "Admin Layanan" && (
-                    <li
-                      className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/manage-user/permission") || pathname.startsWith("/manage-user/permission") ? "text-primary-700" : ""}`}
-                    >
-                      <Link href="/manage-user/permission">Hak Akses</Link>
-                    </li>
+                    <>
+                      <li
+                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/manage-user/admin") || pathname.startsWith("/manage-user/admin") ? "text-primary-700" : ""}`}
+                      >
+                        <Link href="/manage-user/admin">Admin</Link>
+                      </li>
+                      <li
+                        className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/manage-user/permission") || pathname.startsWith("/manage-user/permission") ? "text-primary-700" : ""}`}
+                      >
+                        <Link href="/manage-user/permission">Hak Akses</Link>
+                      </li>
+                    </>
                   )}
                 </ul>
               </>

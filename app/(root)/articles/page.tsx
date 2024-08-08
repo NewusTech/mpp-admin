@@ -83,12 +83,7 @@ const Articles = () => {
 
   return (
     <ProtectedRoute
-      roles={[
-        "Admin Instansi",
-        "Super Admin",
-        "Admin Layanan",
-        "Admin Verifikasi",
-      ]}
+      roles={["Admin Instansi", "Super Admin", "Admin Verifikasi"]}
     >
       <section className="mr-16">
         <div

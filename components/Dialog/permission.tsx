@@ -30,6 +30,7 @@ import {
 import Image from "next/image";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
+import Swal from "sweetalert2";
 
 const ModalPermission = ({ id }: { id: number }) => {
   const router = useRouter();
@@ -94,13 +95,24 @@ const ModalPermission = ({ id }: { id: number }) => {
       );
 
       const result = await response.json();
-      console.log(result);
       if (response.ok) {
-        toast(result.message);
+        Swal.fire({
+          icon: "success",
+          title: `${result.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         handleAddModalClose();
       }
-    } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
+    } catch (e: any) {
+      Swal.fire({
+        icon: "error",
+        title: "Gagal submit!",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }
