@@ -13,6 +13,7 @@ import useQueueStore from "@/lib/store/useQueueStore";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { Loader, X } from "lucide-react";
+import Swal from "sweetalert2";
 
 export function AlertDialogChangeStatusRequestNonactive({
   id,
@@ -48,10 +49,23 @@ export function AlertDialogChangeStatusRequestNonactive({
 
       const data = await response.json();
       if (response.ok) {
-        toast(data.message);
+        Swal.fire({
+          icon: "success",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         handleAddModalClose();
       }
-    } catch (e) {
+    } catch (e: any) {
+      Swal.fire({
+        icon: "error",
+        title: "Gagal mengirim!",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }

@@ -52,7 +52,9 @@ export default function Home() {
       <section className="mr-16">
         {role === "Bupati" ? (
           <DashboardBupati />
-        ) : role === "Admin Instansi" || role === "Admin Layanan" ? (
+        ) : role === "Admin Instansi" ||
+          role === "Admin Layanan" ||
+          role === "Admin Layanan" ? (
           <InstanceDashboard />
         ) : (
           <DashboardSuperadmin />

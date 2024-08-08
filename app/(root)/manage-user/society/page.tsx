@@ -27,7 +27,7 @@ const ManageUser = () => {
     >
       <section className="mr-16">
         <div className="flex justify-end mb-8">
-          <Link href="/manage-user/create">
+          <Link href="/manage-user/society/create">
             <Button className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full">
               Tambah
             </Button>

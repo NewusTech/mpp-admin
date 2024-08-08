@@ -62,7 +62,11 @@ const ManageRequirements = () => {
 
   let url = `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get`;
 
-  if (role === "Admin Instansi" || role === "Admin Layanan") {
+  if (
+    role === "Admin Instansi" ||
+    role === "Admin Layanan" ||
+    role === "Admin Verifikasi"
+  ) {
     url += `/${instansiId}?limit=10000000`;
   } else {
     url += `/${instanceId}?limit=10000000`;
@@ -95,20 +99,22 @@ const ManageRequirements = () => {
           <h1 className="text-lg font-semibold">Kelola Persyaratan</h1>
           <div className="flex justify-between mt-4">
             <div className="w-1/2">
-              {role !== "Admin Instansi" && role !== "Admin Layanan" && (
-                <InputComponent
-                  typeInput="selectSearch"
-                  valueInput={searchInputInstance}
-                  onChangeInputSearch={(e) =>
-                    setSearchInputInstance(e.target.value)
-                  }
-                  items={result}
-                  label="Instansi"
-                  placeholder="Pilih Instansi"
-                  value={instance}
-                  onChange={(e: any) => setInstance(e)}
-                />
-              )}
+              {role !== "Admin Instansi" &&
+                role !== "Admin Layanan" &&
+                role !== "Admin Verifikasi" && (
+                  <InputComponent
+                    typeInput="selectSearch"
+                    valueInput={searchInputInstance}
+                    onChangeInputSearch={(e) =>
+                      setSearchInputInstance(e.target.value)
+                    }
+                    items={result}
+                    label="Instansi"
+                    placeholder="Pilih Instansi"
+                    value={instance}
+                    onChange={(e: any) => setInstance(e)}
+                  />
+                )}
             </div>
             {instance || role === "Admin Instansi" ? (
               <Link href="/manage-requirement/create">

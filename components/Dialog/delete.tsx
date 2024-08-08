@@ -11,6 +11,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Loader } from "lucide-react";
+import Swal from "sweetalert2";
 
 const ModalDelete = ({ endpoint }: { endpoint: string }) => {
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -39,12 +40,24 @@ const ModalDelete = ({ endpoint }: { endpoint: string }) => {
 
       const data = await response.json();
       if (response.ok) {
-        toast(data.message);
+        Swal.fire({
+          icon: "success",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         handleAddModalClose();
         window.location.reload();
       }
     } catch (e: any) {
-      toast(e.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal delete!",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }

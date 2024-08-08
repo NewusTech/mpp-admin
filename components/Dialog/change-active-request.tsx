@@ -13,6 +13,7 @@ import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { Loader, X } from "lucide-react";
 import { mutate } from "swr";
+import Swal from "sweetalert2";
 
 export function AlertDialogChangeStatusRequest({ id }: { id: number }) {
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -44,13 +45,23 @@ export function AlertDialogChangeStatusRequest({ id }: { id: number }) {
 
       const data = await response.json();
       if (response.ok) {
-        toast(data.message);
+        Swal.fire({
+          icon: "success",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         handleAddModalClose();
-        await mutate(
-          `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get/${id}?limit=10000000`,
-        );
       }
-    } catch (e) {
+    } catch (e: any) {
+      Swal.fire({
+        icon: "error",
+        title: "Gagal submit!",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }

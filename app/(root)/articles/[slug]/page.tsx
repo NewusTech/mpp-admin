@@ -25,12 +25,7 @@ const EditArticle = async ({
 
   return (
     <ProtectedRoute
-      roles={[
-        "Admin Instansi",
-        "Super Admin",
-        "Admin Layanan",
-        "Admin Verifikasi",
-      ]}
+      roles={["Admin Instansi", "Super Admin", "Admin Verifikasi"]}
     >
       <section className="mr-16">
         <div className="-ml-14 mb-10">
