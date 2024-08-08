@@ -24,6 +24,7 @@ import { Loader, Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import Swal from "sweetalert2";
 
 // Define types
 type FormValue = string | number | boolean | Record<string, boolean>;
@@ -242,12 +243,25 @@ const CreateOffline = () => {
 
       const data = await response.json();
       console.log(data);
+
       if (response.ok) {
-        toast(data.message);
+        Swal.fire({
+          icon: "success",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         setSelectedUser(data.data.id);
       }
     } catch (error) {
-      console.error("Error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal download!",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setLoading(false);
     }
@@ -573,7 +587,7 @@ const CreateOffline = () => {
                       onChange={(e: ChangeEvent<HTMLInputElement>) =>
                         handleChange(v.id, e.target.value)
                       }
-                      className="rounded-full w-full pr-96 "
+                      className="rounded-full w-full"
                     />
                   )}
                 </div>

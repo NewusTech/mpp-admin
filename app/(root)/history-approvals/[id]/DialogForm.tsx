@@ -17,6 +17,7 @@ import { Loader } from "lucide-react";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 export default function AlertDialogUploadFile({ id }: { id: number }) {
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -53,13 +54,24 @@ export default function AlertDialogUploadFile({ id }: { id: number }) {
 
       const data = await response.json();
       if (response.ok) {
-        toast(data.message);
+        Swal.fire({
+          icon: "success",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         setSelectedFile(null);
         handleAddModalClose();
       }
     } catch (error: any) {
-      toast(error.message);
-      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal submit",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }

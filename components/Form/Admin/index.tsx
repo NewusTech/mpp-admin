@@ -31,6 +31,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { roles } from "@/constants";
+import Swal from "sweetalert2";
 
 const AdminData = () => {
   const router = useRouter();
@@ -99,11 +100,23 @@ const AdminData = () => {
       const data = await response.json();
       console.log(data);
       if (response.ok) {
-        toast(data.message);
+        Swal.fire({
+          icon: "success",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         router.push("/manage-user/admin");
       }
     } catch (error: any) {
-      toast(error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal submit",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     }
   }
 

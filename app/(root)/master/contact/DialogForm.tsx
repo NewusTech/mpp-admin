@@ -26,12 +26,13 @@ import { z } from "zod";
 import { ContactValidation } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import MyEditor from "@/components/Editor";
+import Swal from "sweetalert2";
 
-export default function AlertDialogCreateContact() {
+export default function AlertDialogCreateContact(data: any) {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const editor1Ref = useRef<{ getContent: () => string }>(null);
@@ -47,6 +48,21 @@ export default function AlertDialogCreateContact() {
   const form = useForm<z.infer<typeof ContactValidation>>({
     resolver: zodResolver(ContactValidation),
   });
+
+  const result = data?.data;
+
+  useEffect(() => {
+    if (result) {
+      form.reset({
+        email: result.email,
+        alamat: result.alamat,
+        telp: result.telp,
+        latitude: result.latitude,
+        longitude: result.longitude,
+        website: result.website,
+      });
+    }
+  }, [result]);
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof ContactValidation>) {
@@ -79,17 +95,30 @@ export default function AlertDialogCreateContact() {
       const data = await response.json();
       console.log(data);
       if (response.ok) {
-        toast(data.message);
+        Swal.fire({
+          icon: "success",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         handleAddModalClose();
         window.location.reload();
       }
     } catch (error: any) {
-      toast(error.message);
-      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal submit",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false); // Stop loading
     }
   }
+
+  console.log(data);
 
   return (
     <AlertDialog open={addModalOpen}>
@@ -219,7 +248,7 @@ export default function AlertDialogCreateContact() {
                 <MyEditor
                   ref={editor1Ref}
                   name="editor1"
-                  initialValue={"<p>Ketik disini</p>"}
+                  initialValue={result?.desc || "<p>Ketik disini</p>"}
                 />
               </div>
               <AlertDialogFooter className="p-6">

@@ -19,6 +19,7 @@ import { UserInfoLeft, UserInfoRight } from "@/components/BiodataUser";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useState } from "react";
 import { Loader } from "lucide-react";
+import Swal from "sweetalert2";
 
 const DetailHistoryApproval = ({
   params,
@@ -80,11 +81,23 @@ const DetailHistoryApproval = ({
 
       const data = await response.json();
       if (response.ok) {
-        toast(data.message);
+        Swal.fire({
+          icon: "success",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         router.push("/history-approvals");
       }
     } catch (e: any) {
-      toast(e.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal submit",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }

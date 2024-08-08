@@ -18,12 +18,13 @@ async function getData(): Promise<Contact> {
 const MasterContact = async () => {
   const data = await getData();
   const result: Contact[] = [data];
+  const get = data;
 
   return (
     <ProtectedRoute roles={["Super Admin"]}>
       <section className="mr-16">
         <div className="flex justify-end mb-8">
-          <AlertDialogCreateContact />
+          <AlertDialogCreateContact data={data} />
         </div>
         <DataTables columns={contactColumns} data={result} filterBy="alamat" />
       </section>

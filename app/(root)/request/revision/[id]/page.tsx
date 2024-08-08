@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import { Loader } from "lucide-react";
 import ModalValidateRevision from "@/components/Dialog/modal-validate-revision";
 import { jwtDecode } from "jwt-decode";
+import Swal from "sweetalert2";
 
 interface JwtPayload {
   permission: string[];
@@ -121,11 +122,23 @@ const DetailRequestOnline = ({
 
       const data = await response.json();
       if (response.ok) {
-        toast(data.message);
+        Swal.fire({
+          icon: "success",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         router.push("/request/revision");
       }
     } catch (e: any) {
-      toast(e.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal submit",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }

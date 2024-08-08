@@ -13,6 +13,7 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import Swal from "sweetalert2";
 
 interface UserFileItemProps {
   label: string;
@@ -82,11 +83,23 @@ export default function DetailComplaint({
 
       const data = await response.json();
       if (response.ok) {
-        toast(data.message);
+        Swal.fire({
+          icon: "success",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         router.push("/complaint");
       }
     } catch (e: any) {
-      toast(e.message);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal submit",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setLoading(false);
     }

@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import Swal from "sweetalert2";
 
 const ServiceForm = ({
   type,
@@ -79,13 +80,24 @@ const ServiceForm = ({
         );
 
         const result = await response.json();
-        console.log(result);
         if (response.ok) {
-          toast(result.message);
+          Swal.fire({
+            icon: "success",
+            title: `${result.message}`,
+            timer: 2000,
+            showConfirmButton: false,
+            position: "center",
+          });
           router.push("/master/master-service");
         }
       } catch (error: any) {
-        toast(error.message);
+        Swal.fire({
+          icon: "success",
+          title: `Gagal Submit`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
       } finally {
         setIsLoading(false);
       }
