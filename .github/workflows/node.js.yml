@@ -1,0 +1,54 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: CI/CD Proccess mpp-admin.newus.id
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  id-token: write
+jobs:
+  build:
+
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        node-version: [20]
+    env:
+      NEXT_PUBLIC_API_URL_MPP: https://backend-mpp.newus.id/api
+      NEXT_PUBLIC_TINYMCE_API_KEY: phyaabbmzyqjnf46uyvziekqex174yrbufhte1wwvni8avg2
+    steps:
+    - name: Cache node modules
+      uses: actions/cache@v3
+      with:
+        path: node_modules
+        key: srv523558-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          srv523558-node-
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+    - name : Git pull
+      run : |
+            cd /home/newus-mpp-admin/htdocs/mpp-admin.newus.id/mpp-admin
+            git pull
+    - name : Run NPM
+      run: |
+          if [ -e yarn.lock ]; then
+          yarn install --frozen-lockfile
+          elif [ -e package-lock.json ]; then
+          npm ci
+          else
+          npm i
+          fi
+    - name : Build proccess
+      run : npm run build --if-present
+    - name : change repo
+      run : cd /home/newus-mpp-admin/htdocs/mpp-admin.newus.id/mpp-admin/actions-runner/_work/mpp-admin/mpp-admin
+    - run : pm2 restart mpp-admin.newus.id --update-env
+  
