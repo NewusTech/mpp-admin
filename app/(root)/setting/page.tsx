@@ -101,20 +101,22 @@ const SettingPage = () => {
       <section className="mr-16">
         <div className="flex justify-between gap-x-5 mb-8">
           <div className="flex w-full gap-x-5">
-            {role !== "Admin Isntansi" && role !== "Admin Layanan" && (
-              <InputComponent
-                typeInput="selectSearch"
-                valueInput={searchInputInstance}
-                onChangeInputSearch={(e) =>
-                  setSearchInputInstance(e.target.value)
-                }
-                items={result}
-                label="Instansi"
-                placeholder="Pilih Instansi"
-                value={instance}
-                onChange={(e: any) => setInstance(e)}
-              />
-            )}
+            {role !== "Admin Instansi" &&
+              role !== "Admin Layanan" &&
+              role !== "Admin Verifikasi" && (
+                <InputComponent
+                  typeInput="selectSearch"
+                  valueInput={searchInputInstance}
+                  onChangeInputSearch={(e) =>
+                    setSearchInputInstance(e.target.value)
+                  }
+                  items={result}
+                  label="Instansi"
+                  placeholder="Pilih Instansi"
+                  value={instance}
+                  onChange={(e: any) => setInstance(e)}
+                />
+              )}
             {role !== "Admin Layanan" && (
               <InputComponent
                 typeInput="selectSearch"

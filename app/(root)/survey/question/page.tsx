@@ -80,13 +80,11 @@ const SurveyQuestion = () => {
   };
 
   return (
-    <ProtectedRoute
-      roles={["Super Admin", "Admin Instansi", "Admin Verifikasi"]}
-    >
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi"]}>
       <section className="mr-16">
         <div className="flex justify-between mb-8">
           <div className="w-1/2">
-            {role !== "Admin Isntansi" && role !== "Admin Layanan" && (
+            {role !== "Admin Instansi" && role !== "Admin Layanan" && (
               <InputComponent
                 typeInput="selectSearch"
                 valueInput={searchInputInstance}

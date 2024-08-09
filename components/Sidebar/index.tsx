@@ -96,7 +96,9 @@ const Sidebar = () => {
   return (
     <aside className="bg-neutral-200 fixed w-[291px] h-full overflow-scroll custom-scrollbar">
       <div className="px-8 py-[54px]">
-        <h1 className="text-xl font-semibold">{role}</h1>
+        <h1 className="text-xl font-semibold">
+          {role === "Admin Instansi" ? "Kepala Dinas" : role}
+        </h1>
         <div className={`${inter.className} space-y-2 text-neutral-900 mt-8`}>
           <Nav
             route="/"
@@ -176,7 +178,7 @@ const Sidebar = () => {
             content={
               <>
                 <ul className="space-y-4">
-                  {role !== "Admin Layanan" && (
+                  {role !== "Admin Layanan" && role !== "Admin Verifikasi" && (
                     <li
                       className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/survey/question") || pathname.startsWith("/survey/question") ? "text-primary-700" : ""}`}
                     >
@@ -202,7 +204,7 @@ const Sidebar = () => {
             isDropdownOpen={isDropdownOpen === "/survey"}
             handleDropdownOpen={() => handleDropdownOpen("/survey")}
           />
-          {role !== "Admin Layanan" && (
+          {role !== "Admin Layanan" && role !== "Admin Verifikasi" && (
             <Nav
               route="/articles"
               path="/articles"
@@ -211,16 +213,13 @@ const Sidebar = () => {
               title="Berita"
             />
           )}
-          {role === "Admin Instansi" ||
-            (role === "Admin Layanan" && (
-              <Nav
-                route="/complaint"
-                path="/complaint"
-                icons="/icons/send.svg"
-                iconsActive="/icons/send-active.svg"
-                title="Pengaduan"
-              />
-            ))}
+          <Nav
+            route="/complaint"
+            path="/complaint"
+            icons="/icons/send.svg"
+            iconsActive="/icons/send-active.svg"
+            title="Pengaduan"
+          />
           <Nav
             route="/guest-book"
             path="/guest-book"
@@ -228,7 +227,7 @@ const Sidebar = () => {
             iconsActive="/icons/book-open-active.svg"
             title="Buku Tamu"
           />
-          {role !== "Admin Layanan" && (
+          {role !== "Admin Layanan" && role !== "Admin Verifikasi" && (
             <Nav
               route="#"
               path="/master"
@@ -340,7 +339,7 @@ const Sidebar = () => {
                   >
                     <Link href="/manage-user/society">Masyarakat</Link>
                   </li>
-                  {role !== "Admin Layanan" && (
+                  {role !== "Admin Layanan" && role !== "Admin Verfikasi" && (
                     <>
                       <li
                         className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/manage-user/admin") || pathname.startsWith("/manage-user/admin") ? "text-primary-700" : ""}`}
