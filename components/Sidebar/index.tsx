@@ -339,7 +339,7 @@ const Sidebar = () => {
                   >
                     <Link href="/manage-user/society">Masyarakat</Link>
                   </li>
-                  {role !== "Admin Layanan" && role !== "Admin Verfikasi" && (
+                  {role !== "Admin Layanan" && role !== "Admin Verifikasi" && (
                     <>
                       <li
                         className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/manage-user/admin") || pathname.startsWith("/manage-user/admin") ? "text-primary-700" : ""}`}
