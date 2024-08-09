@@ -107,7 +107,12 @@ export default function DetailComplaint({
 
   return (
     <ProtectedRoute
-      roles={["Admin Instansi", "Admin Layanan", "Admin Verifikasi"]}
+      roles={[
+        "Admin Instansi",
+        "Admin Layanan",
+        "Admin Verifikasi",
+        "Super Admin",
+      ]}
     >
       <section className="mr-16">
         <div className="-ml-14 mb-5">

@@ -77,7 +77,7 @@ const ManageUser = () => {
       <section className="mr-16">
         <div className="flex justify-between mt-4 mb-24">
           <div className="w-1/2">
-            {role !== "Admin Isntansi" && role !== "Admin Layanan" && (
+            {role !== "Admin Instansi" && role !== "Admin Layanan" && (
               <InputComponent
                 typeInput="selectSearch"
                 valueInput={searchInputInstance}
