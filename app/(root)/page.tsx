@@ -54,7 +54,7 @@ export default function Home() {
           <DashboardBupati />
         ) : role === "Admin Instansi" ||
           role === "Admin Layanan" ||
-          role === "Admin Layanan" ? (
+          role === "Admin Verifikasi" ? (
           <InstanceDashboard />
         ) : (
           <DashboardSuperadmin />

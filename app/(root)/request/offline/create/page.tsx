@@ -10,7 +10,7 @@ import { fetcher } from "@/lib/fetch";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { useState, ChangeEvent, useEffect } from "react";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 import {
@@ -195,11 +195,23 @@ const CreateOffline = () => {
       const data = await response.json();
       console.log(data);
       if (response.ok) {
-        toast(data.message);
+        Swal.fire({
+          icon: "success",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
         router.push("/manage-approvals?tabs=offline");
       }
     } catch (error) {
-      console.error("Error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal submit",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -216,17 +228,30 @@ const CreateOffline = () => {
 
   const handleCreateUser = async () => {
     setLoading(true);
-    const formData = {
-      name: form.name,
-      nik: form.nik,
-      telepon: form.telepon,
-      email: form.email,
-      kecamatan_id: kecamatan,
-      desa_id: village,
-      rt: form.rt,
-      rw: form.rw,
-      alamat: form.alamat,
-    };
+    const formData = new FormData();
+    formData.append("name", form.name);
+    formData.append("nik", form.nik);
+    if (form.telepon) {
+      formData.append("telepon", form.telepon);
+    }
+    if (form.email) {
+      formData.append("email", form.email);
+    }
+    if (kecamatan) {
+      formData.append("kecamatan_id", kecamatan.toString());
+    }
+    if (village) {
+      formData.append("desa_id", village.toString());
+    }
+    if (form.rt) {
+      formData.append("rt", form.rt);
+    }
+    if (form.rw) {
+      formData.append("rw", form.rw);
+    }
+    if (form.alamat) {
+      formData.append("alamat", form.alamat);
+    }
 
     try {
       const response = await fetch(
@@ -234,15 +259,24 @@ const CreateOffline = () => {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-          body: JSON.stringify(formData),
+          body: formData,
         },
       );
 
       const data = await response.json();
-      console.log(data);
+      if (!response.ok) {
+        Swal.fire({
+          icon: "error",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
+      }
+
+      console.log(JSON.stringify(formData));
 
       if (response.ok) {
         Swal.fire({
@@ -254,10 +288,10 @@ const CreateOffline = () => {
         });
         setSelectedUser(data.data.id);
       }
-    } catch (error) {
+    } catch (error: any) {
       Swal.fire({
         icon: "error",
-        title: "Gagal download!",
+        title: `${error.message}`,
         timer: 2000,
         showConfirmButton: false,
         position: "center",
@@ -265,6 +299,24 @@ const CreateOffline = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const clearForm = () => {
+    setUserData(null);
+    setSelectedUser("");
+    setForm({
+      name: "",
+      nik: "",
+      telepon: "",
+      email: "",
+      kec: "",
+      desa: "",
+      rt: "",
+      rw: "",
+      alamat: "",
+    });
+    setKecamatan(null);
+    setVillage(null);
   };
 
   return (
@@ -322,7 +374,7 @@ const CreateOffline = () => {
               </SelectContent>
             </Select>
           </div>
-          <div>
+          <div onClick={clearForm} className="cursor-pointer">
             <X className="text-error-700 font-bold" />
           </div>
         </div>
@@ -506,7 +558,7 @@ const CreateOffline = () => {
               <Button
                 onClick={handleCreateUser}
                 className="w-full bg-primary-700 rounded-full hover:bg-primary-800 mt-7"
-                disabled={loading ? true : false}
+                disabled={loading}
               >
                 {loading ? <Loader className="animate-spin" /> : "Submit"}
               </Button>

@@ -260,7 +260,7 @@ const DetailRequestOnline = ({
               </Button>
             </div>
           )}
-          <p className="text-xs">
+          <p className="text-xs mt-5">
             Status permohonan
             {result?.status === 0 ? (
               <span className="bg-secondary-700 px-3 py-1 ml-2 text-neutral-50 rounded-full">
