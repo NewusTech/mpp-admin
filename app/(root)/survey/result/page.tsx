@@ -69,7 +69,11 @@ const SurveyResult = () => {
 
   let instanceId2;
 
-  if (role === "Admin Instansi" || role === "Admin Layanan") {
+  if (
+    role === "Admin Instansi" ||
+    role === "Admin Layanan" ||
+    role === "Admin Verifikasi"
+  ) {
     instanceId2 = instansiId;
   } else {
     instanceId2 = instanceId;
@@ -171,20 +175,22 @@ const SurveyResult = () => {
       <section className="mr-16">
         <div className="flex justify-between mb-8 space-x-3">
           <div className="w-1/2">
-            {role !== "Admin Instansi" && role !== "Admin Layanan" && (
-              <InputComponent
-                typeInput="selectSearch"
-                valueInput={searchInputInstance}
-                onChangeInputSearch={(e) =>
-                  setSearchInputInstance(e.target.value)
-                }
-                items={result}
-                label="Instansi"
-                placeholder="Pilih Instansi"
-                value={instance}
-                onChange={(e: any) => setInstance(e)}
-              />
-            )}
+            {role !== "Admin Instansi" &&
+              role !== "Admin Layanan" &&
+              role !== "Admin Verifikasi" && (
+                <InputComponent
+                  typeInput="selectSearch"
+                  valueInput={searchInputInstance}
+                  onChangeInputSearch={(e) =>
+                    setSearchInputInstance(e.target.value)
+                  }
+                  items={result}
+                  label="Instansi"
+                  placeholder="Pilih Instansi"
+                  value={instance}
+                  onChange={(e: any) => setInstance(e)}
+                />
+              )}
           </div>
           <div className="flex w-5/12 items-center gap-x-2">
             <InputComponent

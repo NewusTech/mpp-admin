@@ -78,7 +78,11 @@ const GuestBook = () => {
 
   let instanceId2;
 
-  if (role === "Admin Instansi") {
+  if (
+    role === "Admin Instansi" ||
+    role === "Admin Layanan" ||
+    role === "Admin Verifikasi"
+  ) {
     instanceId2 = instansiId;
   } else {
     instanceId2 = instanceId;
@@ -160,21 +164,25 @@ const GuestBook = () => {
           className={`flex gap-x-6 ${role === "Admin Instansi" ? "justify-end mb-8" : "justify-between mb-[86px]"}`}
         >
           <div className="w-full">
-            {role !== "Admin Instansi" && role !== "Admin Layanan" && (
-              <InputComponent
-                typeInput="selectSearch"
-                valueInput={searchInputInstance}
-                onChangeInputSearch={(e) =>
-                  setSearchInputInstance(e.target.value)
-                }
-                items={result}
-                label="Instansi"
-                placeholder="Pilih Instansi"
-                value={instance}
-                onChange={(e: any) => setInstance(e)}
-              />
-            )}
-            {role === "Admin Layanan" && (
+            {role !== "Admin Instansi" &&
+              role !== "Admin Layanan" &&
+              role !== "Admin Verifikasi" && (
+                <InputComponent
+                  typeInput="selectSearch"
+                  valueInput={searchInputInstance}
+                  onChangeInputSearch={(e) =>
+                    setSearchInputInstance(e.target.value)
+                  }
+                  items={result}
+                  label="Instansi"
+                  placeholder="Pilih Instansi"
+                  value={instance}
+                  onChange={(e: any) => setInstance(e)}
+                />
+              )}
+            {(role === "Admin Layanan" ||
+              role === "Admin Verifikasi" ||
+              role === "Admin Instansi") && (
               <h1 className="text-3xl font-bold w-10/12">
                 Buku Tamu {instansiName}
               </h1>
@@ -194,8 +202,9 @@ const GuestBook = () => {
             />
           </div>
           {instanceId ||
+          role === "Admin Layanan" ||
           role === "Admin Instansi" ||
-          role === "Admin Layanan" ? (
+          role === "Admin Verifikasi" ? (
             <Button
               disabled={isLoading}
               onClick={handleDownload}

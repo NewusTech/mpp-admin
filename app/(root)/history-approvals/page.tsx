@@ -98,7 +98,7 @@ const HistoryApprovals = () => {
   let instanceId2;
   let serviceId2;
 
-  if (role === "Admin Instansi" || role === "Admin Layanan") {
+  if (role === "Admin Instansi" || role === "Admin Layanan" || role === "Admin Verifikasi") {
     instanceId2 = instansiId;
   } else {
     instanceId2 = instanceId;
@@ -131,20 +131,22 @@ const HistoryApprovals = () => {
       <section className="mr-16">
         <div className="flex justify-between gap-x-5 mb-8">
           <div className="flex w-full gap-x-5">
-            {role !== "Admin Instansi" && role !== "Admin Layanan" && (
-              <InputComponent
-                typeInput="selectSearch"
-                valueInput={searchInputInstance}
-                onChangeInputSearch={(e) =>
-                  setSearchInputInstance(e.target.value)
-                }
-                items={data?.data}
-                label="Instansi"
-                placeholder="Pilih Instansi"
-                value={instance}
-                onChange={(e: any) => setInstance(e)}
-              />
-            )}
+            {role !== "Admin Instansi" &&
+              role !== "Admin Layanan" &&
+              role !== "Admin Verifikasi" && (
+                <InputComponent
+                  typeInput="selectSearch"
+                  valueInput={searchInputInstance}
+                  onChangeInputSearch={(e) =>
+                    setSearchInputInstance(e.target.value)
+                  }
+                  items={data?.data}
+                  label="Instansi"
+                  placeholder="Pilih Instansi"
+                  value={instance}
+                  onChange={(e: any) => setInstance(e)}
+                />
+              )}
             {role !== "Admin Layanan" && (
               <InputComponent
                 typeInput="selectSearch"
