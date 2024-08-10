@@ -53,6 +53,7 @@ import AlertDialogUpdateMasterFlowPermohonan from "@/app/(root)/master/flow-requ
 import AlertDialogCreateMasterFlow from "@/app/(root)/master/flow-mpp/DialogForm";
 import { RichTextDisplay } from "@/components/RichTextDisplay";
 import ModalPermission from "@/components/Dialog/permission";
+import ChangePasswordDialog from "@/components/Dialog/change-password";
 
 function formatDate(dateString: any) {
   const date = new Date(dateString);
@@ -1086,6 +1087,7 @@ export const manageUserColumns: ColumnDef<ManageUser>[] = [
             <Link href={`/manage-user/society/${user.slug}`}>
               <DropdownMenuItem>Edit</DropdownMenuItem>
             </Link>
+            <ChangePasswordDialog slug={user.slug} />
             <ModalDelete endpoint={`alluserinfo/delete/${user.slug}`} />
           </DropdownMenuContent>
         </DropdownMenu>
@@ -1165,11 +1167,15 @@ export const manageAdminColumns: ColumnDef<ManageAdmin>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <Link href={`/manage-user/admin/${user.slug}`}>
+            <Link
+              href={`/manage-user/admin/${user.slug}`}
+              className="hover:bg-slate-400"
+            >
               <DropdownMenuItem className="cursor-pointer w-full">
                 Edit
               </DropdownMenuItem>
             </Link>
+            <ChangePasswordDialog slug={user.slug} />
             <ModalDelete endpoint={`alluserinfo/delete/${user.slug}`} />
           </DropdownMenuContent>
         </DropdownMenu>
