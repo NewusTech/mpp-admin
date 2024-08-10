@@ -291,7 +291,7 @@ const CreateOffline = () => {
     } catch (error: any) {
       Swal.fire({
         icon: "error",
-        title: `${error.message}`,
+        title: "Gagal submit",
         timer: 2000,
         showConfirmButton: false,
         position: "center",

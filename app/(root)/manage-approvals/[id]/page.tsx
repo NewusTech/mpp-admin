@@ -266,19 +266,25 @@ const DetailApproval = ({
               </p>
             </div>
           ))}
-          <h2 className="text-lg font-semibold my-5">
-            Upload Hasil Dokumen Permohonan
-          </h2>
-          <div className="flex gap-x-5 items-center">
-            <AlertDialogUploadFile id={params.id} />
-            <div onClick={handleDownload} className="cursor-pointer">
-              {isLoading ? (
-                <Loader className="animate-spin" />
-              ) : (
-                <p className="underline text-[#3A28FF] text-sm">Unduh Surat</p>
-              )}
-            </div>
-          </div>
+          {permission.includes("Setujui Permohonan") && (
+            <>
+              <h2 className="text-lg font-semibold my-5">
+                Upload Hasil Dokumen Permohonan
+              </h2>
+              <div className="flex gap-x-5 items-center">
+                <AlertDialogUploadFile id={params.id} />
+                <div onClick={handleDownload} className="cursor-pointer">
+                  {isLoading ? (
+                    <Loader className="animate-spin" />
+                  ) : (
+                    <p className="underline text-[#3A28FF] text-sm">
+                      Unduh Surat
+                    </p>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
           <div className="flex justify-between items-center mt-5">
             <p className="text-xs mt-5">
               Status permohonan

@@ -215,3 +215,13 @@ export const ManualBookValidation = z.object({
   file: z.any(),
   video: z.custom<File[]>(),
 });
+
+export const ChangePassword = z
+  .object({
+    password: z.string().min(6, { message: "Password minimal 6" }),
+    confirmPassword: z.string().min(6, { message: "Password minimal 6" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Password tidak cocok",
+    path: ["confirmPassword"],
+  });

@@ -16,6 +16,7 @@ import { formatDate } from "@/lib/utils";
 import { toast } from "sonner";
 import useAudioStore from "@/lib/store/useAudioStore";
 import Swal from "sweetalert2";
+import socket from "@/lib/socket";
 
 interface JwtPayload {
   role?: string;
@@ -112,6 +113,20 @@ const TabQueueService = ({ id }: { id: string }) => {
     fixUrlToday,
     fetcher,
   );
+
+  useEffect(() => {
+    // Menghubungkan socket.io ke event 'newAntrian'
+    socket.on("newAntrian", () => {
+      // Memanggil ulang mutate untuk memperbarui data
+      mutateQueueActive();
+      dashboardToday();
+    });
+
+    // Membersihkan event listener saat komponen unmount
+    return () => {
+      socket.off("newAntrian");
+    };
+  }, [mutateQueueActive, dashboardToday]);
 
   useEffect(() => {
     if (audioUrl) {
