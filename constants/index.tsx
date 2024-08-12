@@ -1470,7 +1470,10 @@ export const manualBookColumns: ColumnDef<ManualBook>[] = [
       const documents = row.original;
       return (
         <Link href={documents?.dokumen} target="_blank" className="underline">
-          Manual Book {documents?.role_name}
+          Manual Book{" "}
+          {documents?.role_name === "Admin Instansi"
+            ? "Kepala Dinas"
+            : documents?.role_name}
         </Link>
       );
     },
