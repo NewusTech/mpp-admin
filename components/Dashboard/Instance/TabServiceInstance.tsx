@@ -140,8 +140,6 @@ const TabServiceInstance = () => {
   const resultTop3Week = stats?.data.totalLayananPerDay;
   const resultTop3Week2 = stats?.data.totalLayanan7Days;
 
-  console.log(resultTop3Week);
-
   const handleClick = (value: any) => {
     setActiveButton(value);
   };
@@ -189,6 +187,13 @@ const TabServiceInstance = () => {
     }
   };
 
+  const totalLayananformnumCount = resultTop3Month?.reduce(
+    (total: any, item: any) => {
+      return total + item.LayananformnumCount;
+    },
+    0,
+  );
+
   return (
     <section className="space-y-4 mt-8">
       <div className="flex w-full gap-x-5">
@@ -196,6 +201,9 @@ const TabServiceInstance = () => {
           <div className="gap-x-2 mb-8 text-neutral-800 flex justify-center">
             <h3 className="text-primary-800 font-medium">TOP 3 Layanan</h3>
             <p>{selectedMonthLabel}</p>
+          </div>
+          <div className="font-semibold text-2xl flex items-center justify-center mt-32">
+            <p>{totalLayananformnumCount}</p>
           </div>
           <DonutChart data={resultTop3Month} />
           <div className="flex gap-x-5 justify-around mt-4">

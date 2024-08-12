@@ -27,6 +27,13 @@ const AreaChart = ({ data }: DonutChartProps) => {
     dataLabels: {
       enabled: false,
     },
+    plotOptions: {
+      pie: {
+        donut: {
+          size: "85%", // Mengatur ukuran lingkaran donut
+        },
+      },
+    },
     colors: ["#1D3A6C", "#3568C0", "#FF9742"],
   };
 
@@ -35,6 +42,7 @@ const AreaChart = ({ data }: DonutChartProps) => {
   return (
     <>
       <ApexChart
+        className="-mt-32"
         type="donut"
         options={option}
         series={series}

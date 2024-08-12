@@ -26,12 +26,18 @@ import { z } from "zod";
 import { ManualBookValidation } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import FileUploader from "@/components/FileUploader";
 import Swal from "sweetalert2";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetch";
 
-export default function AlertDialogCreateMasterManualBook() {
+export default function AlertDialogCreateMasterManualBook({
+  id,
+}: {
+  id: number;
+}) {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -49,17 +55,31 @@ export default function AlertDialogCreateMasterManualBook() {
 
   const fileRef = form.register("file");
 
+  const { data } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/manualbook/get/${id}`,
+    fetcher,
+  );
+
+  const result = data?.data;
+
+  console.log(result);
+
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof ManualBookValidation>) {
     setIsLoading(true);
     const formData = new FormData();
 
-    formData.append("manualbook", values.file[0]);
-    formData.append("video", values.video[0]);
+    if (values.file && values.file.length > 0) {
+      formData.append("manualbook", values.file[0]);
+    }
+
+    if (values.video && values.video.length > 0) {
+      formData.append("video", values.video[0]);
+    }
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/manualbook/update`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/manualbook/update/${id}`,
         {
           method: "PUT",
           headers: {
@@ -98,12 +118,12 @@ export default function AlertDialogCreateMasterManualBook() {
   return (
     <AlertDialog open={addModalOpen}>
       <AlertDialogTrigger asChild>
-        <Button
+        <div
           onClick={handleOpenAddModal}
-          className="bg-primary-700 hover:bg-primary-800 w-[140px] rounded-full"
+          className="hover:bg-slate-100 px-2 py-1 cursor-pointer w-full rounded"
         >
-          Manual Book
-        </Button>
+          <p className="text-sm">Edit</p>
+        </div>
       </AlertDialogTrigger>
       <AlertDialogContent className="p-0 border-0 overflow-auto">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
@@ -138,7 +158,11 @@ export default function AlertDialogCreateMasterManualBook() {
                   <FormItem className="space-y-3">
                     <FormLabel>Video</FormLabel>
                     <FormControl>
-                      <FileUploader fileChange={field.onChange} type="video" />
+                      <FileUploader
+                        fileChange={field.onChange}
+                        type="video"
+                        mediaUrl={result?.video}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -154,7 +178,7 @@ export default function AlertDialogCreateMasterManualBook() {
                 <AlertDialogAction
                   type="submit"
                   className="bg-primary-700 hover:bg-primary-800 rounded-full"
-                  disabled={isLoading ? true : false}
+                  disabled={isLoading}
                 >
                   {isLoading ? <Loader className="animate-spin" /> : "Tambah"}
                 </AlertDialogAction>
