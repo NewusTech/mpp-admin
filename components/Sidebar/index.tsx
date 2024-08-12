@@ -214,6 +214,13 @@ const Sidebar = () => {
             />
           )}
           <Nav
+            route="/manual-book"
+            path="/manual-book"
+            icons="/icons/pdf.svg"
+            iconsActive="/icons/pdf-active.svg"
+            title="Manual Book"
+          />
+          <Nav
             route="/complaint"
             path="/complaint"
             icons="/icons/send.svg"

@@ -144,6 +144,7 @@ export type ManualBook = {
   id: number;
   dokumen: string;
   video: string;
+  role_name: string;
 };
 
 export type Video = {

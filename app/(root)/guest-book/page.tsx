@@ -161,7 +161,7 @@ const GuestBook = () => {
     >
       <section className="mr-16">
         <div
-          className={`flex gap-x-6 ${role === "Admin Instansi" ? "justify-end mb-8" : "justify-between mb-[86px]"}`}
+          className={`flex gap-x-6 ${role === "Admin Instansi" || role === "Admin Layanan" || role === "Admin Verifikasi" ? "justify-end mb-24" : "justify-between mb-[86px]"}`}
         >
           <div className="w-full">
             {role !== "Admin Instansi" &&

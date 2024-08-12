@@ -72,7 +72,16 @@ export default function ChangePasswordDialog({ slug }: any) {
       );
 
       const data = await response.json();
-      console.log(data);
+      if (!response.ok) {
+        Swal.fire({
+          icon: "error",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
+      }
+
       if (response.ok) {
         Swal.fire({
           icon: "success",

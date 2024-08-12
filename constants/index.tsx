@@ -54,6 +54,7 @@ import AlertDialogCreateMasterFlow from "@/app/(root)/master/flow-mpp/DialogForm
 import { RichTextDisplay } from "@/components/RichTextDisplay";
 import ModalPermission from "@/components/Dialog/permission";
 import ChangePasswordDialog from "@/components/Dialog/change-password";
+import AlertDialogCreateMasterManualBook from "@/app/(root)/master/manual-book/DialogForm";
 
 function formatDate(dateString: any) {
   const date = new Date(dateString);
@@ -1466,10 +1467,10 @@ export const manualBookColumns: ColumnDef<ManualBook>[] = [
     accessorKey: "dokumen",
     header: "Dokumen",
     cell: ({ row }) => {
-      const dokumen = row.original.dokumen;
+      const documents = row.original;
       return (
-        <Link href={dokumen} target="_blank" className="underline">
-          Manual Book
+        <Link href={documents?.dokumen} target="_blank" className="underline">
+          Manual Book {documents?.role_name}
         </Link>
       );
     },
@@ -1488,6 +1489,28 @@ export const manualBookColumns: ColumnDef<ManualBook>[] = [
             className="w-1/2 h-20"
           />
         </div>
+      );
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const user = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <AlertDialogCreateMasterManualBook id={user?.id} />
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
   },
