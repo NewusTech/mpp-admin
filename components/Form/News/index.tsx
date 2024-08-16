@@ -25,12 +25,16 @@ import useNewsStore from "@/lib/store/useNewsStore";
 import MyEditor from "@/components/Editor";
 import { Label } from "@/components/ui/label";
 import Swal from "sweetalert2";
+import { jwtDecode } from "jwt-decode";
 
 interface ArticleBySlug {
   title: string;
   desc: string;
   image: string;
   slug: string;
+}
+interface JwtPayload {
+  role?: string;
 }
 
 const News = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
@@ -39,10 +43,32 @@ const News = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
   const editor1Ref = useRef<{ getContent: () => string }>(null);
   const [image, setImage] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [role, setRole] = useState<string | null>(null);
+
   const titleRef = useRef<HTMLInputElement>(null); // Ref untuk title input
   const handleFileChange = (files: File[]) => {
     setImage(files[0]);
   };
+
+  useEffect(() => {
+    // Ambil token dari cookies
+    const token = Cookies.get("token");
+
+    // Periksa apakah token ada dan decode token jika ada
+    if (token) {
+      try {
+        // Decode token untuk mendapatkan payload
+        const decoded = jwtDecode<JwtPayload>(token);
+
+        // Pastikan token terdecode dan mengandung informasi role dan instansi_id
+        if (decoded && decoded.role) {
+          setRole(decoded.role);
+        }
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, []);
 
   // 2. Define a submit handler.
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -53,7 +79,14 @@ const News = ({ data, type }: { type?: string; data?: ArticleBySlug }) => {
     const title: any = titleRef.current?.value;
 
     const formData = new FormData();
-    formData.append("instansi_id", selectedId.toString());
+    if (
+      role === "Admin Instansi" ||
+      role === "Admin Layanan" ||
+      role === "Admin Verifikasi" ||
+      selectedId !== 0
+    ) {
+      formData.append("instansi_id", selectedId.toString());
+    }
     formData.append("title", title);
     formData.append("desc", content1);
     if (image) {
