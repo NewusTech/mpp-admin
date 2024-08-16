@@ -42,18 +42,18 @@ const buttons: any = [
 ];
 
 const months = [
-  { label: "Januari", value: 1 },
-  { label: "Februari", value: 2 },
-  { label: "Maret", value: 3 },
-  { label: "April", value: 4 },
-  { label: "Mei", value: 5 },
-  { label: "Juni", value: 6 },
-  { label: "Juli", value: 7 },
-  { label: "Agustus", value: 8 },
-  { label: "September", value: 9 },
-  { label: "Oktober", value: 10 },
-  { label: "November", value: 11 },
-  { label: "Desember", value: 12 },
+  { label: "Januari", value: 0 },
+  { label: "Februari", value: 1 },
+  { label: "Maret", value: 2 },
+  { label: "April", value: 3 },
+  { label: "Mei", value: 4 },
+  { label: "Juni", value: 5 },
+  { label: "Juli", value: 6 },
+  { label: "Agustus", value: 7 },
+  { label: "September", value: 8 },
+  { label: "Oktober", value: 9 },
+  { label: "November", value: 10 },
+  { label: "Desember", value: 11 },
 ];
 
 const TabServiceInstance = () => {

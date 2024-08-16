@@ -70,10 +70,11 @@ export default function AlertDialogCreateVisionMission() {
       );
 
       const result = await response.json();
+      console.log(result);
       if (response.ok) {
         Swal.fire({
           icon: "success",
-          title: `${data.message}`,
+          title: `${result.message}`,
           timer: 2000,
           showConfirmButton: false,
           position: "center",

@@ -126,9 +126,6 @@ const CreateOffline = () => {
   const resultForm: FormData[] = data?.data?.Layananforms || [];
   const resultDocs: DocData[] = inputFile?.data?.Layananforms || [];
 
-  console.log(resultForm);
-  console.log(resultDocs);
-
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       setSearchTerm(searchInput);
@@ -151,6 +148,7 @@ const CreateOffline = () => {
     const formData = new FormData();
 
     formData.append("userId", selectedUser);
+    formData.append("isonline", "false");
     // Menambahkan datainput dari formValues
     Object.entries(formValues).forEach(([key, value], index) => {
       if (
