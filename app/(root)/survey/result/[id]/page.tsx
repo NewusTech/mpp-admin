@@ -119,11 +119,11 @@ const SurveyPrint = ({
         {/*  <div className="w-1/2">*/}
         {/*    <InputComponent typeInput="select" />*/}
         {/*  </div>*/}
-        {/*  <Link href="/survey/result/[slug]">*/}
+        {/*  <Link href="/survey/result/[id]">*/}
         {/*    <Button className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[140px] rounded-full">*/}
         {/*      <Image*/}
         {/*        src="/icons/printer.svg"*/}
-        {/*        alt="[slug]"*/}
+        {/*        alt="[id]"*/}
         {/*        width={24}*/}
         {/*        height={24}*/}
         {/*      />*/}

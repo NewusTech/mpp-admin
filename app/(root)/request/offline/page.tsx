@@ -103,7 +103,11 @@ const RequestOffline = () => {
   let instanceId2;
   let serviceId2;
 
-  if (role === "Admin Instansi" || role === "Admin Layanan" || role === "Admin Verifikasi") {
+  if (
+    role === "Admin Instansi" ||
+    role === "Admin Layanan" ||
+    role === "Admin Verifikasi"
+  ) {
     instanceId2 = instansiId;
   } else {
     instanceId2 = instanceId;
@@ -296,7 +300,10 @@ const RequestOffline = () => {
               )}
             </div>
           )}
-          {instance || role === "Admin Instansi" || role === "Admin Layanan" ? (
+          {instance ||
+          role === "Admin Instansi" ||
+          role === "Admin Layanan" ||
+          role === "Admin Verifikasi" ? (
             <Button
               disabled={isLoading}
               onClick={handleDownload}

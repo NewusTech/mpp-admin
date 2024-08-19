@@ -191,7 +191,7 @@ const UpdateManageRequirementPageStep2 = () => {
       if (response.ok) {
         Swal.fire({
           icon: "success",
-          title: `${responseData}`,
+          title: `${responseData.message}`,
           timer: 2000,
           showConfirmButton: false,
           position: "center",

@@ -112,7 +112,7 @@ export default function ComplaintPage() {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/bukutamu/get/pdf?instansi_id=${instanceId}&start_date=${startDateFormatted}&end_date=${endDateFormatted}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/pengaduan/getpdf?instansi_id=${instanceId}&start_date=${startDateFormatted}&end_date=${endDateFormatted}`,
         {
           method: "GET",
           headers: {
@@ -139,9 +139,8 @@ export default function ComplaintPage() {
     }
   };
 
-  const result = complaint?.data;
-
-  console.log(result);
+  const result = data?.data;
+  const resultComplaint = complaint?.data;
 
   return (
     <ProtectedRoute
@@ -230,10 +229,10 @@ export default function ComplaintPage() {
             )}
           </div>
         </div>
-        {result && (
+        {resultComplaint && (
           <DataTables
             columns={complaintColumns}
-            data={result}
+            data={resultComplaint}
             filterBy="judul"
           />
         )}
