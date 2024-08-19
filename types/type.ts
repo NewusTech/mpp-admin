@@ -47,6 +47,14 @@ export type DataApps = {
   image: string;
 };
 
+export type DataAppsInstance = {
+  id: number;
+  link: string;
+  name: string;
+  slug: string;
+  file: string;
+};
+
 export type DataServices = {
   id: number;
   no: number;
@@ -101,6 +109,7 @@ export type ManageUser = {
 
 export type ManageAdmin = {
   id: number;
+  user_id: number;
   name: string;
   slug: string;
   Instansi: string;
@@ -167,6 +176,12 @@ export type VisionMission = {
   id: number;
   visi: any;
   misi: any;
+};
+
+export type ServiceFile = {
+  id: number;
+  name: any;
+  file: any;
 };
 
 export type TermAndCondition = {

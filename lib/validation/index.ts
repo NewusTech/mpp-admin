@@ -39,6 +39,19 @@ export const AppsValidation = z.object({
   image: z.custom<File[]>(),
 });
 
+export const AppsInstanceValidation = z.object({
+  name: z.string({
+    message: "Wajib isi.",
+  }),
+  description: z.string().min(25, {
+    message: "Deskripsi setidaknya harus 25 karakter.",
+  }),
+  link: z.string({
+    message: "Deskripsi setidaknya harus 25 karakter.",
+  }),
+  file: z.custom<File[]>(),
+});
+
 export const InstanceValidation = z.object({
   name: z.string({
     message: "Nama dinas wajib diisi",
@@ -214,6 +227,11 @@ export const ContactValidation = z.object({
 export const ManualBookValidation = z.object({
   file: z.any(),
   video: z.custom<File[]>(),
+});
+
+export const ServiceFileValidation = z.object({
+  file: z.any(),
+  name: z.string({ message: "Wajib diisi" }),
 });
 
 export const ChangePassword = z

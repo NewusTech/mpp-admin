@@ -15,6 +15,7 @@ import {
   Complaint,
   Contact,
   DataApps,
+  DataAppsInstance,
   DataInstance,
   DataServices,
   DetailSurveyResult,
@@ -33,6 +34,7 @@ import {
   Report,
   RequestOffline,
   RequestOnline,
+  ServiceFile,
   Slider,
   SurveyQuestion,
   SurveyResult,
@@ -55,6 +57,7 @@ import { RichTextDisplay } from "@/components/RichTextDisplay";
 import ModalPermission from "@/components/Dialog/permission";
 import ChangePasswordDialog from "@/components/Dialog/change-password";
 import AlertDialogCreateMasterManualBook from "@/app/(root)/master/manual-book/DialogForm";
+import AlertDialogUpdateLayananFile from "@/app/(root)/master/master-service/file/[id]/DialogUpdate";
 
 function formatDate(dateString: any) {
   const date = new Date(dateString);
@@ -744,9 +747,76 @@ export const dataAppsColumns: ColumnDef<DataApps>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <Link href={`/master/master-apps/${instance.slug}`}>
-              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">
+                Edit
+              </DropdownMenuItem>
             </Link>
             <ModalDelete endpoint={`aplikasietc/delete/${instance.slug}`} />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
+
+export const dataAppsInstanceColumns: ColumnDef<DataAppsInstance>[] = [
+  {
+    accessorKey: "name",
+    header: "Nama",
+  },
+  {
+    accessorKey: "file",
+    header: "Logo",
+    cell: ({ row }) => {
+      const apps = row.original;
+
+      return (
+        <div>
+          <Image src={apps.file} alt={apps.name} width={100} height={100} />
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "link",
+    header: "Link",
+    cell: ({ row }) => {
+      const apps = row.original;
+      return (
+        <div>
+          <a
+            href={apps.link}
+            className="underline hover:text-primary-700"
+            target="_blank"
+          >
+            {apps.name}
+          </a>
+        </div>
+      );
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const instance = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <Link href={`/master/master-apps-instance/${instance.id}`}>
+              <DropdownMenuItem className="cursor-pointer">
+                Edit
+              </DropdownMenuItem>
+            </Link>
+            <ModalDelete endpoint={`apkinstansi/delete/${instance.id}`} />
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -828,7 +898,14 @@ export const dataServiceColumns: ColumnDef<DataServices>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <Link href={`/master/master-service/${service.id}`}>
-              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">
+                Edit
+              </DropdownMenuItem>
+            </Link>
+            <Link href={`/master/master-service/file/${service.id}`}>
+              <DropdownMenuItem className="cursor-pointer">
+                File
+              </DropdownMenuItem>
             </Link>
             <ModalDelete endpoint={`layanan/delete/${service.id}`} />
           </DropdownMenuContent>
@@ -1086,7 +1163,9 @@ export const manageUserColumns: ColumnDef<ManageUser>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <Link href={`/manage-user/society/${user.slug}`}>
-              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">
+                Edit
+              </DropdownMenuItem>
             </Link>
             <ChangePasswordDialog slug={user.slug} />
             <ModalDelete endpoint={`alluserinfo/delete/${user.slug}`} />
@@ -1215,7 +1294,7 @@ export const managePermissionColumns: ColumnDef<ManageAdmin>[] = [
     cell: ({ row }) => {
       const user = row.original;
 
-      return <ModalPermission id={user?.id} />;
+      return <ModalPermission id={user.user_id} />;
     },
   },
 ];
@@ -1563,6 +1642,10 @@ export const contactColumns: ColumnDef<Contact>[] = [
   {
     accessorKey: "desc",
     header: "Deskripsi",
+    cell: ({ row }) => {
+      const desc = row.original.desc;
+      return <RichTextDisplay content={desc} />;
+    },
   },
   {
     accessorKey: "telp",
@@ -1626,6 +1709,48 @@ export const VisionMissionColumns: ColumnDef<VisionMission>[] = [
     cell: ({ row }) => {
       const misi = row.original.misi;
       return <RichTextDisplay content={misi} />;
+    },
+  },
+];
+
+export const layananFileColumns: ColumnDef<ServiceFile>[] = [
+  {
+    accessorKey: "name",
+    header: "Nama",
+  },
+  {
+    accessorKey: "file",
+    header: "File",
+    cell: ({ row }) => {
+      const misi = row.original.file;
+      return (
+        <Link href={misi} target="_blank" className="underline">
+          <p>Klik untuk melihat</p>
+        </Link>
+      );
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const user = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <AlertDialogUpdateLayananFile id={user?.id} />
+            <ModalDelete endpoint={`layananfile/delete/${user.id}`} />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
     },
   },
 ];

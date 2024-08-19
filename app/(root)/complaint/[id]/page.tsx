@@ -105,6 +105,8 @@ export default function DetailComplaint({
     }
   };
 
+  console.log(result);
+
   return (
     <ProtectedRoute
       roles={[
@@ -135,7 +137,11 @@ export default function DetailComplaint({
             <Instance title="Aduan" name={result?.aduan} />
             <div className="space-y-3 my-3">
               <h3 className="font-medium">Foto</h3>
-              <PopupImage label="image" value={result?.image} />
+              {result?.image ? (
+                <PopupImage label="image" value={result?.image} />
+              ) : (
+                <p>Tidak ada</p>
+              )}
             </div>
           </div>
           <div className="mt-8 space-y-2">
@@ -150,7 +156,7 @@ export default function DetailComplaint({
               <Button
                 onClick={handleSubmit}
                 className="bg-primary-700 mt-4 hover:bg-primary-800 rounded-full px-8"
-                disabled={loading ? true : false}
+                disabled={loading}
               >
                 {loading ? <Loader className="animate-spin" /> : "Kirim"}
               </Button>

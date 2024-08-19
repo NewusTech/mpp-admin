@@ -300,7 +300,9 @@ const Sidebar = () => {
                         <li
                           className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/master-apps") || pathname.startsWith("/master/master-apps") ? "text-primary-700" : ""}`}
                         >
-                          <Link href="/master/master-apps">Aplikasi Dinas</Link>
+                          <Link href="/master/master-apps">
+                            Aplikasi Pendukung
+                          </Link>
                         </li>
                         <li
                           className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/contact") || pathname.startsWith("/master/contact") ? "text-primary-700" : ""}`}
@@ -321,6 +323,13 @@ const Sidebar = () => {
                           className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/master-service") || pathname.startsWith("/master/master-service") ? "text-primary-700" : ""}`}
                         >
                           <Link href="/master/master-service">Layanan</Link>
+                        </li>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/master-apps-instance") || pathname.startsWith("/master/master-apps-instance") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/master-apps-instance">
+                            Aplikasi Instansi
+                          </Link>
                         </li>
                       </>
                     )}
