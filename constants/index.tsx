@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  Announcement,
   Complaint,
   Contact,
   DataApps,
@@ -24,6 +25,7 @@ import {
   FlowBooking,
   GuestBook,
   HistoryQueue,
+  InformationInstance,
   Logo,
   Maklumat,
   ManageAdmin,
@@ -861,9 +863,48 @@ export const dataInstanceColumns: ColumnDef<DataInstance>[] = [
                 Edit
               </DropdownMenuItem>
             </Link>
+            <Link href={`/master/master-instance/information/${instance.id}`}>
+              <DropdownMenuItem className="cursor-pointer">
+                Informasi
+              </DropdownMenuItem>
+            </Link>
             <ModalDelete endpoint={`instansi/delete/${instance.slug}`} />
           </DropdownMenuContent>
         </DropdownMenu>
+      );
+    },
+  },
+];
+
+export const informationInstanceColumns: ColumnDef<InformationInstance>[] = [
+  {
+    accessorKey: "no",
+    header: "No",
+    cell: ({ row }) => {
+      return <p>{row.index + 1}</p>;
+    },
+  },
+  {
+    accessorKey: "title",
+    header: "Judul",
+  },
+  {
+    accessorKey: "content",
+    header: "Konten",
+    cell: ({ row }) => {
+      const content = row.original.content;
+      return <RichTextDisplay content={content} />;
+    },
+  },
+  {
+    accessorKey: "image",
+    header: "Gambar",
+    cell: ({ row }) => {
+      const image = row.original.image;
+      return (
+        <div>
+          <Image src={image} alt="image" width={100} height={100} />
+        </div>
       );
     },
   },
@@ -1715,6 +1756,14 @@ export const VisionMissionColumns: ColumnDef<VisionMission>[] = [
       return <RichTextDisplay content={misi} />;
     },
   },
+  {
+    accessorKey: "motto",
+    header: "Motto",
+    cell: ({ row }) => {
+      const motto = row.original.motto;
+      return <RichTextDisplay content={motto} />;
+    },
+  },
 ];
 
 export const layananFileColumns: ColumnDef<ServiceFile>[] = [
@@ -1802,6 +1851,21 @@ export const logoColumns: ColumnDef<Logo>[] = [
       return (
         <div>
           <Image src={logo} alt="image" width={50} height={50} />
+        </div>
+      );
+    },
+  },
+];
+
+export const announcementColumns: ColumnDef<Announcement>[] = [
+  {
+    accessorKey: "file",
+    header: "Gambar",
+    cell: ({ row }) => {
+      const logo = row.original.file;
+      return (
+        <div>
+          <Image src={logo} alt="image" width={100} height={100} />
         </div>
       );
     },

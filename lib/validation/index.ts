@@ -79,6 +79,7 @@ export const InstanceValidation = z.object({
     .string()
     .min(2, { message: "Kode setidaknya harus 3 karakter." })
     .max(3, { message: "Kode maksimal 3 karakter" }),
+  link: z.string().optional(),
 });
 
 export const FAQValidation = z.object({
@@ -246,4 +247,13 @@ export const ChangePassword = z
 
 export const LogoMPPValidation = z.object({
   logo_mpp: z.custom<File[]>(),
+});
+
+export const AnnouncementValidation = z.object({
+  file: z.custom<File[]>(),
+});
+
+export const InformationInstance = z.object({
+  image: z.custom<File[]>(),
+  title: z.string({ message: "Wajib diisi" }),
 });

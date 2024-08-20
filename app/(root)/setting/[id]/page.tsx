@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import MyEditor from "@/components/Editor";
 import { Button } from "@/components/ui/button";
 import Cookies from "js-cookie";
@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Loader } from "lucide-react";
 import Swal from "sweetalert2";
+import { Input } from "@/components/ui/input";
 
 const CreateFormat = ({
   params,
@@ -26,15 +27,24 @@ const CreateFormat = ({
     fetcher,
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [pj, setPj] = useState("");
+  const [nipPj, setNipPj] = useState("");
   const router = useRouter();
 
   const result = data?.data?.Layanansurat;
   const resultPj = data?.data?.Instansi;
 
+  useEffect(() => {
+    if (resultPj) {
+      setPj(resultPj.pj);
+      setNipPj(resultPj.nip_pj);
+    }
+  }, [resultPj]);
+
+  console.log(resultPj);
+
   const editor1Ref = useRef<{ getContent: () => string }>(null);
   const editor2Ref = useRef<{ getContent: () => string }>(null);
-  const editor3Ref = useRef<{ getContent: () => string }>(null);
-  const editor4Ref = useRef<{ getContent: () => string }>(null);
   const editor5Ref = useRef<{ getContent: () => string }>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -43,15 +53,13 @@ const CreateFormat = ({
 
     const content1 = editor1Ref.current?.getContent();
     const content2 = editor2Ref.current?.getContent();
-    const content3 = editor3Ref.current?.getContent();
-    const content4 = editor4Ref.current?.getContent();
     const content5 = editor5Ref.current?.getContent();
 
     const payload = {
       header: content1,
       body: content2,
-      instansi_pj: content3,
-      nip_pj: content4,
+      instansi_pj: pj,
+      nip_pj: nipPj,
       footer: content5,
     };
 
@@ -132,18 +140,26 @@ const CreateFormat = ({
           </div>
           <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
             <label htmlFor="editor3">Penanggung Jawab</label>
-            <MyEditor
-              ref={editor3Ref}
-              name="editor3"
-              initialValue={resultPj?.pj || "<p>Ketik disni</p>"}
+            <Input
+              type="text"
+              className="rounded-full"
+              placeholder="Masukkan penanggung jawab"
+              value={pj}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setPj(e.target.value)
+              }
             />
           </div>
           <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
             <label htmlFor="editor4">NIP Penanggung Jawab</label>
-            <MyEditor
-              ref={editor4Ref}
-              name="editor4"
-              initialValue={resultPj?.nip_pj || "<p>Ketik disni</p>"}
+            <Input
+              type="text"
+              className="rounded-full"
+              placeholder="Masukkan nik penanggung jawab"
+              value={nipPj}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setNipPj(e.target.value)
+              }
             />
           </div>
           <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">

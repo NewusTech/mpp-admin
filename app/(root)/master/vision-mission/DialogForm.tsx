@@ -43,6 +43,7 @@ export default function AlertDialogCreateVisionMission() {
 
   const editor1Ref = useRef<{ getContent: () => string }>(null);
   const editor2Ref = useRef<{ getContent: () => string }>(null);
+  const editor3Ref = useRef<{ getContent: () => string }>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     setIsLoading(true);
@@ -50,10 +51,12 @@ export default function AlertDialogCreateVisionMission() {
 
     const content1 = editor1Ref.current?.getContent();
     const content2 = editor2Ref.current?.getContent();
+    const content3 = editor3Ref.current?.getContent();
 
     const payload = {
       visi: content1,
       misi: content2,
+      motto: content3,
     };
 
     try {
@@ -126,6 +129,14 @@ export default function AlertDialogCreateVisionMission() {
               ref={editor2Ref}
               name="editor2"
               initialValue={result?.misi || "<p>Ketik disni</p>"}
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="editor3">Motto</label>
+            <MyEditor
+              ref={editor3Ref}
+              name="editor3"
+              initialValue={result?.motto || "<p>Ketik disni</p>"}
             />
           </div>
           <AlertDialogFooter className="p-6">
