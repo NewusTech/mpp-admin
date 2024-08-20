@@ -39,12 +39,11 @@ export default function AlertDialogCreateMaklumat() {
 
   const editor1Ref = useRef<{ getContent: () => string }>(null);
 
-  const content1 = editor1Ref.current?.getContent();
-
   const handleSubmit = async (e: React.FormEvent) => {
     setIsLoading(true);
     e.preventDefault();
 
+    const content1 = editor1Ref.current?.getContent();
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/user/maklumat/update`,

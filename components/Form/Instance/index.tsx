@@ -56,6 +56,7 @@ const Instance = ({
         open: data.jam_buka,
         closed: data.jam_tutup,
         code: data.code,
+        link: data.linkmaps,
       });
     }
   }, [data]);
@@ -81,6 +82,9 @@ const Instance = ({
     formData.append("jam_buka", values.open);
     formData.append("jam_tutup", values.closed);
     formData.append("code", values.code);
+    if (values.link) {
+      formData.append("linkmaps", values.link);
+    }
 
     if (type === "create") {
       try {
@@ -208,6 +212,23 @@ const Instance = ({
                     <Input
                       className="rounded-full"
                       placeholder="Masukan penanggung jawab."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="link"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>Link Google Maps</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="rounded-full"
+                      placeholder="Masukan link google maps."
                       {...field}
                     />
                   </FormControl>

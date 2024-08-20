@@ -39,6 +39,14 @@ export type DataInstance = {
   slug: string;
 };
 
+export type InformationInstance = {
+  id: number;
+  no: number;
+  title: string;
+  content: string;
+  image: string;
+};
+
 export type DataApps = {
   id: number;
   link: string;
@@ -176,6 +184,7 @@ export type VisionMission = {
   id: number;
   visi: any;
   misi: any;
+  motto: any;
 };
 
 export type ServiceFile = {
@@ -198,6 +207,11 @@ export type Maklumat = {
 export type Logo = {
   id: number;
   logo_mpp: string;
+};
+
+export type Announcement = {
+  id: number;
+  file: string;
 };
 
 export type SOPMPP = {
