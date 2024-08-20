@@ -293,6 +293,26 @@ const Sidebar = () => {
                           <Link href="/master/flow-booking">Alur Booking</Link>
                         </li>
                         <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/sop-mpp") || pathname.startsWith("/master/sop-mpp") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/sop-mpp">SOP MPP</Link>
+                        </li>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/sop-instance") || pathname.startsWith("/master/sop-instance") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/sop-instance">SOP Instance</Link>
+                        </li>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/maklumat") || pathname.startsWith("/master/maklumat") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/maklumat">Maklumat</Link>
+                        </li>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/logo") || pathname.startsWith("/master/logo") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/logo">Logo</Link>
+                        </li>
+                        <li
                           className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/carousel") || pathname.startsWith("/master/carousel") ? "text-primary-700" : ""}`}
                         >
                           <Link href="/master/carousel">Slider</Link>
@@ -323,6 +343,11 @@ const Sidebar = () => {
                           className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/master-service") || pathname.startsWith("/master/master-service") ? "text-primary-700" : ""}`}
                         >
                           <Link href="/master/master-service">Layanan</Link>
+                        </li>
+                        <li
+                          className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/sop-instance") || pathname.startsWith("/master/sop-instance") ? "text-primary-700" : ""}`}
+                        >
+                          <Link href="/master/sop-instance">SOP Instance</Link>
                         </li>
                         <li
                           className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/master/master-apps-instance") || pathname.startsWith("/master/master-apps-instance") ? "text-primary-700" : ""}`}

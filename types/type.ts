@@ -190,6 +190,21 @@ export type TermAndCondition = {
   privasi_text: string;
 };
 
+export type Maklumat = {
+  id: number;
+  desc: string;
+};
+
+export type Logo = {
+  id: number;
+  logo_mpp: string;
+};
+
+export type SOPMPP = {
+  id: number;
+  file: string;
+};
+
 export type Complaint = {
   id: number;
   createdAt: string;
