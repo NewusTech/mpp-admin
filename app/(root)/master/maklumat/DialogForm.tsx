@@ -11,28 +11,19 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Loader } from "lucide-react";
 import Cookies from "js-cookie";
-import { toast } from "sonner";
 import { useRef, useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import MyEditor from "@/components/Editor";
 import Swal from "sweetalert2";
 
-export default function AlertDialogCreateTermAndCondition() {
+export default function AlertDialogCreateMaklumat() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<any>(null);
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
-  };
-
-  const handleFileChange = (event: any) => {
-    setSelectedFile(event.target.files[0]);
   };
 
   const handleAddModalClose = () => {
@@ -40,34 +31,30 @@ export default function AlertDialogCreateTermAndCondition() {
   };
 
   const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/termcond/get`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/maklumat/get`,
     fetcher,
   );
 
-  const result = data?.data;
+  const result = data?.data?.maklumat;
 
   const editor1Ref = useRef<{ getContent: () => string }>(null);
+
+  const content1 = editor1Ref.current?.getContent();
 
   const handleSubmit = async (e: React.FormEvent) => {
     setIsLoading(true);
     e.preventDefault();
 
-    const content1 = editor1Ref.current?.getContent();
-    const formData = new FormData();
-    if (content1) {
-      formData.append("privasi_text", content1);
-    }
-    formData.append("desc", selectedFile);
-
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/termcond/update`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/maklumat/update`,
         {
           method: "PUT",
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-          body: formData,
+          body: JSON.stringify({ desc: content1 }),
         },
       );
 
@@ -103,30 +90,22 @@ export default function AlertDialogCreateTermAndCondition() {
           onClick={handleOpenAddModal}
           className="bg-primary-700 hover:bg-primary-800 w-[170px] rounded-full"
         >
-          Syarat & Ketentuan
+          Maklumat
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="p-0 border-0 overflow-auto max-w-[60%]">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
-            Syarat & Ketentuan
+            Maklumat
           </AlertDialogTitle>
         </AlertDialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 px-4">
           <div className="space-y-2">
-            <label>Dokumen</label>
-            <Input
-              type="file"
-              className="rounded-full"
-              onChange={handleFileChange}
-            />
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="editor1">Syarat & Ketentuan</label>
+            <label htmlFor="editor1">Maklumat</label>
             <MyEditor
               ref={editor1Ref}
               name="editor1"
-              initialValue={result?.privasi_text || "<p>Ketik disni</p>"}
+              initialValue={result?.desc || "<p>Ketik disni</p>"}
             />
           </div>
           <AlertDialogFooter className="p-6">
@@ -139,7 +118,7 @@ export default function AlertDialogCreateTermAndCondition() {
             <AlertDialogAction
               type="submit"
               className="bg-primary-700 hover:bg-primary-800 rounded-full"
-              disabled={isLoading ? true : false}
+              disabled={isLoading}
             >
               {isLoading ? <Loader className="animate-spin" /> : "Simpan"}
             </AlertDialogAction>

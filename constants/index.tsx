@@ -24,6 +24,8 @@ import {
   FlowBooking,
   GuestBook,
   HistoryQueue,
+  Logo,
+  Maklumat,
   ManageAdmin,
   ManageApprovals,
   ManageRequirements,
@@ -36,6 +38,7 @@ import {
   RequestOnline,
   ServiceFile,
   Slider,
+  SOPMPP,
   SurveyQuestion,
   SurveyResult,
   TermAndCondition,
@@ -58,6 +61,7 @@ import ModalPermission from "@/components/Dialog/permission";
 import ChangePasswordDialog from "@/components/Dialog/change-password";
 import AlertDialogCreateMasterManualBook from "@/app/(root)/master/manual-book/DialogForm";
 import AlertDialogUpdateLayananFile from "@/app/(root)/master/master-service/file/[id]/DialogUpdate";
+import AlertDialogUpdateSOPInstance from "@/app/(root)/master/sop-instance/DialogFormUpdate";
 
 function formatDate(dateString: any) {
   const date = new Date(dateString);
@@ -1774,6 +1778,85 @@ export const termAndConditionColumns: ColumnDef<TermAndCondition>[] = [
     cell: ({ row }) => {
       const desc = row.original.privasi_text;
       return <RichTextDisplay content={desc} />;
+    },
+  },
+];
+
+export const maklumatColumns: ColumnDef<Maklumat>[] = [
+  {
+    accessorKey: "desc",
+    header: "Deskripsi",
+    cell: ({ row }) => {
+      const desc = row.original.desc;
+      return <RichTextDisplay content={desc} />;
+    },
+  },
+];
+
+export const logoColumns: ColumnDef<Logo>[] = [
+  {
+    accessorKey: "logo_mpp",
+    header: "Logo",
+    cell: ({ row }) => {
+      const logo = row.original.logo_mpp;
+      return (
+        <div>
+          <Image src={logo} alt="image" width={50} height={50} />
+        </div>
+      );
+    },
+  },
+];
+
+export const sopMppColumns: ColumnDef<SOPMPP>[] = [
+  {
+    accessorKey: "file",
+    header: "Dokumen",
+    cell: ({ row }) => {
+      const desc = row.original.file;
+      return (
+        <Link href={desc} target="_blank" className="underline">
+          Dokumen
+        </Link>
+      );
+    },
+  },
+];
+
+export const sopInstanceColumns: ColumnDef<SOPMPP>[] = [
+  {
+    accessorKey: "file",
+    header: "Dokumen",
+    cell: ({ row }) => {
+      const desc = row.original.file;
+      return (
+        <Link href={desc} target="_blank" className="underline">
+          Dokumen
+        </Link>
+      );
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const user = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <AlertDialogUpdateSOPInstance id={user?.id} />
+            <ModalDelete endpoint={`sopinstansi/delete/${user.id}`} />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
     },
   },
 ];

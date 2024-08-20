@@ -23,7 +23,7 @@ import { fetcher } from "@/lib/fetch";
 import MyEditor from "@/components/Editor";
 import Swal from "sweetalert2";
 
-export default function AlertDialogCreateTermAndCondition() {
+export default function AlertDialogUpdateSOPInstance({ id }: { id: number }) {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<any>(null);
@@ -39,29 +39,17 @@ export default function AlertDialogCreateTermAndCondition() {
     setAddModalOpen(false);
   };
 
-  const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/termcond/get`,
-    fetcher,
-  );
-
-  const result = data?.data;
-
-  const editor1Ref = useRef<{ getContent: () => string }>(null);
-
   const handleSubmit = async (e: React.FormEvent) => {
     setIsLoading(true);
     e.preventDefault();
 
-    const content1 = editor1Ref.current?.getContent();
     const formData = new FormData();
-    if (content1) {
-      formData.append("privasi_text", content1);
-    }
-    formData.append("desc", selectedFile);
+
+    formData.append("file", selectedFile);
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/termcond/update`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/sopinstansi/update/${id}`,
         {
           method: "PUT",
           headers: {
@@ -99,17 +87,17 @@ export default function AlertDialogCreateTermAndCondition() {
   return (
     <AlertDialog open={addModalOpen}>
       <AlertDialogTrigger asChild>
-        <Button
+        <div
           onClick={handleOpenAddModal}
-          className="bg-primary-700 hover:bg-primary-800 w-[170px] rounded-full"
+          className="hover:bg-slate-100 px-2 py-1 cursor-pointer w-full rounded"
         >
-          Syarat & Ketentuan
-        </Button>
+          <p className="text-sm">Edit</p>
+        </div>
       </AlertDialogTrigger>
-      <AlertDialogContent className="p-0 border-0 overflow-auto max-w-[60%]">
+      <AlertDialogContent className="p-0 border-0 overflow-auto">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
-            Syarat & Ketentuan
+            SOP Instansi
           </AlertDialogTitle>
         </AlertDialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 px-4">
@@ -119,14 +107,6 @@ export default function AlertDialogCreateTermAndCondition() {
               type="file"
               className="rounded-full"
               onChange={handleFileChange}
-            />
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="editor1">Syarat & Ketentuan</label>
-            <MyEditor
-              ref={editor1Ref}
-              name="editor1"
-              initialValue={result?.privasi_text || "<p>Ketik disni</p>"}
             />
           </div>
           <AlertDialogFooter className="p-6">
@@ -139,7 +119,7 @@ export default function AlertDialogCreateTermAndCondition() {
             <AlertDialogAction
               type="submit"
               className="bg-primary-700 hover:bg-primary-800 rounded-full"
-              disabled={isLoading ? true : false}
+              disabled={isLoading}
             >
               {isLoading ? <Loader className="animate-spin" /> : "Simpan"}
             </AlertDialogAction>

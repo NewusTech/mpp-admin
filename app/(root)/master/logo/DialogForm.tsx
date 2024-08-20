@@ -11,57 +11,60 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Loader } from "lucide-react";
 import Cookies from "js-cookie";
-import { toast } from "sonner";
 import { useRef, useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import MyEditor from "@/components/Editor";
 import Swal from "sweetalert2";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { LogoMPPValidation } from "@/lib/validation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import FileUploader from "@/components/FileUploader";
 
-export default function AlertDialogCreateTermAndCondition() {
+export default function AlertDialogCreateLogo() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<any>(null);
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
-  };
-
-  const handleFileChange = (event: any) => {
-    setSelectedFile(event.target.files[0]);
   };
 
   const handleAddModalClose = () => {
     setAddModalOpen(false);
   };
 
+  const form = useForm<z.infer<typeof LogoMPPValidation>>({
+    resolver: zodResolver(LogoMPPValidation),
+  });
+
   const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/termcond/get`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/logo/get`,
     fetcher,
   );
 
   const result = data?.data;
 
-  const editor1Ref = useRef<{ getContent: () => string }>(null);
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  async function onSubmit(values: z.infer<typeof LogoMPPValidation>) {
     setIsLoading(true);
-    e.preventDefault();
 
-    const content1 = editor1Ref.current?.getContent();
     const formData = new FormData();
-    if (content1) {
-      formData.append("privasi_text", content1);
+    if (values.logo_mpp && values.logo_mpp.length > 0) {
+      formData.append("logo_mpp", values.logo_mpp[0]);
     }
-    formData.append("desc", selectedFile);
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/termcond/update`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/logo/update`,
         {
           method: "PUT",
           headers: {
@@ -72,6 +75,7 @@ export default function AlertDialogCreateTermAndCondition() {
       );
 
       const result = await response.json();
+      console.log(result);
       if (response.ok) {
         Swal.fire({
           icon: "success",
@@ -94,7 +98,7 @@ export default function AlertDialogCreateTermAndCondition() {
     } finally {
       setIsLoading(false); // Stop loading
     }
-  };
+  }
 
   return (
     <AlertDialog open={addModalOpen}>
@@ -103,48 +107,53 @@ export default function AlertDialogCreateTermAndCondition() {
           onClick={handleOpenAddModal}
           className="bg-primary-700 hover:bg-primary-800 w-[170px] rounded-full"
         >
-          Syarat & Ketentuan
+          Logo
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="p-0 border-0 overflow-auto max-w-[60%]">
         <AlertDialogHeader className="bg-primary-700 px-9 py-6">
           <AlertDialogTitle className="font-normal text-neutral-50 text-2xl">
-            Syarat & Ketentuan
+            Logo
           </AlertDialogTitle>
         </AlertDialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 px-4">
-          <div className="space-y-2">
-            <label>Dokumen</label>
-            <Input
-              type="file"
-              className="rounded-full"
-              onChange={handleFileChange}
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 px-9"
+          >
+            <FormField
+              control={form.control}
+              name="logo_mpp"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Logo MPP</FormLabel>
+                  <FormControl>
+                    <FileUploader
+                      fileChange={field.onChange}
+                      mediaUrl={result?.logo_mpp}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="editor1">Syarat & Ketentuan</label>
-            <MyEditor
-              ref={editor1Ref}
-              name="editor1"
-              initialValue={result?.privasi_text || "<p>Ketik disni</p>"}
-            />
-          </div>
-          <AlertDialogFooter className="p-6">
-            <AlertDialogCancel
-              onClick={handleAddModalClose}
-              className="bg-transparent border border-primary-700 rounded-full hover:bg-primary-700 hover:text-neutral-50 text-primary-700"
-            >
-              Batal
-            </AlertDialogCancel>
-            <AlertDialogAction
-              type="submit"
-              className="bg-primary-700 hover:bg-primary-800 rounded-full"
-              disabled={isLoading ? true : false}
-            >
-              {isLoading ? <Loader className="animate-spin" /> : "Simpan"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </form>
+            <AlertDialogFooter className="p-6">
+              <AlertDialogCancel
+                onClick={handleAddModalClose}
+                className="bg-transparent border border-primary-700 rounded-full hover:bg-primary-700 hover:text-neutral-50 text-primary-700"
+              >
+                Batal
+              </AlertDialogCancel>
+              <AlertDialogAction
+                type="submit"
+                className="bg-primary-700 hover:bg-primary-800 rounded-full"
+                disabled={isLoading}
+              >
+                {isLoading ? <Loader className="animate-spin" /> : "Simpan"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </form>
+        </Form>
       </AlertDialogContent>
     </AlertDialog>
   );

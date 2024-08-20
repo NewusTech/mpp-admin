@@ -243,3 +243,7 @@ export const ChangePassword = z
     message: "Password tidak cocok",
     path: ["confirmPassword"],
   });
+
+export const LogoMPPValidation = z.object({
+  logo_mpp: z.custom<File[]>(),
+});
