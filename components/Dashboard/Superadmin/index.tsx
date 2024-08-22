@@ -59,7 +59,7 @@ export function getDescription(value: number): string {
   return "Nilai tidak valid";
 }
 
-function getBackgroundClass(description: string): string {
+export function getBackgroundClass(description: string): string {
   switch (description) {
     case "Sangat Buruk":
       return "bg-error-700";
@@ -107,7 +107,7 @@ export const ProgressBar = ({
             <p>{value}</p>
           </Link>
         </div>
-        <Progress value={value} />
+        <Progress indicator="bg-primary-700" value={value} />
       </div>
       <div
         className={`text-[10px] ${backgroundClass} h-10 w-20 flex items-center justify-center rounded-lg text-neutral-50 px-2 py-1`}

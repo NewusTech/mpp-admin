@@ -176,7 +176,7 @@ const UserData = ({
             showConfirmButton: false,
             position: "center",
           });
-          router.push("/manage-user");
+          router.push("/manage-user/society");
         }
       } catch (error: any) {
         Swal.fire({
@@ -211,7 +211,7 @@ const UserData = ({
             showConfirmButton: false,
             position: "center",
           });
-          router.push("/manage-user");
+          router.push("/manage-user/society");
         }
       } catch (error: any) {
         Swal.fire({

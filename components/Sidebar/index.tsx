@@ -76,6 +76,8 @@ const Sidebar = () => {
       setIsDropdownOpen("/master");
     } else if (pathname.startsWith("/manage-user")) {
       setIsDropdownOpen("/manage-user");
+    } else if (pathname.startsWith("/report")) {
+      setIsDropdownOpen("/report");
     } else {
       setIsDropdownOpen(null);
     }
@@ -160,13 +162,40 @@ const Sidebar = () => {
             title="Riwayat Permohonan"
           />
           <Nav
-            route={
-              role === "Admin Layanan" ? `/report/${layananId}` : "/report"
-            }
+            route="#"
             path="/report"
             icons="/icons/Report.svg"
             iconsActive="/icons/Report-active.svg"
             title="Laporan"
+            type="dropdown"
+            content={
+              <>
+                <ul className="space-y-4">
+                  {role !== "Admin Layanan" && role !== "Admin Verifikasi" && (
+                    <li
+                      className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/report/request") || pathname.startsWith("/report/request") ? "text-primary-700" : ""}`}
+                    >
+                      <Link
+                        href={
+                          role === "Admin Layanan"
+                            ? `/report/request/${layananId}`
+                            : "/report/request"
+                        }
+                      >
+                        Permohonan
+                      </Link>
+                    </li>
+                  )}
+                  <li
+                    className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/report/performance") || pathname.startsWith("/report/performance") ? "text-primary-700" : ""}`}
+                  >
+                    <Link href="/report/performance">Kinerja</Link>
+                  </li>
+                </ul>
+              </>
+            }
+            isDropdownOpen={isDropdownOpen === "/report"}
+            handleDropdownOpen={() => handleDropdownOpen("/report")}
           />
           <Nav
             route="#"
