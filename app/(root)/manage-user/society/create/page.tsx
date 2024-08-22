@@ -17,7 +17,7 @@ const CreateUserData = () => {
     >
       <section className="mr-16">
         <div className="-ml-14 mb-10">
-          <Link href="/manage-user">
+          <Link href="/manage-user/society">
             <Image
               src="/icons/back-arrow.svg"
               alt="back-arrow"

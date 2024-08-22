@@ -90,7 +90,7 @@ export const UserInfoRight = ({
   return (
     <div className="space-y-3">
       <UserInfoItem label="Pendidikan" value={education || "-"} />
-      <UserInfoItem label="Status Kawain" value={marriedStatus || "-"} />
+      <UserInfoItem label="Status Kawin" value={marriedStatus || "-"} />
       <UserInfoItem label="Golongan Darah" value={bloodType || "-"} />
       <UserInfoItem label="Pekerjaan" value={userInfo?.pekerjaan || "-"} />
       <UserInfoItem
