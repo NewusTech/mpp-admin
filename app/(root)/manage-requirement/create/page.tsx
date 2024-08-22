@@ -32,7 +32,7 @@ const CreateManageRequirementPage = () => {
   const [searchTermInstance, setSearchTermInstance] = useState("");
 
   const { data: services } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get/${selectedId}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get/${selectedId}?search=${searchTermInstance}&limit=6`,
     fetcher,
   );
 
@@ -70,7 +70,7 @@ const CreateManageRequirementPage = () => {
       ]}
     >
       <section className="mr-16">
-        <div className="-ml-14 mb-10">
+        <div className="-ml-14 mb-3">
           <Link href="/manage-requirement">
             <Image
               src="/icons/back-arrow.svg"
