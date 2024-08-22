@@ -56,7 +56,7 @@ export const ProgressBar = ({
         <h4>{name}</h4>
         <p>{value}</p>
       </div>
-      <Progress value={value} />
+      <Progress indicator="bg-primary-700" value={value} />
     </div>
   );
 };
@@ -80,7 +80,7 @@ const DashboardBupati = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher,
+    fetcher
   );
 
   const instanceId = Number(instance);
@@ -92,7 +92,7 @@ const DashboardBupati = () => {
     fetcher,
     {
       revalidateOnFocus: false,
-    },
+    }
   );
 
   useEffect(() => {
