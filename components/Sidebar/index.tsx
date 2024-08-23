@@ -169,30 +169,26 @@ const Sidebar = () => {
             title="Laporan"
             type="dropdown"
             content={
-              <>
-                <ul className="space-y-4">
-                  {role !== "Admin Layanan" && role !== "Admin Verifikasi" && (
-                    <li
-                      className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/report/request") || pathname.startsWith("/report/request") ? "text-primary-700" : ""}`}
-                    >
-                      <Link
-                        href={
-                          role === "Admin Layanan"
-                            ? `/report/request/${layananId}`
-                            : "/report/request"
-                        }
-                      >
-                        Permohonan
-                      </Link>
-                    </li>
-                  )}
-                  <li
-                    className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/report/performance") || pathname.startsWith("/report/performance") ? "text-primary-700" : ""}`}
+              <ul className="space-y-4">
+                <li
+                  className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/report/request") || pathname.startsWith("/report/request") ? "text-primary-700" : ""}`}
+                >
+                  <Link
+                    href={
+                      role === "Admin Layanan"
+                        ? `/report/request/${layananId}`
+                        : "/report/request"
+                    }
                   >
-                    <Link href="/report/performance">Kinerja</Link>
-                  </li>
-                </ul>
-              </>
+                    Permohonan
+                  </Link>
+                </li>
+                <li
+                  className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/report/performance") || pathname.startsWith("/report/performance") ? "text-primary-700" : ""}`}
+                >
+                  <Link href="/report/performance">Kinerja</Link>
+                </li>
+              </ul>
             }
             isDropdownOpen={isDropdownOpen === "/report"}
             handleDropdownOpen={() => handleDropdownOpen("/report")}
