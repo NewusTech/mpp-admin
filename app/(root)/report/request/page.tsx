@@ -58,7 +58,7 @@ const Report = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher,
+    fetcher
   );
 
   const instanceId = Number(instance);
@@ -125,7 +125,7 @@ const Report = () => {
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-        },
+        }
       );
 
       const blob = await response.blob();
@@ -194,7 +194,7 @@ const Report = () => {
                 />
               )}
             <div
-              className={`flex items-center gap-x-2 ${role === "Admin Instansi" || role === "Admin Layanan" ? "w-full justify-between" : "w-8/12 justify-end"}`}
+              className={`flex items-center gap-x-2 ${role === "Admin Instansi" || role === "Admin Layanan" || role === "Admin Verifikasi" ? "w-full justify-between" : "w-8/12 justify-end"}`}
             >
               <div className="flex items-center gap-x-2 w-8/12">
                 <InputComponent
