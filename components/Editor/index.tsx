@@ -56,6 +56,9 @@ const MyEditor: React.ForwardRefRenderFunction<
           "bold italic forecolor | alignleft aligncenter " +
           "alignright alignjustify | bullist numlist outdent indent | " +
           "removeformat | help",
+        // "table tabledelete | tableprops tablerowprops tablecellprops | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol",
+        // table_toolbar:
+        //   "table tabledelete | tableprops tablerowprops tablecellprops | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol",
         content_style:
           "body { font-family:Roboto,Helvetica,Arial,sans-serif; font-size:16px; line-height: 1; }",
       }}
