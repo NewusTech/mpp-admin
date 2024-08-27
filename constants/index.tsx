@@ -64,6 +64,7 @@ import ChangePasswordDialog from "@/components/Dialog/change-password";
 import AlertDialogCreateMasterManualBook from "@/app/(root)/master/manual-book/DialogForm";
 import AlertDialogUpdateLayananFile from "@/app/(root)/master/master-service/file/[id]/DialogUpdate";
 import AlertDialogUpdateSOPInstance from "@/app/(root)/master/sop-instance/DialogFormUpdate";
+import ModalBarcode from "@/components/Dialog/barcode";
 
 function formatDate(dateString: any) {
   const date = new Date(dateString);
@@ -952,6 +953,7 @@ export const dataServiceColumns: ColumnDef<DataServices>[] = [
                 File
               </DropdownMenuItem>
             </Link>
+            <ModalBarcode id={service.id} />
             <ModalDelete endpoint={`layanan/delete/${service.id}`} />
           </DropdownMenuContent>
         </DropdownMenu>
