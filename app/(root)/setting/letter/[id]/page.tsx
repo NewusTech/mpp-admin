@@ -29,23 +29,29 @@ const CreateFormat = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [pj, setPj] = useState("");
   const [nipPj, setNipPj] = useState("");
+  const [perihal, setPerihal] = useState("");
+  const [nomor, setNomor] = useState("");
   const router = useRouter();
 
   const result = data?.data?.Layanansurat;
   const resultPj = data?.data?.Instansi;
 
   useEffect(() => {
-    if (resultPj) {
+    if (resultPj || result) {
       setPj(resultPj.pj);
       setNipPj(resultPj.nip_pj);
+      setNomor(result.nomor);
+      setPerihal(result.perihal);
     }
-  }, [resultPj]);
+  }, [resultPj, result]);
 
-  console.log(resultPj);
+  console.log(result);
 
   const editor1Ref = useRef<{ getContent: () => string }>(null);
   const editor2Ref = useRef<{ getContent: () => string }>(null);
   const editor5Ref = useRef<{ getContent: () => string }>(null);
+  const editor6Ref = useRef<{ getContent: () => string }>(null);
+  const editor7Ref = useRef<{ getContent: () => string }>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     setIsLoading(true);
@@ -54,12 +60,18 @@ const CreateFormat = ({
     const content1 = editor1Ref.current?.getContent();
     const content2 = editor2Ref.current?.getContent();
     const content5 = editor5Ref.current?.getContent();
+    const content6 = editor6Ref.current?.getContent();
+    const content7 = editor7Ref.current?.getContent();
 
     const payload = {
       header: content1,
       body: content2,
       instansi_pj: pj,
       nip_pj: nipPj,
+      nomor: nomor,
+      perihal: perihal,
+      cataan: content6,
+      tembusan: content7,
       footer: content5,
     };
 
@@ -139,7 +151,7 @@ const CreateFormat = ({
             />
           </div>
           <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
-            <label htmlFor="editor3">Penanggung Jawab</label>
+            <label>Penanggung Jawab</label>
             <Input
               type="text"
               className="rounded-full"
@@ -151,7 +163,7 @@ const CreateFormat = ({
             />
           </div>
           <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
-            <label htmlFor="editor4">NIP Penanggung Jawab</label>
+            <label>NIP Penanggung Jawab</label>
             <Input
               type="text"
               className="rounded-full"
@@ -160,6 +172,46 @@ const CreateFormat = ({
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setNipPj(e.target.value)
               }
+            />
+          </div>
+          <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
+            <label>Nomor</label>
+            <Input
+              type="text"
+              className="rounded-full"
+              placeholder="Masukkan nik penanggung jawab"
+              value={nomor}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setNomor(e.target.value)
+              }
+            />
+          </div>
+          <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
+            <label>Perihal</label>
+            <Input
+              type="text"
+              className="rounded-full"
+              placeholder="Masukkan nik penanggung jawab"
+              value={perihal}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setPerihal(e.target.value)
+              }
+            />
+          </div>
+          <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
+            <label htmlFor="editor6">Catatan</label>
+            <MyEditor
+              ref={editor6Ref}
+              name="editor6"
+              initialValue={result?.catatan || "<p>Ketik disni</p>"}
+            />
+          </div>
+          <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
+            <label htmlFor="editor7">Tembusan</label>
+            <MyEditor
+              ref={editor7Ref}
+              name="editor7"
+              initialValue={result?.tembusan || "<p>Ketik disni</p>"}
             />
           </div>
           <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">
