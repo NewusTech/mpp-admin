@@ -136,8 +136,41 @@ const SettingPage = () => {
         {role === "Super Admin" ? (
           <div>
             {instansiId && serviceId2 ? (
-              <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-700 hover:bg-primary-800 duration-300 transition-colors">
-                <Link href={`/setting/${serviceId2}`}>
+              <div className="flex space-x-4">
+                <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-700 hover:bg-primary-800 duration-300 transition-colors">
+                  <Link href={`/setting/letter/${serviceId2}`}>
+                    <div className="w-full h-full space-y-8 flex flex-col items-center justify-center">
+                      <Image
+                        src="/icons/letter.svg"
+                        alt="Surat"
+                        width={100}
+                        height={100}
+                      />
+                      <p className="text-xl font-semibold text-neutral-50">
+                        Format Surat
+                      </p>
+                    </div>
+                  </Link>
+                </div>
+                <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-700 hover:bg-primary-800 duration-300 transition-colors">
+                  <Link href={`/setting/cert/${serviceId2}`}>
+                    <div className="w-full h-full space-y-8 flex flex-col items-center justify-center">
+                      <Image
+                        src="/icons/letter.svg"
+                        alt="Surat"
+                        width={100}
+                        height={100}
+                      />
+                      <p className="text-xl font-semibold text-neutral-50">
+                        Format Surat
+                      </p>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <div className="flex space-x-4">
+                <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-400">
                   <div className="w-full h-full space-y-8 flex flex-col items-center justify-center">
                     <Image
                       src="/icons/letter.svg"
@@ -149,20 +182,19 @@ const SettingPage = () => {
                       Format Surat
                     </p>
                   </div>
-                </Link>
-              </div>
-            ) : (
-              <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-600">
-                <div className="w-full h-full space-y-8 flex flex-col items-center justify-center">
-                  <Image
-                    src="/icons/letter.svg"
-                    alt="Surat"
-                    width={100}
-                    height={100}
-                  />
-                  <p className="text-xl font-semibold text-neutral-50">
-                    Format Surat
-                  </p>
+                </div>
+                <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-400">
+                  <div className="w-full h-full space-y-8 flex flex-col items-center justify-center">
+                    <Image
+                      src="/icons/letter.svg"
+                      alt="Surat"
+                      width={100}
+                      height={100}
+                    />
+                    <p className="text-xl font-semibold text-neutral-50">
+                      Format Dokumen Hasil
+                    </p>
+                  </div>
                 </div>
               </div>
             )}
@@ -170,8 +202,41 @@ const SettingPage = () => {
         ) : (
           <div>
             {serviceId2 ? (
-              <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-700 hover:bg-primary-800 duration-300 transition-colors">
-                <Link href={`/setting/${serviceId2}`}>
+              <div className="flex space-x-4">
+                <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-700 hover:bg-primary-800 duration-300 transition-colors">
+                  <Link href={`/setting/letter/${serviceId2}`}>
+                    <div className="w-full h-full space-y-8 flex flex-col items-center justify-center">
+                      <Image
+                        src="/icons/letter.svg"
+                        alt="Surat"
+                        width={100}
+                        height={100}
+                      />
+                      <p className="text-xl font-semibold text-neutral-50">
+                        Format Surat
+                      </p>
+                    </div>
+                  </Link>
+                </div>
+                <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-700 hover:bg-primary-800 duration-300 transition-colors">
+                  <Link href={`/setting/cert/${serviceId2}`}>
+                    <div className="w-full h-full space-y-8 flex flex-col items-center justify-center">
+                      <Image
+                        src="/icons/letter.svg"
+                        alt="Surat"
+                        width={100}
+                        height={100}
+                      />
+                      <p className="text-xl font-semibold text-neutral-50">
+                        Format Dokumen Hasil
+                      </p>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <div className="flex space-x-4">
+                <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-400">
                   <div className="w-full h-full space-y-8 flex flex-col items-center justify-center">
                     <Image
                       src="/icons/letter.svg"
@@ -183,20 +248,19 @@ const SettingPage = () => {
                       Format Surat
                     </p>
                   </div>
-                </Link>
-              </div>
-            ) : (
-              <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-600">
-                <div className="w-full h-full space-y-8 flex flex-col items-center justify-center">
-                  <Image
-                    src="/icons/letter.svg"
-                    alt="Surat"
-                    width={100}
-                    height={100}
-                  />
-                  <p className="text-xl font-semibold text-neutral-50">
-                    Format Surat
-                  </p>
+                </div>
+                <div className="w-[270px] h-[260px] rounded-[10px] bg-primary-400">
+                  <div className="w-full h-full space-y-8 flex flex-col items-center justify-center">
+                    <Image
+                      src="/icons/letter.svg"
+                      alt="Surat"
+                      width={100}
+                      height={100}
+                    />
+                    <p className="text-xl font-semibold text-neutral-50">
+                      Format Dokumen Hasil
+                    </p>
+                  </div>
                 </div>
               </div>
             )}

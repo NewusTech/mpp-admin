@@ -46,7 +46,7 @@ const MyEditor: React.ForwardRefRenderFunction<
           "fullscreen",
           "insertdatetime",
           "media",
-          "table",
+          "table ",
           "code",
           "help",
           "wordcount",
