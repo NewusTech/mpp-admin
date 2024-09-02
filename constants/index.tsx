@@ -36,6 +36,8 @@ import {
   News,
   QueueTab,
   Report,
+  ReportDoc,
+  ReportProb,
   RequestOffline,
   RequestOnline,
   ServiceFile,
@@ -1370,6 +1372,116 @@ export const reportColumns: ColumnDef<Report>[] = [
   {
     accessorKey: "selesai",
     header: "Selesai",
+  },
+];
+
+export const reportDocColumns: ColumnDef<ReportDoc>[] = [
+  {
+    id: "tanggal",
+    accessorKey: "createdAt",
+    header: "Tanggal",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{formatDate(date)}</p>;
+    },
+  },
+  {
+    id: "hari",
+    accessorKey: "createdAt",
+    header: "Hari",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{getDayName(date)}</p>;
+    },
+  },
+  {
+    id: "jam",
+    accessorKey: "createdAt",
+    header: "Jam",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{getTime(date)}</p>;
+    },
+  },
+  {
+    accessorKey: "name",
+    header: "Nama",
+  },
+  {
+    accessorKey: "nik",
+    header: "NIK",
+  },
+  {
+    accessorKey: "instansi_name",
+    header: "Dinas",
+  },
+  {
+    accessorKey: "layanan_name",
+    header: "Layanan",
+  },
+  {
+    accessorKey: "fileoutput",
+    header: "Surat Rekomendasi",
+    cell: ({ row }) => {
+      const link = row.original.fileoutput;
+      return link ? (
+        <Link href={link} className="underline">
+          Klik disini
+        </Link>
+      ) : (
+        <p>Tidak ada</p>
+      );
+    },
+  },
+  {
+    accessorKey: "filesertif",
+    header: "Dokumen Hasil",
+    cell: ({ row }) => {
+      const link = row.original.filesertif;
+      return link ? (
+        <Link href={link} className="underline">
+          Klik disini
+        </Link>
+      ) : (
+        <p>Tidak ada</p>
+      );
+    },
+  },
+];
+
+export const reportProbColumns: ColumnDef<ReportProb>[] = [
+  {
+    id: "tanggal",
+    accessorKey: "createdAt",
+    header: "Tanggal",
+    cell: ({ row }) => {
+      const date = row.original.createdAt;
+
+      return <p>{formatDate(date)}</p>;
+    },
+  },
+  {
+    accessorKey: "Userinfo.name",
+    header: "Nama",
+  },
+  {
+    accessorKey: "Userinfo.nik",
+    header: "NIK",
+  },
+  {
+    accessorKey: "Layanan.name",
+    header: "Layanan",
+  },
+  {
+    accessorKey: "judul",
+    header: "Judul",
+  },
+  {
+    accessorKey: "aduan",
+    header: "Detail",
   },
 ];
 
