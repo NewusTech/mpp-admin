@@ -188,6 +188,16 @@ const Sidebar = () => {
                 >
                   <Link href="/report/performance">Kinerja</Link>
                 </li>
+                <li
+                  className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/report/document") || pathname.startsWith("/report/document") ? "text-primary-700" : ""}`}
+                >
+                  <Link href="/report/document">Dokumen Terbit</Link>
+                </li>
+                <li
+                  className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/report/problems") || pathname.startsWith("/report/problems") ? "text-primary-700" : ""}`}
+                >
+                  <Link href="/report/problems">Permasahalan</Link>
+                </li>
               </ul>
             }
             isDropdownOpen={isDropdownOpen === "/report"}

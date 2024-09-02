@@ -133,6 +133,29 @@ export type Report = {
   selesai: string;
 };
 
+export type ReportDoc = {
+  id: number;
+  name: string;
+  nik: string;
+  layanan_name: string;
+  instansi_name: string;
+  createdAt: string;
+  fileoutput: string;
+  filesertif: string;
+};
+
+export type ReportProb = {
+  id: number;
+  Userinfo: { name: string; nik: string };
+  nik: string;
+  Layanan: {
+    name: string;
+  };
+  createdAt: string;
+  judul: string;
+  aduan: string;
+};
+
 export type FAQ = {
   id: number;
   question: string;
