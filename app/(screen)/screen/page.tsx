@@ -8,6 +8,7 @@ import { jwtDecode } from "jwt-decode";
 import Image from "next/legacy/image";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Slider from "react-slick";
+import socket from "@/lib/socket";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -15,13 +16,46 @@ import "slick-carousel/slick/slick-theme.css";
 interface JwtPayload {
   role?: string;
   instansi: string;
+  instansi_id: number;
 }
 
 export default function Screen() {
   const [role, setRole] = useState<string | null>(null);
   const [instansi, setInstansi] = useState<string | null>(null);
+  const [instansiid, setInstansiid] = useState<number>();
   const [tanggal, setTanggal] = useState<string>("");
   const [jam, setJam] = useState<string>("");
+  const [result, setResult] = useState<any[]>([]);
+  const [count, setCount] = useState<number>(0);
+  const [antrianLast, setAntrianLast] = useState<any>(null);
+
+  const { data, mutate } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/screen`,
+    fetcher,
+  );
+
+  useEffect(() => {
+    // Periksa apakah data sudah tersedia dan set state result dan antrianLast
+    if (data && data.data) {
+      setCount(data?.data?.count || 0)
+      setResult(data.data.antrian || []);
+      setAntrianLast(data.data.antrian_last || null);
+    }
+
+    socket.on("updateAntrian", (data: any) => {
+      // Memanggil ulang mutate untuk memperbarui data
+     
+      if (data == instansiid) {
+        console.log("apaaa", data)
+        mutate();
+      }
+    });
+
+    // Membersihkan event listener saat komponen unmount
+    return () => {
+      socket.off("updateAntrian");
+    };
+  }, [data]);
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -32,12 +66,12 @@ export default function Screen() {
       try {
         // Decode token untuk mendapatkan payload
         const decoded = jwtDecode<JwtPayload>(token);
-        console.log(decoded);
 
         // Pastikan token terdecode dan mengandung informasi role dan instansi_id
         if (decoded && decoded.role && decoded.instansi !== undefined) {
           setRole(decoded.role);
           setInstansi(decoded.instansi);
+          setInstansiid(decoded.instansi_id);
         }
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -77,11 +111,10 @@ export default function Screen() {
   }, []);
 
   const settings = {
-    dots: true,
     infinite: true,
-    slidesToShow: 4,
+    slidesToShow: count > 4 ? 4 : count,
     slidesToScroll: 1,
-    autoplay: true,
+    autoplay: count > 4 ? true : false,
     autoplaySpeed: 5000,
     cssEase: "linear",
     responsive: [
@@ -108,14 +141,6 @@ export default function Screen() {
       }
     ]
   };
-
-  const { data } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/screen`,
-    fetcher,
-  );
-
-  const result = data?.data?.antrian;
-  const antrian_last = data?.data?.antrian_last;
 
   return (
     <ProtectedRoute roles={["Admin Instansi", "Admin Layanan", "Admin Verifikasi"]}>
@@ -156,9 +181,9 @@ export default function Screen() {
               Nomor Antrian
             </h4>
 
-            <h2 className="text-neutral-50 font-semibold text-[50px]">{antrian_last?.antrian_now}</h2>
+            <h2 className="text-neutral-50 font-semibold text-[50px]">{antrianLast?.antrian_now}</h2>
 
-            <h5 className="text-neutral-50 font-normal text-[25px]">Loket {antrian_last?.code}</h5>
+            <h5 className="text-neutral-50 font-normal text-[25px]">Loket {antrianLast?.code}</h5>
           </div>
 
           <div className="bg-neutral-50 w-full rounded-lg">
@@ -174,30 +199,31 @@ export default function Screen() {
           </div>
         </div>
 
-        <Slider {...settings}>
-          {result?.map((item: any, index: any) => (
-            <div
-              key={index}
-              className={`rounded-lg p-8 ${index % 4 === 0
-                ? "bg-[#3597FC]"
-                : index % 4 === 1
-                  ? "bg-[#00CC83]"
-                  : index % 4 === 2
-                    ? "bg-[#ED4B54]"
-                    : "bg-[#A636FF]"
-                }`}
-            >
-              <h4 className="text-neutral-50 font-semibold text-[46px]">
-                {item.antrian_now}
-              </h4>
+        <div className="slider-container">
+          <Slider {...settings}>
+            {result?.map((item: any, index: any) => (
+              <div
+                key={index}
+                className={`rounded-2xl p-8 ${index % 4 === 0
+                  ? "bg-[#3597FC]"
+                  : index % 4 === 1
+                    ? "bg-[#00CC83]"
+                    : index % 4 === 2
+                      ? "bg-[#ED4B54]"
+                      : "bg-[#A636FF]"
+                  }`}
+              >
+                <h4 className="text-neutral-50 font-semibold text-[46px]">
+                  {item.antrian_now}
+                </h4>
 
-              <h5 className="text-neutral-50 font-normal text-[26px]">
-                {`Loket ${item.code}`}
-              </h5>
-            </div>
-          ))}
-        </Slider>
-
+                <h5 className="text-neutral-50 font-normal text-[26px]">
+                  {`Loket ${item.code}`}
+                </h5>
+              </div>
+            ))}
+          </Slider>
+        </div>
       </div>
     </ProtectedRoute>
   );
