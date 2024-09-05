@@ -22,6 +22,7 @@ import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
+import AlertDialogUploadSertif from "@/app/(root)/manage-approvals/[id]/DialogForm";
 
 interface JwtPayload {
   permission: string[];
@@ -40,6 +41,7 @@ const DetailApproval = ({
   );
   const [permission, setPermission] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoadingSertif, setIsLoadingSertif] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
@@ -130,6 +132,50 @@ const DetailApproval = ({
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDownloadCert = async () => {
+    setIsLoadingSertif(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/sertif/${result?.layanan_id}/${result?.id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        },
+      );
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "dokumen-hasil.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      if (response.ok) {
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil download surat",
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
+      }
+    } catch (e: any) {
+      Swal.fire({
+        icon: "error",
+        title: "Gagal download surat",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
+    } finally {
+      setIsLoadingSertif(false);
     }
   };
 
@@ -271,16 +317,30 @@ const DetailApproval = ({
               <h2 className="text-lg font-semibold my-5">
                 Upload Hasil Dokumen Permohonan
               </h2>
-              <div className="flex gap-x-5 items-center">
-                <AlertDialogUploadFile id={params.id} />
-                <div onClick={handleDownload} className="cursor-pointer">
-                  {isLoading ? (
-                    <Loader className="animate-spin" />
-                  ) : (
-                    <p className="underline text-[#3A28FF] text-sm">
-                      Unduh Surat
-                    </p>
-                  )}
+              <div className="flex space-x-5">
+                <div className="flex gap-x-5 items-center">
+                  <AlertDialogUploadFile id={params.id} />
+                  <div onClick={handleDownload} className="cursor-pointer">
+                    {isLoading ? (
+                      <Loader className="animate-spin" />
+                    ) : (
+                      <p className="underline text-[#3A28FF] text-sm">
+                        Unduh Surat
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="flex gap-x-5 items-center">
+                  <AlertDialogUploadSertif id={params.id} />
+                  <div onClick={handleDownloadCert} className="cursor-pointer">
+                    {isLoadingSertif ? (
+                      <Loader className="animate-spin" />
+                    ) : (
+                      <p className="underline text-[#3A28FF] text-sm">
+                        Unduh Dokumen Hasil
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             </>

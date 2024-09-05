@@ -19,7 +19,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import Swal from "sweetalert2";
 
-export default function AlertDialogUploadFile({ id }: { id: number }) {
+export default function AlertDialogUploadSertif({ id }: { id: number }) {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
@@ -38,7 +38,7 @@ export default function AlertDialogUploadFile({ id }: { id: number }) {
   async function onSubmit() {
     setIsLoading(true);
     const formData = new FormData();
-    formData.append("file", selectedFile);
+    formData.append("sertif", selectedFile);
 
     try {
       const response = await fetch(
@@ -84,7 +84,7 @@ export default function AlertDialogUploadFile({ id }: { id: number }) {
           onClick={handleOpenAddModal}
           className="rounded-[20px] bg-neutral-50 px-10 hover:bg-neutral-100 shadow p-3 flex text-sm justify-around items-center text-neutral-900"
         >
-          Upload Surat
+          Upload Dokumen Hasil
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="p-0 border-0 overflow-auto w-full">

@@ -25,7 +25,7 @@ const CreateFormat = ({
   };
 }) => {
   const { data, mutate } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/detailsurat/${params.id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/detailsertif/${params.id}`,
     fetcher,
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -35,9 +35,15 @@ const CreateFormat = ({
   const [nomor, setNomor] = useState("");
   const router = useRouter();
   const [editorData, setEditorData] = useState("");
+  const editor1Ref = useRef<{ getContent: () => string }>(null);
+  const editor2Ref = useRef<{ getContent: () => string }>(null);
+  const editor5Ref = useRef<{ getContent: () => string }>(null);
+  const editor6Ref = useRef<{ getContent: () => string }>(null);
 
-  const result = data?.data?.Layanansurat;
+  const result = data?.data?.Layanansertif;
   const resultPj = data?.data?.Instansi;
+
+  console.log(result);
 
   useEffect(() => {
     if (resultPj || result) {
@@ -45,16 +51,9 @@ const CreateFormat = ({
       setNipPj(resultPj.nip_pj);
       setNomor(result.nomor);
       setPerihal(result.perihal);
+      setEditorData(result?.body);
     }
   }, [resultPj, result]);
-
-  console.log(result);
-
-  const editor1Ref = useRef<{ getContent: () => string }>(null);
-  const editor2Ref = useRef<{ getContent: () => string }>(null);
-  const editor5Ref = useRef<{ getContent: () => string }>(null);
-  const editor6Ref = useRef<{ getContent: () => string }>(null);
-  const editor7Ref = useRef<{ getContent: () => string }>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     setIsLoading(true);
@@ -64,23 +63,22 @@ const CreateFormat = ({
     const content2 = editor2Ref.current?.getContent();
     const content5 = editor5Ref.current?.getContent();
     const content6 = editor6Ref.current?.getContent();
-    const content7 = editor7Ref.current?.getContent();
 
     const payload = {
       header: content1,
-      body: content2,
+      body: editorData,
       instansi_pj: pj,
       nip_pj: nipPj,
       nomor: nomor,
       perihal: perihal,
-      cataan: content6,
-      tembusan: content7,
+      cataan: content2,
+      tembusan: content6,
       footer: content5,
     };
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/editsurat/${params.id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/editsertif/${params.id}`,
         {
           method: "PUT",
           headers: {
@@ -136,116 +134,93 @@ const CreateFormat = ({
             />
           </Link>
         </div>
-        <div>
-          <h2>CKEditor 5 Integration</h2>
-          <CKEditor
-            editor={ClassicEditor}
-            data={editorData}
-            onChange={(event, editor) => {
-              const data = editor.getData();
-              setEditorData(data);
-            }}
-          />
-        </div>
-        {/*<form onSubmit={handleSubmit} className="space-y-4">*/}
-        {/*  <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">*/}
-        {/*    <label htmlFor="editor1">Kepala Surat</label>*/}
-        {/*    <MyEditor*/}
-        {/*      ref={editor1Ref}*/}
-        {/*      name="editor1"*/}
-        {/*      initialValue={result?.header || "<p>Ketik disni</p>"}*/}
-        {/*    />*/}
-        {/*  </div>*/}
-        {/*  <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">*/}
-        {/*    <label htmlFor="editor2">Body Surat</label>*/}
-        {/*    <MyEditor*/}
-        {/*      ref={editor2Ref}*/}
-        {/*      name="editor2"*/}
-        {/*      initialValue={result?.body || "<p>Ketik disni</p>"}*/}
-        {/*    />*/}
-        {/*  </div>*/}
-        {/*  <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">*/}
-        {/*    <label>Penanggung Jawab</label>*/}
-        {/*    <Input*/}
-        {/*      type="text"*/}
-        {/*      className="rounded-full"*/}
-        {/*      placeholder="Masukkan penanggung jawab"*/}
-        {/*      value={pj}*/}
-        {/*      onChange={(e: ChangeEvent<HTMLInputElement>) =>*/}
-        {/*        setPj(e.target.value)*/}
-        {/*      }*/}
-        {/*    />*/}
-        {/*  </div>*/}
-        {/*  <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">*/}
-        {/*    <label>NIP Penanggung Jawab</label>*/}
-        {/*    <Input*/}
-        {/*      type="text"*/}
-        {/*      className="rounded-full"*/}
-        {/*      placeholder="Masukkan nik penanggung jawab"*/}
-        {/*      value={nipPj}*/}
-        {/*      onChange={(e: ChangeEvent<HTMLInputElement>) =>*/}
-        {/*        setNipPj(e.target.value)*/}
-        {/*      }*/}
-        {/*    />*/}
-        {/*  </div>*/}
-        {/*  <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">*/}
-        {/*    <label>Nomor</label>*/}
-        {/*    <Input*/}
-        {/*      type="text"*/}
-        {/*      className="rounded-full"*/}
-        {/*      placeholder="Masukkan nik penanggung jawab"*/}
-        {/*      value={nomor}*/}
-        {/*      onChange={(e: ChangeEvent<HTMLInputElement>) =>*/}
-        {/*        setNomor(e.target.value)*/}
-        {/*      }*/}
-        {/*    />*/}
-        {/*  </div>*/}
-        {/*  <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">*/}
-        {/*    <label>Perihal</label>*/}
-        {/*    <Input*/}
-        {/*      type="text"*/}
-        {/*      className="rounded-full"*/}
-        {/*      placeholder="Masukkan nik penanggung jawab"*/}
-        {/*      value={perihal}*/}
-        {/*      onChange={(e: ChangeEvent<HTMLInputElement>) =>*/}
-        {/*        setPerihal(e.target.value)*/}
-        {/*      }*/}
-        {/*    />*/}
-        {/*  </div>*/}
-        {/*  <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">*/}
-        {/*    <label htmlFor="editor6">Catatan</label>*/}
-        {/*    <MyEditor*/}
-        {/*      ref={editor6Ref}*/}
-        {/*      name="editor6"*/}
-        {/*      initialValue={result?.catatan || "<p>Ketik disni</p>"}*/}
-        {/*    />*/}
-        {/*  </div>*/}
-        {/*  <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">*/}
-        {/*    <label htmlFor="editor7">Tembusan</label>*/}
-        {/*    <MyEditor*/}
-        {/*      ref={editor7Ref}*/}
-        {/*      name="editor7"*/}
-        {/*      initialValue={result?.tembusan || "<p>Ketik disni</p>"}*/}
-        {/*    />*/}
-        {/*  </div>*/}
-        {/*  <div className="bg-white shadow px-4 py-8 space-y-4 rounded-[10px]">*/}
-        {/*    <label htmlFor="editor5">Footer</label>*/}
-        {/*    <MyEditor*/}
-        {/*      ref={editor5Ref}*/}
-        {/*      name="editor5"*/}
-        {/*      initialValue={result?.footer || "<p>Ketik disni</p>"}*/}
-        {/*    />*/}
-        {/*  </div>*/}
-        {/*  <div className="text-right">*/}
-        {/*    <Button*/}
-        {/*      type="submit"*/}
-        {/*      className="rounded-full bg-primary-700 hover:bg-primary-800"*/}
-        {/*      disabled={isLoading ? true : false}*/}
-        {/*    >*/}
-        {/*      {isLoading ? <Loader className="animate-spin" /> : "Submit"}*/}
-        {/*    </Button>*/}
-        {/*  </div>*/}
-        {/*</form>*/}
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white shadow px-4 py-8 space-y-5 rounded-[10px]"
+        >
+          <div className="space-y-3">
+            <label htmlFor="editor1">Kepala Surat</label>
+            <MyEditor
+              ref={editor1Ref}
+              name="editor1"
+              initialValue={result?.header || "<p>Ketik disni</p>"}
+            />
+          </div>
+          <div className="space-y-3">
+            <label htmlFor="body">Body Surat</label>
+            <CKEditor
+              editor={ClassicEditor}
+              data={editorData}
+              onChange={(event, editor) => {
+                const data = editor.getData();
+                setEditorData(data);
+              }}
+            />
+          </div>
+          <div className="space-y-3">
+            <label htmlFor="body">Penanggung Jawab</label>
+            <Input
+              placeholder="Masukkan penangung jawab"
+              value={pj}
+              onChange={(e) => setPj(e.target.value)}
+            />
+          </div>
+          <div className="space-y-3">
+            <label htmlFor="body">NIP Penanggung Jawab</label>
+            <Input
+              placeholder="Masukkan nip penangung jawab"
+              value={nipPj}
+              onChange={(e) => setNipPj(e.target.value)}
+            />
+          </div>
+          <div className="space-y-3">
+            <label htmlFor="body">Nomor</label>
+            <Input
+              placeholder="Masukkan nomor"
+              value={nomor}
+              onChange={(e) => setNomor(e.target.value)}
+            />
+          </div>
+          <div className="space-y-3">
+            <label htmlFor="body">Perihal</label>
+            <Input
+              placeholder="Masukkan perihal"
+              value={perihal}
+              onChange={(e) => setPerihal(e.target.value)}
+            />
+          </div>
+          <div className="space-y-3">
+            <label htmlFor="editor6">Catatan</label>
+            <MyEditor
+              ref={editor2Ref}
+              name="editor6"
+              initialValue={result?.catatan || "<p>Ketik disni</p>"}
+            />
+          </div>
+          <div className="space-y-3">
+            <label htmlFor="editor7">Tembusan</label>
+            <MyEditor
+              ref={editor6Ref}
+              name="editor7"
+              initialValue={result?.tembusan || "<p>Ketik disni</p>"}
+            />
+          </div>
+          <div className="space-y-3">
+            <label htmlFor="editor5">Footer</label>
+            <MyEditor
+              ref={editor5Ref}
+              name="editor5"
+              initialValue={result?.footer || "<p>Ketik disni</p>"}
+            />
+          </div>
+          <Button
+            type="submit"
+            className="rounded-full w-full bg-primary-700 hover:bg-primary-800"
+            disabled={isLoading}
+          >
+            {isLoading ? <Loader className="animate-spin" /> : "Submit"}
+          </Button>
+        </form>
       </section>
     </ProtectedRoute>
   );
