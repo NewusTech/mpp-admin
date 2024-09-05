@@ -198,22 +198,41 @@ const DetailHistoryApproval = ({
           <h2 className="text-lg font-semibold my-5">
             Dokumen Hasil Permohonan
           </h2>
-          {result?.fileoutput ? (
-            <Link
-              href={result?.fileoutput}
-              className="w-[25vh] rounded-[20px] bg-neutral-50 hover:bg-neutral-100 shadow p-3 flex justify-around items-center"
-            >
-              <Image
-                src="/icons/download.svg"
-                alt="download"
-                width={24}
-                height={24}
-              />
-              <p className="text-neutral-900">Dokumen</p>
-            </Link>
-          ) : (
-            "Tidak ada"
-          )}
+          <div className="flex space-x-2">
+            {result?.fileoutput ? (
+              <Link
+                href={result?.fileoutput}
+                className="w-[25vh] rounded-[20px] bg-neutral-50 hover:bg-neutral-100 shadow p-3 flex justify-around items-center"
+              >
+                <Image
+                  src="/icons/download.svg"
+                  alt="download"
+                  width={24}
+                  height={24}
+                />
+                <p className="text-neutral-900">Surat</p>
+              </Link>
+            ) : (
+              <p>Tidak ada surat</p>
+            )}
+            <div className="border-r border-neutral-800"></div>
+            {result?.filesertif ? (
+              <Link
+                href={result?.filesertif}
+                className="w-[25vh] rounded-[20px] bg-neutral-50 hover:bg-neutral-100 shadow p-3 flex justify-around items-center"
+              >
+                <Image
+                  src="/icons/download.svg"
+                  alt="download"
+                  width={24}
+                  height={24}
+                />
+                <p className="text-neutral-900">Dokumen Hasil</p>
+              </Link>
+            ) : (
+              <p>Tidak ada dokumen hasil</p>
+            )}
+          </div>
           {result?.status === 2 ? (
             <Button
               onClick={handleValidationStatus}
