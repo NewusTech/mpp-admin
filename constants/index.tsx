@@ -1355,7 +1355,7 @@ export const reportColumns: ColumnDef<Report>[] = [
     cell: ({ row }) => {
       const field = row.original;
       return (
-        <Link href={`/report/${field.id}`} className="underline">
+        <Link href={`/report/request/${field.id}`} className="underline">
           <p>{field.name}</p>
         </Link>
       );
