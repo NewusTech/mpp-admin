@@ -11,7 +11,6 @@ import { jwtDecode } from "jwt-decode";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { Loader } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import Swal from "sweetalert2";
@@ -30,6 +29,7 @@ const SurveyResult = () => {
   const [layananId, setLayananId] = useState<number | null>(null);
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoadingTwo, setIsLoadingTwo] = useState<boolean>(false);
   const now = new Date();
 
   const firstDayOfYear = new Date(now.getFullYear(), 0, 1); // 0 berarti Januari
@@ -60,7 +60,7 @@ const SurveyResult = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher,
+    fetcher
   );
 
   const instanceId = Number(instance);
@@ -79,9 +79,47 @@ const SurveyResult = () => {
     instanceId2 = instanceId;
   }
 
+  const buildUrl = (baseUrl: string, params: Record<string, any>) => {
+    const url = new URL(baseUrl);
+    // Tambahkan parameter lainnya
+    Object.keys(params).forEach((key) => {
+      if (params[key] !== undefined) {
+        url.searchParams.append(key, params[key]);
+      }
+    });
+
+    return url.toString();
+  };
+
+  // Pastikan startDate dan endDate dalam format yang benar
+  const startDateFormatted = startDate
+    ? formatDate(new Date(startDate))
+    : undefined;
+  const endDateFormatted = endDate ? formatDate(new Date(endDate)) : undefined;
+
+  const param = {
+    instansi_id: instanceId2,
+    limit: 10000000, // atau false
+    start_date: startDateFormatted, // atau undefined
+    end_date: endDateFormatted, // atau undefined
+  };
+
+  // Bangun URL berdasarkan role dan instanceId
+  const fixUrl = buildUrl(url, param);
+
+  const { data: resultSurvey } = useSWR<any>(fixUrl, fetcher);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearchTermInstance(searchInputInstance);
+    }, 300); // Debounce time to avoid excessive API calls
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchInputInstance]);
+
   const handleDownload = async () => {
     setIsLoading(true);
-    let urlDownload = `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/pdf`;
+    let urlDownload = `${process.env.NEXT_PUBLIC_API_URL}/user/historysurvey/pdf?instansi_id=${instanceId2}&start_date=${startDateFormatted}&end_date=${endDateFormatted}`;
 
     try {
       const response = await fetch(urlDownload, {
@@ -122,43 +160,48 @@ const SurveyResult = () => {
     }
   };
 
-  const buildUrl = (baseUrl: string, params: Record<string, any>) => {
-    const url = new URL(baseUrl);
-    // Tambahkan parameter lainnya
-    Object.keys(params).forEach((key) => {
-      if (params[key] !== undefined) {
-        url.searchParams.append(key, params[key]);
+  const handleDownloadAll = async () => {
+    setIsLoadingTwo(true);
+    let urlDownload = `${process.env.NEXT_PUBLIC_API_URL}/user/historysurveyall/pdf`;
+
+    try {
+      const response = await fetch(urlDownload, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
+      });
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "report skm semua instansi.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      if (response.ok) {
+        Swal.fire({
+          icon: "success",
+          title: "Berhasil download",
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
       }
-    });
-
-    return url.toString();
+    } catch (e: any) {
+      Swal.fire({
+        icon: "error",
+        title: "Gagal download!",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "center",
+      });
+    } finally {
+      setIsLoadingTwo(false);
+    }
   };
-
-  // Pastikan startDate dan endDate dalam format yang benar
-  const startDateFormatted = startDate
-    ? formatDate(new Date(startDate))
-    : undefined;
-  const endDateFormatted = endDate ? formatDate(new Date(endDate)) : undefined;
-
-  const param = {
-    instansi_id: instanceId2,
-    limit: 10000000, // atau false
-    start_date: startDateFormatted, // atau undefined
-    end_date: endDateFormatted, // atau undefined
-  };
-
-  // Bangun URL berdasarkan role dan instanceId
-  const fixUrl = buildUrl(url, param);
-
-  const { data: resultSurvey } = useSWR<any>(fixUrl, fetcher);
-
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      setSearchTermInstance(searchInputInstance);
-    }, 300); // Debounce time to avoid excessive API calls
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchInputInstance]);
 
   const result = data?.data;
   const surveys = resultSurvey?.data;
@@ -173,7 +216,7 @@ const SurveyResult = () => {
       ]}
     >
       <section className="mr-16">
-        <div className="flex justify-between mb-8 space-x-3">
+        <div className="flex justify-between mb-4 space-x-3">
           <div className="w-1/2">
             {role !== "Admin Instansi" &&
               role !== "Admin Layanan" &&
@@ -205,6 +248,8 @@ const SurveyResult = () => {
               setDate={(e) => setEndDate(e)}
             />
           </div>
+        </div>
+        <div className="w-full justify-end flex space-x-3">
           {instance || role === "Admin Instansi" || role === "Admin Layanan" ? (
             <Button
               disabled={isLoading}
@@ -239,6 +284,25 @@ const SurveyResult = () => {
               Print
             </Button>
           )}
+          <Button
+            disabled={isLoading}
+            onClick={handleDownloadAll}
+            className="flex justify-around bg-transparent items-center border border-primary-700 text-primary-700 hover:bg-neutral-300 w-[160px] rounded-full"
+          >
+            {isLoading ? (
+              <Loader className="animate-spin" />
+            ) : (
+              <>
+                <Image
+                  src="/icons/printer.svg"
+                  alt="print"
+                  width={24}
+                  height={24}
+                />
+                Print Semua
+              </>
+            )}
+          </Button>
         </div>
         {surveys && (
           <DataTables
