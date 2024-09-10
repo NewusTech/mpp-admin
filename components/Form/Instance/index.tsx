@@ -57,6 +57,7 @@ const Instance = ({
         closed: data.jam_tutup,
         code: data.code,
         link: data.linkmaps,
+        website: data.website,
       });
     }
   }, [data]);
@@ -85,6 +86,9 @@ const Instance = ({
     if (values.link) {
       formData.append("linkmaps", values.link);
     }
+    if (values.website) {
+      formData.append("website", values.website);
+    }
 
     if (type === "create") {
       try {
@@ -96,7 +100,7 @@ const Instance = ({
               Authorization: `Bearer ${Cookies.get("token")}`,
             },
             body: formData,
-          },
+          }
         );
 
         const data = await response.json();
@@ -132,7 +136,7 @@ const Instance = ({
               Authorization: `Bearer ${Cookies.get("token")}`,
             },
             body: formData,
-          },
+          }
         );
 
         const result = await response.json();
@@ -366,6 +370,23 @@ const Instance = ({
                     <Input
                       className="rounded-full"
                       placeholder="Masukkan Jam Tutup"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="website"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>Website</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="rounded-full"
+                      placeholder="Masukkan Website"
                       {...field}
                     />
                   </FormControl>

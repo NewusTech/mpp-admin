@@ -240,6 +240,8 @@ export type Announcement = {
 export type SOPMPP = {
   id: number;
   file: string;
+  name: string;
+  desc: string;
 };
 
 export type Complaint = {

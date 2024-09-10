@@ -80,6 +80,7 @@ export const InstanceValidation = z.object({
     .min(2, { message: "Kode setidaknya harus 3 karakter." })
     .max(3, { message: "Kode maksimal 3 karakter" }),
   link: z.string().optional(),
+  website: z.string().optional(),
 });
 
 export const FAQValidation = z.object({
