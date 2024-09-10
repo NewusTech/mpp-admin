@@ -24,7 +24,7 @@ const CreateFormat = ({
 }) => {
   const { data, mutate } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/detailsurat/${params.id}`,
-    fetcher,
+    fetcher
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [pj, setPj] = useState("");
@@ -38,10 +38,10 @@ const CreateFormat = ({
 
   useEffect(() => {
     if (resultPj || result) {
-      setPj(resultPj.pj);
-      setNipPj(resultPj.nip_pj);
-      setNomor(result.nomor);
-      setPerihal(result.perihal);
+      setPj(resultPj?.pj);
+      setNipPj(resultPj?.nip_pj);
+      setNomor(result?.nomor);
+      setPerihal(result?.perihal);
     }
   }, [resultPj, result]);
 
@@ -85,7 +85,7 @@ const CreateFormat = ({
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
           body: JSON.stringify(payload),
-        },
+        }
       );
 
       const result = await response.json();

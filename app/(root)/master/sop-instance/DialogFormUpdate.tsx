@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader } from "lucide-react";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
 import MyEditor from "@/components/Editor";
@@ -27,6 +27,8 @@ export default function AlertDialogUpdateSOPInstance({ id }: { id: number }) {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<any>(null);
+  const [name, setName] = useState<any>(null);
+  const [desc, setDesc] = useState<any>(null);
   const handleOpenAddModal = () => {
     setAddModalOpen(true);
   };
@@ -39,6 +41,20 @@ export default function AlertDialogUpdateSOPInstance({ id }: { id: number }) {
     setAddModalOpen(false);
   };
 
+  const { data } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/sopinstansi/get/id/${id}`,
+    fetcher
+  );
+
+  const result = data?.data;
+
+  useEffect(() => {
+    if (result) {
+      setName(result?.name);
+      setDesc(result?.desc);
+    }
+  }, [result]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     setIsLoading(true);
     e.preventDefault();
@@ -46,6 +62,8 @@ export default function AlertDialogUpdateSOPInstance({ id }: { id: number }) {
     const formData = new FormData();
 
     formData.append("file", selectedFile);
+    formData.append("name", name);
+    formData.append("desc", desc);
 
     try {
       const response = await fetch(
@@ -56,7 +74,7 @@ export default function AlertDialogUpdateSOPInstance({ id }: { id: number }) {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
           body: formData,
-        },
+        }
       );
 
       const result = await response.json();
@@ -107,6 +125,24 @@ export default function AlertDialogUpdateSOPInstance({ id }: { id: number }) {
               type="file"
               className="rounded-full"
               onChange={handleFileChange}
+            />
+          </div>
+          <div className="space-y-2">
+            <label>Judul</label>
+            <Input
+              type="text"
+              className="rounded-full"
+              placeholder="Masukkan judul"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <label>Deskripsi</label>
+            <Textarea
+              placeholder="Masukkan deskripsi"
+              value={desc}
+              onChange={(e) => setDesc(e.target.value)}
             />
           </div>
           <AlertDialogFooter className="p-6">
