@@ -2003,6 +2003,14 @@ export const sopMppColumns: ColumnDef<SOPMPP>[] = [
 
 export const sopInstanceColumns: ColumnDef<SOPMPP>[] = [
   {
+    accessorKey: "name",
+    header: "Judul",
+  },
+  {
+    accessorKey: "desc",
+    header: "Deskripsi",
+  },
+  {
     accessorKey: "file",
     header: "Dokumen",
     cell: ({ row }) => {
