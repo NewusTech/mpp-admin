@@ -130,13 +130,26 @@ const TabQueueService = ({ id }: { id: string }) => {
 
   useEffect(() => {
     if (audioUrl) {
+      const audioPembukaUrl = 'https://newus-bucket.s3.ap-southeast-2.amazonaws.com/dir_mpp/asset/bell.mp3';
+
       if (audioRef.current) {
         audioRef.current.pause();
       }
-      audioRef.current = new Audio(audioUrl);
-      audioRef.current.play().catch((error) => {
-        console.error("Error playing audio:", error);
+      const audioPembuka = new Audio(audioPembukaUrl);
+
+      // Ketika audio pembuka selesai, play audioUrl
+      audioPembuka.onended = () => {
+        audioRef.current = new Audio(audioUrl);
+        audioRef.current.play().catch((error) => {
+          console.error("Error playing main audio:", error);
+        });
+      };
+
+      // Play audio pembuka
+      audioPembuka.play().catch((error) => {
+        console.error("Error playing opening audio:", error);
       });
+
     }
   }, [audioUrl]);
 
@@ -215,18 +228,40 @@ const TabQueueService = ({ id }: { id: string }) => {
 
   const replayAudio = () => {
     if (audioRef.current) {
+      console.log("audioRef", audioRef);
       setIsLoadingAudio(true);
-      audioRef.current.currentTime = 0;
-      audioRef.current
+
+      // URL untuk audio pembuka
+      const audioPembukaUrl = 'https://newus-bucket.s3.ap-southeast-2.amazonaws.com/dir_mpp/asset/bell.mp3';
+
+      // Buat audio pembuka
+      const audioPembuka = new Audio(audioPembukaUrl);
+
+      // Setelah audio pembuka selesai, reset audio utama dan mulai memutarnya
+      audioPembuka.onended = () => {
+        if (audioRef?.current) {
+          audioRef.current.currentTime = 0;
+          audioRef.current
+            .play()
+            .catch((error) => {
+              console.error("Error replaying main audio:", error);
+            })
+            .finally(() => {
+              setIsLoadingAudio(false);
+            });
+        }
+      };
+
+      // Mulai memutar audio pembuka
+      audioPembuka
         .play()
         .catch((error) => {
-          console.error("Error replaying audio:", error);
-        })
-        .finally(() => {
+          console.error("Error playing opening audio:", error);
           setIsLoadingAudio(false);
         });
     }
   };
+
 
   const result = data?.data;
   const riwayat = result?.riwayatAntrian;
@@ -439,11 +474,10 @@ const TabQueueService = ({ id }: { id: string }) => {
                   {buttons.map((button: any) => (
                     <Button
                       key={button.value}
-                      className={`rounded-[20px] ${
-                        activeButton === button.value
-                          ? "bg-primary-700 text-neutral-50"
-                          : "bg-transparent text-neutral-800"
-                      } hover:text-neutral-50 hover:bg-primary-700`}
+                      className={`rounded-[20px] ${activeButton === button.value
+                        ? "bg-primary-700 text-neutral-50"
+                        : "bg-transparent text-neutral-800"
+                        } hover:text-neutral-50 hover:bg-primary-700`}
                       onClick={() => handleClick(button.value)}
                     >
                       {button.label}
