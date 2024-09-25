@@ -17,13 +17,19 @@ import { Input } from "@/components/ui/input";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { Loader } from "lucide-react";
-import Cookies from "js-cookie";
 import { useState } from "react";
 import useAuthStore from "@/lib/store/useAuthStore";
+import { Eye, EyeOff } from "lucide-react";
 
 const FormSignin = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Fungsi untuk toggle visibilitas kata sandi
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState);
+  };
   const login = useAuthStore((state) => state.login);
 
   const form = useForm<z.infer<typeof SigninValidation>>({
@@ -47,7 +53,7 @@ const FormSignin = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(formData),
-        },
+        }
       );
 
       const data = await response.json();
@@ -55,7 +61,7 @@ const FormSignin = () => {
         // Tangani respons yang bukan 2xx
         const errorData = await response.json();
         throw new Error(
-          errorData.message || `HTTP error! status: ${response.status}`,
+          errorData.message || `HTTP error! status: ${response.status}`
         );
       }
       if (response.ok) {
@@ -102,7 +108,7 @@ const FormSignin = () => {
                 <Input
                   className="rounded-full"
                   type="text"
-                  placeholder="Masukkan NIK"
+                  placeholder="Masukkan username"
                   {...field}
                 />
               </FormControl>
@@ -117,12 +123,24 @@ const FormSignin = () => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input
-                  className="rounded-full"
-                  type="password"
-                  placeholder="Masukkan password"
-                  {...field}
-                />
+                <div className="flex rounded-full border items-center pr-4">
+                  <Input
+                    className="rounded-full border-none"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Masukkan password"
+                    {...field}
+                  />
+                  <div
+                    onClick={togglePasswordVisibility}
+                    className="cursor-pointer"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="text-greyy" />
+                    ) : (
+                      <Eye className="text-greyy" />
+                    )}
+                  </div>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
