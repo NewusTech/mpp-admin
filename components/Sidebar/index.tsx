@@ -196,7 +196,7 @@ const Sidebar = () => {
                 <li
                   className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/report/problems") || pathname.startsWith("/report/problems") ? "text-primary-700" : ""}`}
                 >
-                  <Link href="/report/problems">Permasahalan</Link>
+                  <Link href="/report/problems">Permasalahan</Link>
                 </li>
               </ul>
             }
