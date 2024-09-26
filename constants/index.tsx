@@ -37,6 +37,7 @@ import {
   QueueTab,
   Report,
   ReportDoc,
+  ReportGeo,
   ReportProb,
   RequestOffline,
   RequestOnline,
@@ -1773,6 +1774,58 @@ export const videoColumns: ColumnDef<Video>[] = [
           />
         </div>
       );
+    },
+  },
+];
+
+export const geoColumn: ColumnDef<ReportGeo>[] = [
+  {
+    accessorKey: "nik",
+    header: "NIK",
+    cell: ({ row }) => {
+      return <p>{row.original.nik || "-"}</p>;
+    },
+  },
+  {
+    accessorKey: "name",
+    header: "Nama",
+    cell: ({ row }) => {
+      return <p>{row.original.name || "-"}</p>;
+    },
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+    cell: ({ row }) => {
+      return <p>{row.original.email || "-"}</p>;
+    },
+  },
+  {
+    accessorKey: "telepon",
+    header: "Telepon",
+    cell: ({ row }) => {
+      return <p>{row.original.telepon || "-"}</p>;
+    },
+  },
+  {
+    accessorKey: "kecamatan_name",
+    header: "Kecamatan",
+    cell: ({ row }) => {
+      return <p>{row.original.kecamatan_name || "-"}</p>;
+    },
+  },
+  {
+    accessorKey: "desa_name",
+    header: "Desa",
+    cell: ({ row }) => {
+      return <p>{row.original.desa_name || "-"}</p>;
+    },
+  },
+  {
+    accessorKey: "alamat",
+    header: "Alamat",
+    cell: ({ row }) => {
+      return <p>{row.original.alamat || "-"}</p>;
     },
   },
 ];

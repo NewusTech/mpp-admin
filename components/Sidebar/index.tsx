@@ -198,6 +198,11 @@ const Sidebar = () => {
                 >
                   <Link href="/report/problems">Permasalahan</Link>
                 </li>
+                <li
+                  className={`hover:translate-x-2 hover:text-primary-700 transition-color duration-200 ${isActive("/report/geo") || pathname.startsWith("/report/geo") ? "text-primary-700" : ""}`}
+                >
+                  <Link href="/report/geo">Geo Layanan</Link>
+                </li>
               </ul>
             }
             isDropdownOpen={isDropdownOpen === "/report"}
