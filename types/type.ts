@@ -274,6 +274,16 @@ export type HistoryQueue = {
   timeprocess: string;
 };
 
+export type ReportGeo = {
+  nik: string;
+  name: string;
+  email: string;
+  telepon: string;
+  kecamatan_name: string;
+  desa_name: string;
+  alamat: string;
+};
+
 export const dataActive = {
   data: [
     {
