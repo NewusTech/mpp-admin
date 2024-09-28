@@ -18,7 +18,7 @@ const InfromationInsantce = ({
 }) => {
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/infoinstansi/get/${params.id}`,
-    fetcher,
+    fetcher
   );
 
   const result = data?.data?.Infoinstansi;
@@ -42,7 +42,11 @@ const InfromationInsantce = ({
           </div>
           <div>
             <p className="font-semibold">Gambar</p>
-            <Image src={result?.image} alt="admin" width={100} height={100} />
+            {result?.image ? (
+              <Image src={result?.image} alt="admin" width={100} height={100} />
+            ) : (
+              <p>Tidak ada gambar</p>
+            )}
           </div>
         </div>
       </section>
