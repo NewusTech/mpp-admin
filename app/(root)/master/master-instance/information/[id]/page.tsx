@@ -1,7 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";

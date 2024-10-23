@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: "Mal Pelayanan Publik Kabupaten Lampung Timur",
   icons: {
     icon: {
-      url: "/logo.svg",
+      url: "/logo-1.png",
     },
   },
 };
