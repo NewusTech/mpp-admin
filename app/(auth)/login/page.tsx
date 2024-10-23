@@ -20,7 +20,7 @@ const LoginPage = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/termcond/get`,
-    fetcher,
+    fetcher
   );
 
   const term = data?.data;
@@ -29,17 +29,13 @@ const LoginPage = () => {
     <section className="bg-gradient-to-b from-primary-700 to-[#99B3E0] w-screen h-screen flex justify-center items-center">
       <div className="flex rounded-[20px] flex-col justify-center items-center bg-neutral-50 px-20 py-14 min-w-[600px] min-h-[480px]">
         <Image
-          src="/logo.svg"
+          src="/logo.png"
           width={133}
           height={107}
           alt="logo"
-          className="mb-3"
+          className="w-[290px] -mt-20"
         />
-        <h3 className="font-semibold text-[16px] text-secondary-700">
-          Mal Pelayanan Publik
-        </h3>
-        <h3 className="text-sm text-primary-700">Kabupaten Lampung Timur</h3>
-        <div className="w-full space-y-2">
+        <div className="w-full space-y-2 -mt-16">
           <FormSignin />
         </div>
         <div className="w-full text-center text-primary-700 text-[14px] mt-4">
