@@ -47,7 +47,7 @@ const ManageUser = () => {
 
   const { data: instances } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher,
+    fetcher
   );
 
   const instanceId = Number(instance);
@@ -73,9 +73,9 @@ const ManageUser = () => {
   const result = data?.data;
 
   return (
-    <ProtectedRoute roles={["Super Admin"]}>
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi"]}>
       <section className="mr-16">
-        <div className="flex justify-between mt-4 mb-24">
+        <div className="flex justify-between mt-4 mb-8">
           <div className="w-1/2">
             {role !== "Admin Instansi" && role !== "Admin Layanan" && (
               <InputComponent

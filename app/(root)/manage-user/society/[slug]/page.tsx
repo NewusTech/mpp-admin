@@ -27,9 +27,6 @@ const UpdateUserData = ({
     <ProtectedRoute
       roles={[
         "Super Admin",
-        "Admin Instansi",
-        "Admin Layanan",
-        "Admin Verifikasi",
       ]}
     >
       <section className="mr-16">
