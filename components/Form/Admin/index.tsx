@@ -33,7 +33,7 @@ import {
 import { roles } from "@/constants";
 import Swal from "sweetalert2";
 
-const AdminData = () => {
+const AdminData = ({ role }: { role: string | null }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [searchInputInstance, setSearchInputInstance] = useState(""); // State for search input
@@ -45,7 +45,7 @@ const AdminData = () => {
 
   const { data: instances } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher,
+    fetcher
   );
 
   const instanceId = Number(instance);
@@ -72,6 +72,11 @@ const AdminData = () => {
     resolver: zodResolver(AdminValidation),
   });
 
+  const availableRoles =
+    role === "Admin Instansi" // Misalkan ID 2 adalah Super Admin
+      ? roles.filter((role) => [3, 4, 6].includes(role.id)) // Tampilkan hanya role 3, 4, 6
+      : roles;
+
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof AdminValidation>) {
     setIsLoading(true);
@@ -94,7 +99,7 @@ const AdminData = () => {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
           body: JSON.stringify(formData),
-        },
+        }
       );
 
       const data = await response.json();
@@ -284,7 +289,7 @@ const AdminData = () => {
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Role</SelectLabel>
-                          {roles?.map((item: any) => (
+                          {availableRoles?.map((item: any) => (
                             <SelectItem
                               key={item.id}
                               value={item.id.toString()}

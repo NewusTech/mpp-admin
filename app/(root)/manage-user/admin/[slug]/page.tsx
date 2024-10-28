@@ -16,17 +16,13 @@ const UpdateAdminData = ({
 }) => {
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/alluserinfo/get/${params.slug}`,
-    fetcher,
+    fetcher
   );
 
   const result = data?.data;
 
-  console.log(data);
-
   return (
-    <ProtectedRoute
-      roles={["Super Admin", "Admin Instansi", "Admin Verifikasi"]}
-    >
+    <ProtectedRoute roles={["Super Admin", "Admin Instansi"]}>
       <section className="mr-16">
         <div className="-ml-14 mb-10">
           <Link href="/manage-user/admin">
