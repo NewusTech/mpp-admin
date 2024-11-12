@@ -252,7 +252,7 @@ const ReportGeo = () => {
 
   return (
     <ProtectedRoute
-      roles={["Super Admin", "Admin Instansi", "Admin Verifikasi"]}
+      roles={["Super Admin", "Admin Instansi", "Admin Verifikasi", "Admin Layanan"]}
     >
       <section className="mr-16">
         <div className="flex justify-between gap-x-5 mb-8">
