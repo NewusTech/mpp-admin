@@ -49,7 +49,7 @@ const CreateManageRequirementPageStep2 = () => {
             tipedata: "text",
             isrequired: "",
           },
-        ],
+        ]
   );
   const [lastOptionId, setLastOptionId] = useState<number>(0); // State for incremental option ID
 
@@ -75,12 +75,10 @@ const CreateManageRequirementPageStep2 = () => {
   const handleCardChange = (
     id: number,
     field: keyof CardType,
-    value: string | number | OptionType[],
+    value: string | number | OptionType[]
   ) => {
     setCards(
-      cards.map((card) =>
-        card.id === id ? { ...card, [field]: value } : card,
-      ),
+      cards.map((card) => (card.id === id ? { ...card, [field]: value } : card))
     );
   };
 
@@ -95,7 +93,7 @@ const CreateManageRequirementPageStep2 = () => {
               { id: (card.options?.length || 0) + 1, key: "" },
             ],
           }
-        : card,
+        : card
     );
     setCards(updatedCards);
   };
@@ -109,7 +107,7 @@ const CreateManageRequirementPageStep2 = () => {
               ?.filter((option) => option.id !== optionId)
               ?.map((option, index) => ({ ...option, id: index + 1 })), // Reassign IDs starting from 1
           }
-        : card,
+        : card
     );
     setCards(updatedCards);
   };
@@ -117,17 +115,17 @@ const CreateManageRequirementPageStep2 = () => {
   const handleOptionChange = (
     cardId: number,
     optionId: number,
-    value: string,
+    value: string
   ) => {
     const updatedCards = cards.map((card) =>
       card.id === cardId
         ? {
             ...card,
             options: card.options?.map((option) =>
-              option.id === optionId ? { ...option, key: value } : option,
+              option.id === optionId ? { ...option, key: value } : option
             ),
           }
-        : card,
+        : card
     );
     setCards(updatedCards);
   };
@@ -167,7 +165,7 @@ const CreateManageRequirementPageStep2 = () => {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
           body: JSON.stringify(formattedData),
-        },
+        }
       );
 
       const responseData = await response.json();
@@ -341,7 +339,7 @@ const CreateManageRequirementPageStep2 = () => {
           >
             Tambah
           </Button>
-          <div className="flex justify-center items-center pt-8">
+          <div className="flex justify-center items-center pt-8 space-x-2">
             <Button
               className="bg-primary-700 hover:bg-primary-800 rounded-full w-[290px]"
               onClick={handleSubmit}
@@ -349,6 +347,12 @@ const CreateManageRequirementPageStep2 = () => {
             >
               {isLoading ? <Loader className="animate-spin" /> : "Lanjut"}
             </Button>
+            <Link
+              href="/manage-requirement/create/step-3"
+              className="rounded-full border border-primary-700 text-primary-700 w-24 h-10 flex items-center justify-center"
+            >
+              Lewati
+            </Link>
           </div>
         </div>
       </section>

@@ -2254,7 +2254,7 @@ export const historyQueueColumns: ColumnDef<HistoryQueue>[] = [
     header: "Waktu Selesai",
     cell: ({ row }) => {
       const time = row.original.finishedAt;
-      return <p>{getTime(time)}</p>;
+      return <p>{row.original.status ? getTime(time) : "-"} </p>;
     },
   },
   {
