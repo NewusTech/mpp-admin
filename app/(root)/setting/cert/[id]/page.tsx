@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import Cookies from "js-cookie";
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetch";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Loader } from "lucide-react";
@@ -43,15 +42,13 @@ const CreateFormat = ({
   const result = data?.data?.Layanansertif;
   const resultPj = data?.data?.Instansi;
 
-  console.log(result);
-
   useEffect(() => {
     if (resultPj || result) {
       setPj(resultPj?.pj);
       setNipPj(resultPj?.nip_pj);
       setNomor(result?.nomor);
       setPerihal(result?.perihal);
-      setEditorData(result?.body);
+      setEditorData(result?.body || "<p>Ketik disni</p>");
     }
   }, [resultPj, result]);
 
