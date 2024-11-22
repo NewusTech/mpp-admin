@@ -32,6 +32,8 @@ const CreateFormat = ({
   const [nipPj, setNipPj] = useState("");
   const [perihal, setPerihal] = useState("");
   const [nomor, setNomor] = useState("");
+  const [title, setTitle] = useState("");
+  const [position, setPosition] = useState("");
   const router = useRouter();
   const [editorData, setEditorData] = useState("");
   const editor1Ref = useRef<{ getContent: () => string }>(null);
@@ -160,6 +162,22 @@ const CreateFormat = ({
               placeholder="Masukkan penangung jawab"
               value={pj}
               onChange={(e) => setPj(e.target.value)}
+            />
+          </div>
+          <div className="space-y-3">
+            <label htmlFor="body">Gelar</label>
+            <Input
+              placeholder="Masukkan gelar"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+          <div className="space-y-3">
+            <label htmlFor="body">Jabatan</label>
+            <Input
+              placeholder="Masukkan jabatan"
+              value={position}
+              onChange={(e) => setPosition(e.target.value)}
             />
           </div>
           <div className="space-y-3">
