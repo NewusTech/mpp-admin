@@ -13,10 +13,13 @@ import { Label } from "@/components/ui/label";
 import React, { useState, ChangeEvent, useEffect } from "react";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
+
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -52,6 +55,10 @@ const CreateOffline = () => {
   const [userData, setUserData] = useState<any>(null); // State for storing selected user data
   const [searchTerm, setSearchTerm] = useState("");
   const [kecamatan, setKecamatan] = useState<any>(null);
+  const [provinsi, setProvinsi] = useState<any>(null);
+  const [city, setCity] = useState<any>(null);
+  const [district, setDistrict] = useState<any>(null);
+  const [village2, setVillage2] = useState<any>(null);
   const [searchKecamatanTerm, setSearchKecamatanTerm] = useState("");
   const [searchKecamatanInput, setSearchKecamatanInput] = useState("");
   const [village, setVillage] = useState<any>(null);
@@ -71,6 +78,8 @@ const CreateOffline = () => {
     alamat: "",
   });
 
+  console.log(city);
+
   const handleChange = (id: string, value: FormValue) => {
     setFormValues((prevValues) => ({
       ...prevValues,
@@ -86,7 +95,7 @@ const CreateOffline = () => {
   };
 
   const handleChangeUserData = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setForm((prevData) => ({
@@ -97,32 +106,56 @@ const CreateOffline = () => {
 
   const { data: kecamatans } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/kecamatan/get?search=${searchKecamatanTerm}`,
-    fetcher,
+    fetcher
+  );
+
+  const { data: provinces } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_INDOREGION_URL}/region/provinces`,
+    fetcher
+  );
+
+  const { data: cities } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_INDOREGION_URL}/region/regencies/${provinsi}`,
+    fetcher
+  );
+
+  const { data: districts } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_INDOREGION_URL}/region/districts/${city}`,
+    fetcher
+  );
+
+  const { data: villages } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_INDOREGION_URL}/region/villages/${district}`,
+    fetcher
   );
 
   const { data: desa } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/desa/get?kecamatan_id=${userData ? userData.kecamatan_id : kecamatan}&search=${searchVillageTerm}`,
-    fetcher,
+    fetcher
   );
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/form/${serviceId}`,
-    fetcher,
+    fetcher
   );
 
   const { data: inputFile } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/docs/${serviceId}`,
-    fetcher,
+    fetcher
   );
 
   const { data: users } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/alluserinfo/get?search=${searchTerm}&role=5`,
-    fetcher,
+    fetcher
   );
 
   const resultUser = users?.data;
   const resultKec = kecamatans?.data;
   const resultDesa = desa?.data;
+  const resultProv = provinces?.data;
+  const resultCities = cities?.data;
+  const resultDistricts = districts?.data;
+  const resultVillages = villages?.data;
   const resultForm: FormData[] = data?.data?.Layananforms || [];
   const resultDocs: DocData[] = inputFile?.data?.Layananforms || [];
 
@@ -137,7 +170,7 @@ const CreateOffline = () => {
   useEffect(() => {
     if (selectedUser) {
       const user = resultUser?.find(
-        (item: any) => item.id.toString() === selectedUser,
+        (item: any) => item.id.toString() === selectedUser
       );
       setUserData(user);
     }
@@ -161,7 +194,7 @@ const CreateOffline = () => {
         formData.append(`datainput[${index}][layananform_id]`, key);
         formData.append(
           `datainput[${index}][data]`,
-          JSON.stringify(selectedValues),
+          JSON.stringify(selectedValues)
         );
       } else {
         // Jika value adalah data primitif
@@ -187,7 +220,7 @@ const CreateOffline = () => {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
           body: formData,
-        },
+        }
       );
 
       const data = await response.json();
@@ -260,7 +293,7 @@ const CreateOffline = () => {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
           body: formData,
-        },
+        }
       );
 
       const data = await response.json();
@@ -402,36 +435,124 @@ const CreateOffline = () => {
                 <h1 className="text-xl font-semibold mb-4">Alamat</h1>
                 <div className="flex gap-x-4">
                   <div className="w-full space-y-2">
-                    <p>Kecamatan</p>
-                    <InputComponent
-                      typeInput="selectSearch"
-                      valueInput={searchKecamatanInput}
-                      onChangeInputSearch={(e) =>
-                        setSearchKecamatanInput(e.target.value)
-                      }
-                      items={resultKec}
-                      label="Kecamatan"
-                      placeholder="Pilih Kecamatan"
-                      value={kecamatan || userData.kecamatan_id}
-                      onChange={(e: any) => setKecamatan(e)}
-                    />
+                    <p>Provinsi</p>
+                    <Select
+                      value={provinsi}
+                      onValueChange={(e: any) => setProvinsi(e)}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Pilih Provinsi" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Provinsi</SelectLabel>
+                          {resultProv?.map((item: any) => (
+                            <SelectItem key={item.id} value={item.id}>
+                              {item.name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="w-full space-y-2">
-                    <p>Desa</p>
-                    <InputComponent
-                      typeInput="selectSearch"
-                      valueInput={searchVillageInput}
-                      onChangeInputSearch={(e) =>
-                        setSearchVillageInput(e.target.value)
-                      }
-                      items={resultDesa}
-                      label="Desa"
-                      placeholder="Pilih Desa"
-                      value={village || userData.desa_id}
-                      onChange={(e: any) => setVillage(e)}
-                    />
+                    <p>Kabupaten / Kota</p>
+                    <Select value={city} onValueChange={(e: any) => setCity(e)}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Pilih Kab/Kota" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Kab/Kota</SelectLabel>
+                          {resultCities?.map((item: any) => (
+                            <SelectItem key={item.id} value={item.id}>
+                              {item.type} - {item.name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
+                {city === 322 || userData.user_id ? (
+                  <div className="flex gap-x-4">
+                    <div className="w-full space-y-2">
+                      <p>Kecamatan</p>
+                      <InputComponent
+                        typeInput="selectSearch"
+                        valueInput={searchKecamatanInput}
+                        onChangeInputSearch={(e) =>
+                          setSearchKecamatanInput(e.target.value)
+                        }
+                        items={resultKec}
+                        label="Kecamatan"
+                        placeholder="Pilih Kecamatan"
+                        value={kecamatan || userData.kecamatan_id}
+                        onChange={(e: any) => setKecamatan(e)}
+                      />
+                    </div>
+                    <div className="w-full space-y-2">
+                      <p>Desa</p>
+                      <InputComponent
+                        typeInput="selectSearch"
+                        valueInput={searchVillageInput}
+                        onChangeInputSearch={(e) =>
+                          setSearchVillageInput(e.target.value)
+                        }
+                        items={resultDesa}
+                        label="Desa"
+                        placeholder="Pilih Desa"
+                        value={village || userData.desa_id}
+                        onChange={(e: any) => setVillage(e)}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex gap-x-4">
+                    <div className="w-full space-y-2">
+                      <p>Kecamatan</p>
+                      <Select
+                        value={district}
+                        onValueChange={(e: any) => setDistrict(e)}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih Kecamatan" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Kecematan</SelectLabel>
+                            {resultDistricts?.map((item: any) => (
+                              <SelectItem key={item.id} value={item.id}>
+                                {item.name}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="w-full space-y-2">
+                      <p>Kelurahan / Desa</p>
+                      <Select
+                        value={village2}
+                        onValueChange={(e: any) => setVillage2(e)}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih Kelurahan Desa" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Kelurahan / Desa</SelectLabel>
+                            {resultVillages?.map((item: any) => (
+                              <SelectItem key={item.id} value={item.id}>
+                                {item.name}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                )}
                 <div className="flex gap-x-4">
                   <div className="w-full space-y-2">
                     <p>RT</p>
@@ -494,36 +615,127 @@ const CreateOffline = () => {
                   <h1 className="text-xl font-semibold mb-4">Alamat</h1>
                   <div className="flex gap-x-4">
                     <div className="w-full space-y-2">
-                      <p>Kecamatan</p>
-                      <InputComponent
-                        typeInput="selectSearch"
-                        valueInput={searchKecamatanInput}
-                        onChangeInputSearch={(e) =>
-                          setSearchKecamatanInput(e.target.value)
-                        }
-                        items={resultKec}
-                        label="Kecamatan"
-                        placeholder="Pilih Kecamatan"
-                        value={kecamatan}
-                        onChange={(e: any) => setKecamatan(e)}
-                      />
+                      <p>Provinsi</p>
+                      <Select
+                        value={provinsi}
+                        onValueChange={(e: any) => setProvinsi(e)}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih Provinsi" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Provinsi</SelectLabel>
+                            {resultProv?.map((item: any) => (
+                              <SelectItem key={item.id} value={item.id}>
+                                {item.name}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     </div>
                     <div className="w-full space-y-2">
-                      <p>Desa</p>
-                      <InputComponent
-                        typeInput="selectSearch"
-                        valueInput={searchVillageInput}
-                        onChangeInputSearch={(e) =>
-                          setSearchVillageInput(e.target.value)
-                        }
-                        items={resultDesa}
-                        label="Desa"
-                        placeholder="Pilih Desa"
-                        value={village}
-                        onChange={(e: any) => setVillage(e)}
-                      />
+                      <p>Kabupaten / Kota</p>
+                      <Select
+                        value={city}
+                        onValueChange={(e: any) => setCity(e)}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih Kab/Kota" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Kab/Kota</SelectLabel>
+                            {resultCities?.map((item: any) => (
+                              <SelectItem key={item.id} value={item.id}>
+                                {item.type} - {item.name}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
+                  {city === 322 ? (
+                    <div className="flex gap-x-4">
+                      <div className="w-full space-y-2">
+                        <p>Kecamatan</p>
+                        <InputComponent
+                          typeInput="selectSearch"
+                          valueInput={searchKecamatanInput}
+                          onChangeInputSearch={(e) =>
+                            setSearchKecamatanInput(e.target.value)
+                          }
+                          items={resultKec}
+                          label="Kecamatan"
+                          placeholder="Pilih Kecamatan"
+                          value={kecamatan}
+                          onChange={(e: any) => setKecamatan(e)}
+                        />
+                      </div>
+                      <div className="w-full space-y-2">
+                        <p>Desa</p>
+                        <InputComponent
+                          typeInput="selectSearch"
+                          valueInput={searchVillageInput}
+                          onChangeInputSearch={(e) =>
+                            setSearchVillageInput(e.target.value)
+                          }
+                          items={resultDesa}
+                          label="Desa"
+                          placeholder="Pilih Desa"
+                          value={village}
+                          onChange={(e: any) => setVillage(e)}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex gap-x-4">
+                      <div className="w-full space-y-2">
+                        <p>Kecamatan</p>
+                        <Select
+                          value={district}
+                          onValueChange={(e: any) => setDistrict(e)}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Pilih Kecamatan" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectLabel>Kecematan</SelectLabel>
+                              {resultDistricts?.map((item: any) => (
+                                <SelectItem key={item.id} value={item.id}>
+                                  {item.name}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="w-full space-y-2">
+                        <p>Kelurahan / Desa</p>
+                        <Select
+                          value={village2}
+                          onValueChange={(e: any) => setVillage2(e)}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Pilih Kelurahan Desa" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectLabel>Kelurahan / Desa</SelectLabel>
+                              {resultVillages?.map((item: any) => (
+                                <SelectItem key={item.id} value={item.id}>
+                                  {item.name}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  )}
                   <div className="flex gap-x-4">
                     <div className="w-full space-y-2">
                       <p>RT</p>
@@ -667,7 +879,7 @@ const CreateOffline = () => {
                   onChange={(e) =>
                     handleDocChange(
                       v.id,
-                      e.target.files ? e.target.files[0] : null,
+                      e.target.files ? e.target.files[0] : null
                     )
                   }
                   required={v.isrequired}

@@ -65,7 +65,7 @@ export const InstanceValidation = z.object({
   image: z.custom<File[]>().optional(),
   address: z.string({ message: "Alamat wajib diisi" }),
   phone: z.string().optional(),
-  pj: z.string({ message: "PJ wajib diisi" }),
+  pj: z.string({ message: "Persyaratan wajib diisi" }),
   nip_pj: z.string({ message: "NIP PJ wajib diisi" }),
   active_offline: z.enum(["0", "1"], {
     required_error: "Kamu harus pilih salah satu",

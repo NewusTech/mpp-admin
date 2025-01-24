@@ -211,7 +211,7 @@ const Instance = ({
               name="pj"
               render={({ field }) => (
                 <FormItem className="space-y-3">
-                  <FormLabel>Penanggung Jawab</FormLabel>
+                  <FormLabel>Persyaratan</FormLabel>
                   <FormControl>
                     <Input
                       className="rounded-full"
