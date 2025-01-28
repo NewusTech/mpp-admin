@@ -105,7 +105,7 @@ const CreateOffline = () => {
   };
 
   const { data: kecamatans } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/kecamatan/get?search=${searchKecamatanTerm}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/user/kecamatan/get?search=${searchKecamatanTerm}&limit=10000`,
     fetcher
   );
 
@@ -158,6 +158,17 @@ const CreateOffline = () => {
   const resultVillages = villages?.data;
   const resultForm: FormData[] = data?.data?.Layananforms || [];
   const resultDocs: DocData[] = inputFile?.data?.Layananforms || [];
+
+  useEffect(() => {
+    if (userData) {
+      setProvinsi(Number(userData.province_id));
+      setCity(Number(userData.regency_id));
+      setDistrict(Number(userData.district_id));
+      setVillage2(Number(userData.village_id));
+    }
+  }, [userData]);
+
+  console.log(village2, "aa");
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -268,11 +279,26 @@ const CreateOffline = () => {
     if (form.email) {
       formData.append("email", form.email);
     }
-    if (kecamatan) {
-      formData.append("kecamatan_id", kecamatan.toString());
+    if (provinsi) {
+      formData.append("province_id", provinsi.toString());
     }
-    if (village) {
-      formData.append("desa_id", village.toString());
+    if (city) {
+      formData.append("regency_id", city.toString());
+    }
+    if (city === "322") {
+      if (kecamatan) {
+        formData.append("kecamatan_id", kecamatan.toString());
+      }
+      if (village) {
+        formData.append("desa_id", village.toString());
+      }
+    } else {
+      if (district) {
+        formData.append("district_id", district.toString());
+      }
+      if (village2) {
+        formData.append("village_id", village.toString());
+      }
     }
     if (form.rt) {
       formData.append("rt", form.rt);
@@ -306,8 +332,6 @@ const CreateOffline = () => {
           position: "center",
         });
       }
-
-      console.log(JSON.stringify(formData));
 
       if (response.ok) {
         Swal.fire({
@@ -348,6 +372,10 @@ const CreateOffline = () => {
     });
     setKecamatan(null);
     setVillage(null);
+    setProvinsi(null);
+    setCity(null);
+    setDistrict(null);
+    setVillage2(null);
   };
 
   return (
@@ -447,7 +475,10 @@ const CreateOffline = () => {
                         <SelectGroup>
                           <SelectLabel>Provinsi</SelectLabel>
                           {resultProv?.map((item: any) => (
-                            <SelectItem key={item.id} value={item.id}>
+                            <SelectItem
+                              key={item.id}
+                              value={item.id || userData.province_id}
+                            >
                               {item.name}
                             </SelectItem>
                           ))}
@@ -465,7 +496,10 @@ const CreateOffline = () => {
                         <SelectGroup>
                           <SelectLabel>Kab/Kota</SelectLabel>
                           {resultCities?.map((item: any) => (
-                            <SelectItem key={item.id} value={item.id}>
+                            <SelectItem
+                              key={item.id}
+                              value={item.id || userData.regency_id}
+                            >
                               {item.type} - {item.name}
                             </SelectItem>
                           ))}
@@ -474,7 +508,7 @@ const CreateOffline = () => {
                     </Select>
                   </div>
                 </div>
-                {city === 322 || userData.user_id ? (
+                {city === 322 && userData.user_id ? (
                   <div className="flex gap-x-4">
                     <div className="w-full space-y-2">
                       <p>Kecamatan</p>
