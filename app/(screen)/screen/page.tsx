@@ -34,13 +34,6 @@ export default function Screen() {
     fetcher
   );
 
-  const { data: video } = useSWR<any>(
-    `${process.env.NEXT_PUBLIC_API_URL}/user/video/get`,
-    fetcher
-  );
-
-  const resultVideo = video?.data?.video;
-
   useEffect(() => {
     // Periksa apakah data sudah tersedia dan set state result dan antrianLast
     if (data && data.data) {
@@ -119,9 +112,9 @@ export default function Screen() {
 
   const settings = {
     infinite: true,
-    slidesToShow: count > 2 ? 2 : count,
+    slidesToShow: count > 4 ? 4 : count,
     slidesToScroll: 1,
-    autoplay: count > 2 ? true : false,
+    autoplay: count > 4,
     autoplaySpeed: 3000,
     cssEase: "linear",
     arrows: false, // Hilangkan tombol navigasi kiri-kanan
@@ -197,34 +190,26 @@ export default function Screen() {
             <h4 className="text-neutral-50 font-semibold text-[30px]">
               Nomor Antrian
             </h4>
-
             <h2 className="text-neutral-50 font-semibold text-[50px]">
-              {antrianLast?.antrian_now}
+              {antrianLast?.antrian_now ?? "-"}
             </h2>
-
-            <h5 className="text-neutral-50 font-normal text-[25px]">
-              Loket {antrianLast?.code}
-            </h5>
           </div>
-
-          <div className="bg-neutral-50 w-full rounded-lg">
-            <div className="flex flex-row w-full">
-              <video controls autoPlay loop className="w-full h-[480px]">
-                <source src={resultVideo} type="video/mp4" />
-                Browser Anda tidak pemutaran video.
-              </video>
-            </div>
+          <div className="flex flex-col justify-evenly bg-primary-700 text-center py-10 min-h-[300px] w-full rounded-lg h-full space-y-5">
+            <h5 className="text-neutral-50 font-bold text-4xl">Loket</h5>
+            <h5 className="text-neutral-50 font-bold text-4xl">
+              {antrianLast?.code ?? "-"}
+            </h5>
           </div>
         </div>
 
-        <div className="flex space-x-8">
-          <div className="w-1/2">
+        <div className="space-y-6">
+          <div className="w-full">
             <p className="capitalize text-slate-800 text-[24px] font-semibold">
               Antrean Saat Ini
             </p>
 
             <div className="slider-container mt-2">
-              <Slider {...settings}>
+              <Slider {...settings} className="gap-x-4">
                 {result?.map((item: any, index: any) => (
                   <div
                     key={index}
@@ -250,7 +235,7 @@ export default function Screen() {
               </Slider>
             </div>
           </div>
-          <div className="w-1/2">
+          <div className="w-full">
             <p className="capitalize text-slate-800 text-[24px] font-semibold">
               Antrean Selanjutnya
             </p>
@@ -260,7 +245,7 @@ export default function Screen() {
                 {result?.map((item: any, index: any) => (
                   <div
                     key={index}
-                    className={`rounded-2xl p-8 mr-4 ${
+                    className={`rounded-2xl p-8 ${
                       index % 4 === 0
                         ? "bg-[#c815ff]"
                         : index % 4 === 1
