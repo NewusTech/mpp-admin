@@ -59,6 +59,7 @@ export const InstanceValidation = z.object({
   desc: z.string().min(25, {
     message: "Deskripsi setidaknya harus 25 karakter.",
   }),
+  loket: z.string().optional(),
   status: z.enum(["0", "1"], {
     required_error: "Kamu harus pilih status",
   }),

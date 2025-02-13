@@ -197,7 +197,7 @@ export default function Screen() {
           <div className="flex flex-col justify-evenly bg-primary-700 text-center py-10 min-h-[300px] w-full rounded-lg h-full space-y-5">
             <h5 className="text-neutral-50 font-bold text-4xl">Loket</h5>
             <h5 className="text-neutral-50 font-bold text-4xl">
-              {antrianLast?.code ?? "-"}
+              {antrianLast?.loket ?? "-"}
             </h5>
           </div>
         </div>
