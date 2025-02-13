@@ -44,6 +44,7 @@ const Instance = ({
   useEffect(() => {
     if (data) {
       form.reset({
+        loket: data.loket,
         name: data.name,
         desc: data.desc,
         status: data?.status === true ? "1" : "0",
@@ -66,6 +67,10 @@ const Instance = ({
   async function onSubmit(values: z.infer<typeof InstanceValidation>) {
     setIsLoading(true);
     const formData = new FormData();
+
+    if (values.loket) {
+      formData.append("loket", values.loket);
+    }
     formData.append("name", values.name);
     formData.append("desc", values.desc);
     formData.append("status", values.status);
@@ -180,7 +185,25 @@ const Instance = ({
                     <Input
                       className="rounded-full"
                       type="text"
-                      placeholder="Masukkan Judul"
+                      placeholder="Masukkan Instansi"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="loket"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>Loket Instansi</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="rounded-full"
+                      type="text"
+                      placeholder="Masukkan Loket"
                       {...field}
                     />
                   </FormControl>
