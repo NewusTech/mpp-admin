@@ -186,7 +186,13 @@ export default function Screen() {
         </div>
 
         <div className="flex flex-row w-full gap-x-4">
-          <div className="flex flex-col justify-evenly items-center bg-secondary-700 rounded-lg w-5/12">
+          <div className="flex flex-col justify-evenly bg-secondary-700 text-center py-10 min-h-[400px] w-full rounded-lg h-full space-y-5">
+            <h5 className="text-neutral-50 font-bold text-8xl">Loket</h5>
+            <h5 className="text-neutral-50 font-bold text-8xl">
+              {antrianLast?.loket ?? "-"}
+            </h5>
+          </div>
+          <div className="flex flex-col justify-evenly items-center bg-primary-700 rounded-lg w-5/12">
             <h4 className="text-neutral-50 font-semibold text-[30px]">
               Nomor Antrian
             </h4>
@@ -194,26 +200,16 @@ export default function Screen() {
               {antrianLast?.antrian_now ?? "-"}
             </h2>
           </div>
-          <div className="flex flex-col justify-evenly bg-primary-700 text-center py-10 min-h-[300px] w-full rounded-lg h-full space-y-5">
-            <h5 className="text-neutral-50 font-bold text-4xl">Loket</h5>
-            <h5 className="text-neutral-50 font-bold text-4xl">
-              {antrianLast?.loket ?? "-"}
-            </h5>
-          </div>
         </div>
 
         <div className="space-y-6">
           <div className="w-full">
-            <p className="capitalize text-slate-800 text-[24px] font-semibold">
-              Antrean Saat Ini
-            </p>
-
             <div className="slider-container mt-2">
               <Slider {...settings} className="gap-x-4">
                 {result?.map((item: any, index: any) => (
                   <div
                     key={index}
-                    className={`rounded-2xl p-8 mr-4 ${
+                    className={`rounded-2xl text-center p-8 mr-4 ${
                       index % 4 === 0
                         ? "bg-[#3597FC]"
                         : index % 4 === 1
@@ -223,45 +219,12 @@ export default function Screen() {
                             : "bg-[#A636FF]"
                     }`}
                   >
+                    <h5 className="text-neutral-50 font-normal text-[26px]">
+                      {`Loket ${item.loket}`}
+                    </h5>
                     <h4 className="text-neutral-50 font-semibold text-[46px]">
                       {item.antrian_now}
                     </h4>
-
-                    <h5 className="text-neutral-50 font-normal text-[26px]">
-                      {`Loket ${item.code}`}
-                    </h5>
-                  </div>
-                ))}
-              </Slider>
-            </div>
-          </div>
-          <div className="w-full">
-            <p className="capitalize text-slate-800 text-[24px] font-semibold">
-              Antrean Selanjutnya
-            </p>
-
-            <div className="slider-container mt-2">
-              <Slider {...settings}>
-                {result?.map((item: any, index: any) => (
-                  <div
-                    key={index}
-                    className={`rounded-2xl p-8 ${
-                      index % 4 === 0
-                        ? "bg-[#c815ff]"
-                        : index % 4 === 1
-                          ? "bg-[#ff7417]"
-                          : index % 4 === 2
-                            ? "bg-[#55090d]"
-                            : "bg-[#16d0ff]"
-                    }`}
-                  >
-                    <h4 className="text-neutral-50 font-semibold text-[46px]">
-                      {item.antrian_next}
-                    </h4>
-
-                    <h5 className="text-neutral-50 font-normal text-[26px]">
-                      {`Loket ${item.code}`}
-                    </h5>
                   </div>
                 ))}
               </Slider>
