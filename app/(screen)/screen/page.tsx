@@ -187,16 +187,16 @@ export default function Screen() {
 
         <div className="flex flex-row w-full gap-x-4">
           <div className="flex flex-col justify-evenly bg-secondary-700 text-center py-10 min-h-[400px] w-full rounded-lg h-full space-y-5">
-            <h5 className="text-neutral-50 font-bold text-8xl">Loket</h5>
-            <h5 className="text-neutral-50 font-bold text-8xl">
+            <h5 className="text-black font-bold text-8xl">Loket</h5>
+            <h5 className="text-black font-bold text-8xl">
               {antrianLast?.loket ?? "-"}
             </h5>
           </div>
           <div className="flex flex-col justify-evenly items-center bg-primary-700 rounded-lg w-5/12">
-            <h4 className="text-neutral-50 font-semibold text-[30px]">
+            <h4 className="text-black font-semibold text-[30px]">
               Nomor Antrian
             </h4>
-            <h2 className="text-neutral-50 font-semibold text-[50px]">
+            <h2 className="text-black font-semibold text-[50px]">
               {antrianLast?.antrian_now ?? "-"}
             </h2>
           </div>
@@ -219,10 +219,10 @@ export default function Screen() {
                             : "bg-[#A636FF]"
                     }`}
                   >
-                    <h5 className="text-neutral-50 font-normal text-[26px]">
+                    <h5 className="text-black font-normal text-[26px]">
                       {`Loket ${item.loket}`}
                     </h5>
-                    <h4 className="text-neutral-50 font-semibold text-[46px]">
+                    <h4 className="text-black font-semibold text-[46px]">
                       {item.antrian_now}
                     </h4>
                   </div>
