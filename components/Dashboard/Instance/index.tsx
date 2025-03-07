@@ -9,8 +9,11 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import TabQueueService from "@/components/Dashboard/Service/TabQueueService";
+import TabQueueServiceCall from "@/components/Dashboard/Instance/TabQueueServiceCall";
 import TabSurveyService from "@/components/Dashboard/Service/TabSurveyService";
 import TabService from "@/components/Dashboard/Service/TabService";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetch";
 
 interface JwtPayload {
   role?: string;
@@ -34,6 +37,7 @@ const InstanceDashboard = () => {
     serviceId: 0,
     slug: "",
   });
+  // State for search input
 
   useEffect(() => {
     // Ambil token dari cookies
@@ -66,7 +70,9 @@ const InstanceDashboard = () => {
     }
   }, []);
 
-  console.log(state.role);
+  // if (state.role === "Admin Instansi") {
+  //   setState({ ...state, slug: "hello" });
+  // }
 
   return (
     <>
@@ -98,11 +104,19 @@ const InstanceDashboard = () => {
       </div>
       <Tabs defaultValue="queue" className="my-8">
         <TabsList className="p-0 bg-transparent rounded-none w-full justify-between">
+          {state.role === "Admin Instansi" && (
+            <TabsTrigger
+              value="queue"
+              className="text-[26px] pb-3 text-secondatry-800 font-bold w-full h-full data-[state=active]:border-b-2 data-[state=active]:bg-transparent data-[state=active]:rounded-none data-[state=active]:border-neutral-500 data-[state=active]:text-primary-700 data-[state=active]:shadow-none"
+            >
+              Antrian
+            </TabsTrigger>
+          )}
           <TabsTrigger
-            value="queue"
+            value="statistic-queue"
             className="text-[26px] pb-3 text-primary-700 font-bold w-full h-full data-[state=active]:border-b-2 data-[state=active]:bg-transparent data-[state=active]:rounded-none data-[state=active]:border-neutral-500 data-[state=active]:text-primary-700 data-[state=active]:shadow-none"
           >
-            Antrian
+            Statistik Antrian
           </TabsTrigger>
           <TabsTrigger
             value="service"
@@ -117,7 +131,12 @@ const InstanceDashboard = () => {
             Survey
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="queue" className="mt-8">
+        {state.role === "Admin Instansi" && (
+          <TabsContent value="queue" className="mt-8">
+            <TabQueueServiceCall id={state.instansiId} />
+          </TabsContent>
+        )}
+        <TabsContent value="statistic-queue" className="mt-8">
           {state.role === "Admin Instansi" ||
           state.role === "Admin Verifikasi" ? (
             <TabQueue />

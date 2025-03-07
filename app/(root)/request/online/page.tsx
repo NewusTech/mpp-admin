@@ -70,7 +70,7 @@ const RequestOnline = () => {
 
   const { data } = useSWR<any>(
     `${process.env.NEXT_PUBLIC_API_URL}/user/instansi/get?search=${searchTermInstance}`,
-    fetcher,
+    fetcher
   );
 
   const instanceId = Number(instance);
@@ -102,7 +102,11 @@ const RequestOnline = () => {
   let instanceId2;
   let serviceId2;
 
-  if (role === "Admin Instansi" || role === "Admin Layanan" || role === "Admin Verifikasi") {
+  if (
+    role === "Admin Instansi" ||
+    role === "Admin Layanan" ||
+    role === "Admin Verifikasi"
+  ) {
     instanceId2 = instansiId;
   } else {
     instanceId2 = instanceId;
@@ -157,7 +161,7 @@ const RequestOnline = () => {
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
           },
-        },
+        }
       );
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
