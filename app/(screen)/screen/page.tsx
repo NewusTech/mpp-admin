@@ -187,7 +187,7 @@ export default function Screen() {
 
         <div className="flex flex-row w-full gap-x-4">
           <div className="flex flex-col justify-evenly bg-secondary-700 text-center py-10 min-h-[400px] w-full rounded-lg h-full space-y-5">
-            <h5 className="text-black font-bold text-8xl">Loket</h5>
+            <h5 className="text-black font-bold text-8xl">LOKET</h5>
             <h5 className="text-black font-bold text-8xl">
               {antrianLast?.loket ?? "-"}
             </h5>
@@ -220,7 +220,7 @@ export default function Screen() {
                     }`}
                   >
                     <h5 className="text-black font-normal text-[26px]">
-                      {`Loket ${item.loket}`}
+                      {`LOKET ${item.loket}`}
                     </h5>
                     <h4 className="text-black font-semibold text-[46px]">
                       {item.antrian_now}

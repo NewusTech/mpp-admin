@@ -76,10 +76,7 @@ export const InstanceValidation = z.object({
   }),
   open: z.string(),
   closed: z.string(),
-  code: z
-    .string()
-    .min(2, { message: "Kode setidaknya harus 3 karakter." })
-    .max(3, { message: "Kode maksimal 3 karakter" }),
+  code: z.string().min(1).max(1, { message: "Kode maksimal 1 karakter" }),
   link: z.string().optional(),
   website: z.string().optional(),
 });
