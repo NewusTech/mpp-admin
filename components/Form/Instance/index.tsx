@@ -44,7 +44,7 @@ const Instance = ({
   useEffect(() => {
     if (data) {
       form.reset({
-        loket: data.loket,
+        loket: String(data.loket),
         name: data.name,
         desc: data.desc,
         status: data?.status === true ? "1" : "0",

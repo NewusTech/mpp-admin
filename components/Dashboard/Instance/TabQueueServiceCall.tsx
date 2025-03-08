@@ -418,7 +418,7 @@ const TabQueueServiceCall = ({ id }: { id: number }) => {
           />
         </div>
         <div className="flex w-full justify-end space-x-2">
-          {idQueue === null && audioUrl === null ? (
+          {result?.AntrianNext !== "" ? (
             <Button
               onClick={fetchAudio}
               className="bg-error-700 hover:bg-error-800 w-40 rounded-full"
