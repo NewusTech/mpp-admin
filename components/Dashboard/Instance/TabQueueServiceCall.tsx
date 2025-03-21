@@ -9,7 +9,7 @@ import { DataTables } from "@/components/Datatables";
 import { historyQueueColumns, activeQueueColumns } from "@/constants";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader, Search } from "lucide-react";
+import { ChevronRight, Loader, Search } from "lucide-react";
 import Image from "next/image";
 import InputComponent from "@/components/InputComponent";
 import { formatDate } from "@/lib/utils";
@@ -354,12 +354,12 @@ const TabQueueServiceCall = ({ id }: { id: number }) => {
     }
   };
 
-  let url = `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get`;
-
-  url += `/${id}?search=${searchTermService}`;
+  let url = `${process.env.NEXT_PUBLIC_API_URL}/user/layanan/dinas/get/${id}`;
 
   const { data: services } = useSWR(url, fetcher);
   const result2 = services?.data;
+
+  console.log(result2);
 
   return (
     <>
@@ -388,6 +388,20 @@ const TabQueueServiceCall = ({ id }: { id: number }) => {
             </SelectGroup>
           </SelectContent>
         </Select>
+      </div>
+      <div className="space-y-2 mb-5">
+        {result2?.map((v: any) => (
+          <div
+            key={v.id}
+            className="rounded-full px-5 py-2 w-full mb-5 bg-white shadow flex justify-between items-center"
+          >
+            <p className="font-semibold">{v.name}</p>
+            <div className="flex items-center space-x-2">
+              <p>{v.name}</p>
+              <ChevronRight />
+            </div>
+          </div>
+        ))}
       </div>
       <section className="bg-primary-200 px-8 py-9 rounded-[20px] shadow space-y-3">
         <div className="grid grid-cols-5 gap-x-5">

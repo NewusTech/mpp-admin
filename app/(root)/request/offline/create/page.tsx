@@ -297,7 +297,7 @@ const CreateOffline = () => {
         formData.append("district_id", district.toString());
       }
       if (village2) {
-        formData.append("village_id", village.toString());
+        formData.append("village_id", village2.toString());
       }
     }
     if (form.rt) {
