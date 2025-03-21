@@ -91,7 +91,7 @@ const AdminData = ({ role }: { role: string | null }) => {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/register`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/register?isAdmin=true`,
         {
           method: "POST",
           headers: {
@@ -114,6 +114,15 @@ const AdminData = ({ role }: { role: string | null }) => {
         });
         router.push("/manage-user/admin");
       }
+      if (!response.ok) {
+        Swal.fire({
+          icon: "error",
+          title: `${data.message}`,
+          timer: 2000,
+          showConfirmButton: false,
+          position: "center",
+        });
+      }
     } catch (error: any) {
       Swal.fire({
         icon: "error",
@@ -122,6 +131,8 @@ const AdminData = ({ role }: { role: string | null }) => {
         showConfirmButton: false,
         position: "center",
       });
+    } finally {
+      setIsLoading(false);
     }
   }
 

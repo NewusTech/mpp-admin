@@ -75,7 +75,7 @@ const ManageUser = () => {
   return (
     <ProtectedRoute roles={["Super Admin", "Admin Instansi"]}>
       <section className="mr-16">
-        <div className="flex justify-between mt-4 mb-8">
+        <div className="flex justify-between mt-4 mb-24">
           <div className="w-1/2">
             {role !== "Admin Instansi" && role !== "Admin Layanan" && (
               <InputComponent
